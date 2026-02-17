@@ -1,11 +1,9 @@
-import AppRoutes from "./navigation/AppRoutes";
+import AppRoutes from "./navigation/AppRoutes.jsx";
 
-function App() {
+export default function App() {
   return (
     <div className="electric-bg">
       <AppRoutes />
     </div>
   );
 }
-
-export default App;
