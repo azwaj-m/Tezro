@@ -5,6 +5,7 @@ export default function BottomNav() {
 
   return (
     <div className="bottom-nav">
+
       <Link to="/ride">
         <button className={location.pathname === "/ride" ? "active-nav" : "nav-btn"}>
           🚗
@@ -16,6 +17,7 @@ export default function BottomNav() {
           ⚽
         </button>
       </Link>
+
     </div>
   );
 }
