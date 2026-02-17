@@ -1,0 +1,14 @@
+<div class="login-container neon-box">
+    <h2>AlinGo Login</h2>
+    <button onclick="loginWithGoogle()" class="google-btn">Login with Google</button>
+    
+    <hr>
+    
+    <input type="tel" id="phone" placeholder="+92 300 1234567">
+    <button onclick="sendOTP()" class="glow-button">Send OTP</button>
+    
+    <div id="otp-section" class="hidden">
+        <input type="text" id="otp" placeholder="Enter 6-digit OTP">
+        <button onclick="verifyOTP()" class="glow-button">Verify & Login</button>
+    </div>
+</div>
