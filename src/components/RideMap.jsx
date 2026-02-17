@@ -10,10 +10,21 @@ export default function RideMap() {
       "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
     ).addTo(map);
 
-    L.marker([31.5204, 74.3587]).addTo(map);
+    let marker;
+
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        const { latitude, longitude } = position.coords;
+
+        map.setView([latitude, longitude], 15);
+
+        marker = L.marker([latitude, longitude]).addTo(map);
+        marker.bindPopup("You are here").openPopup();
+      });
+    }
 
     return () => map.remove();
   }, []);
 
-  return <div id="rideMap" style={{ height: "400px" }}></div>;
+  return <div id="rideMap" style={{ height: "350px" }}></div>;
 }
