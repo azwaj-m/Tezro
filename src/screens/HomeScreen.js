@@ -1,43 +1,40 @@
-import React from 'react';
-import RideMap from '../components/RideMap';
-import WeatherCard from '../components/WeatherCard';
-import SportsScore from '../components/SportsScore';
-import '../global.css';
+import { Link } from "react-router-dom";
+import { useEffect } from "react";
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
 
-const HomeScreen = () => {
+export default function HomeScreen() {
+
+  useEffect(() => {
+    const map = L.map("homeMap", {
+      zoomControl: false,
+      attributionControl: false,
+    }).setView([31.5204, 74.3587], 13);
+
+    L.tileLayer(
+      "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+    ).addTo(map);
+
+    return () => map.remove();
+  }, []);
+
   return (
-    <div className="app-container">
-      {/* ٹاپ ہیڈر */}
-      <header className="main-header">
-        <div className="logo">AlinGo</div>
-        <div className="profile-btn">👤</div>
-      </header>
+    <div className="home-container">
+      <h1>AlinGo</h1>
 
-      {/* لائیو میپ سیکشن */}
-      <section className="map-section neon-border">
-        <RideMap />
-      </section>
-
-      {/* کارڈز گریڈ */}
-      <div className="info-grid">
-        <WeatherCard temperature="28°C" condition="Clear" />
-        <SportsScore teamA="PAK" teamB="AUS" score="150/2" />
+      <div className="map-preview">
+        <div id="homeMap" style={{ height: "300px" }}></div>
       </div>
 
-      {/* بڑا ایکشن بٹن */}
-      <button className="main-action-btn">
-        START RIDE
-      </button>
+      <div className="button-grid">
+        <Link to="/ride">
+          <button className="neon-btn">🚗 Ride</button>
+        </Link>
 
-      {/* باٹم نیویگیشن */}
-      <nav className="bottom-nav">
-        <div className="nav-item active">🏠<span>Home</span></div>
-        <div className="nav-item">🚗<span>Rides</span></div>
-        <div className="nav-item">🏆<span>Sports</span></div>
-        <div className="nav-item">👤<span>Profile</span></div>
-      </nav>
+        <Link to="/sports">
+          <button className="neon-btn">⚽ Sports</button>
+        </Link>
+      </div>
     </div>
   );
-};
-
-export default HomeScreen;
+}
