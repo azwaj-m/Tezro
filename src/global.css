@@ -107,3 +107,54 @@ body {
 
 .live-blink { color: var(--neon); animation: pulse 1.5s infinite; }
 @keyframes pulse { 50% { opacity: 0.4; } }
+
+
+
+    .fare-box {
+  margin-top: 20px;
+}
+
+.fare-input {
+  padding: 12px;
+  border-radius: 10px;
+  border: 2px solid #00ff88;
+  background: black;
+  color: #00ff88;
+  margin-right: 10px;
+}
+
+.fare-result {
+  margin-top: 15px;
+  font-size: 18px;
+  color: #00ff88;
+}
+
+/* Bottom Navigation */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background: black;
+  display: flex;
+  justify-content: space-around;
+  padding: 10px 0;
+  border-top: 2px solid #00ff88;
+  box-shadow: 0 0 15px #00ff88;
+}
+
+.nav-btn {
+  background: black;
+  border: 2px solid #00ff88;
+  color: #00ff88;
+  padding: 12px;
+  border-radius: 50%;
+  font-size: 20px;
+}
+
+.active-nav {
+  background: #00ff88;
+  color: black;
+  border-radius: 50%;
+  padding: 12px;
+  font-size: 20px;
+}
