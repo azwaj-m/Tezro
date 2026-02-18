@@ -21,13 +21,13 @@
 </head>
 <body>
     <div class="app-shell">
-        <header class="navbar">
-            <button class="glow-button" onclick="location.href='/index.html'">← BACK</button>
-            <h2 style="color:#39FF14">SELECT RIDE</h2>
+        <header class="navbar" style="padding: 15px; display: flex; align-items: center; justify-content: space-between; background: #111;">
+            <button class="glow-button" onclick="location.href='../../index.html'" style="background:none; border:1px solid #39FF14; color:#39FF14; padding:5px 10px; border-radius:5px; cursor:pointer;">← BACK</button>
+            <h2 style="color:#39FF14; margin:0;">SELECT RIDE</h2>
         </header>
 
         <div class="ride-options">
-            <div class="ride-card" onclick="location.href='/src/screens/RideTracking.html'">
+            <div class="ride-card" onclick="bookRide('Bike', 80)">
                 <div class="ride-info">
                     <span class="ride-icon">🏍️</span>
                     <div><strong>Motorcycle</strong><br><small>Quickest in traffic</small></div>
@@ -35,7 +35,7 @@
                 <span class="price">Rs. 80</span>
             </div>
 
-            <div class="ride-card" onclick="location.href='/src/screens/RideTracking.html'">
+            <div class="ride-card" onclick="bookRide('Rickshaw', 150)">
                 <div class="ride-info">
                     <span class="ride-icon">🛺</span>
                     <div><strong>Rickshaw</strong><br><small>Economical for 3</small></div>
@@ -43,15 +43,15 @@
                 <span class="price">Rs. 150</span>
             </div>
 
-            <div class="ride-card" onclick="location.href='/src/screens/RideTracking.html'">
+            <div class="ride-card" onclick="bookRide('Car', 300)">
                 <div class="ride-info">
-                    <span class="ride-icon">🚖</span>
+                    <span class="ride-info">🚖</span>
                     <div><strong>Car (Mini)</strong><br><small>AC Ride for 4</small></div>
                 </div>
                 <span class="price">Rs. 300</span>
             </div>
 
-            <div class="ride-card" style="border-color: gold; box-shadow: 0 0 10px gold;" onclick="location.href='/src/screens/RideTracking.html'">
+            <div class="ride-card" style="border-color: gold; box-shadow: 0 0 10px gold;" onclick="bookRide('VVIP', 850)">
                 <div class="ride-info">
                     <span class="ride-icon" style="filter: drop-shadow(0 0 5px gold);">👑</span>
                     <div><strong>VVIP Ride</strong> <span class="vvip-tag">GOLD</span><br><small>Premium Luxury Sedan</small></div>
@@ -60,5 +60,15 @@
             </div>
         </div>
     </div>
+
+    <script>
+        // رائیڈ بکنگ اور نیویگیشن کا فنکشن
+        function bookRide(type, price) {
+            console.log(`Booking ${type} for Rs. ${price}`);
+            // یہاں آپ سیشن میں قیمت محفوظ کر سکتے ہیں تاکہ رائیڈ ختم ہونے پر کمیشن کٹ سکے
+            sessionStorage.setItem('currentRideFare', price);
+            window.location.href = 'RideTracking.html';
+        }
+    </script>
 </body>
 </html>
