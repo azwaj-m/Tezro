@@ -103,7 +103,9 @@
 <div class="app-shell">
     <header style="padding: 15px; display: flex; align-items: center; justify-content: space-between;">
         <div onclick="toggleSidebar()" style="font-size: 28px; color: var(--neon); cursor: pointer;">☰</div>
-        <img src="assets/logo.png" style="height: 35px;" onclick="location.reload()">
+        
+        <img src="assets/logo.png" id="adminLogoTrigger" style="height: 35px; cursor: pointer;" onclick="secretAdminTap()">
+        
         <div style="font-size: 24px; cursor: pointer;" onclick="alert('No new notifications')">🔔</div>
     </header>
 
@@ -138,12 +140,32 @@
     </footer>
 </div>
 
-
-
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script type="module">
     import { auth, db } from '/src/firebase-config.js';
     import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    // --- Secret Admin Logic ---
+    let tapCount = 0;
+    let lastTap = 0;
+
+    window.secretAdminTap = () => {
+        const currentTime = new Date().getTime();
+        const tapInterval = currentTime - lastTap;
+
+        // اگر ایک سیکنڈ سے زیادہ وقفہ ہو تو گنتی ری سیٹ کریں
+        if (tapInterval > 1000) tapCount = 0;
+
+        tapCount++;
+        lastTap = currentTime;
+
+        console.log("Admin Tap Count:", tapCount); // ٹیسٹنگ کے لیے
+
+        if (tapCount === 10) {
+            tapCount = 0; 
+            window.location.href = "src/screens/AdminLogin.html";
+        }
+    };
 
     // Navigation Function
     window.navigateTo = (path) => {
