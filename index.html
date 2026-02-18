@@ -20,7 +20,7 @@
             color: white; overflow-x: hidden;
         }
 
-        /* --- App Switcher Active Logic --- */
+        /* --- App Switcher Logic --- */
         .app-switcher {
             display: flex; justify-content: center; gap: 15px; padding: 10px;
             background: rgba(57, 255, 20, 0.05); border-bottom: 1px solid rgba(57, 255, 20, 0.1);
@@ -142,10 +142,11 @@
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script type="module">
-    import { auth, db } from '/src/firebase-config.js';
+    // Path Correction for Firebase Config
+    import { auth, db } from './src/firebase-config.js';
     import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    // --- Secret Admin Logic ---
+    // --- Secret Admin Logic (Corrected) ---
     let tapCount = 0;
     let lastTap = 0;
 
@@ -153,23 +154,25 @@
         const currentTime = new Date().getTime();
         const tapInterval = currentTime - lastTap;
 
-        // اگر ایک سیکنڈ سے زیادہ وقفہ ہو تو گنتی ری سیٹ کریں
         if (tapInterval > 1000) tapCount = 0;
 
         tapCount++;
         lastTap = currentTime;
 
-        console.log("Admin Tap Count:", tapCount); // ٹیسٹنگ کے لیے
+        console.log("Admin Tap Count:", tapCount);
 
         if (tapCount === 10) {
             tapCount = 0; 
+            // Relative path fix for 404
             window.location.href = "src/screens/AdminLogin.html";
         }
     };
 
-    // Navigation Function
+    // Global Navigation Function (Relative Path Fix)
     window.navigateTo = (path) => {
-        window.location.href = path;
+        // Removes leading slash to avoid root-relative issues
+        const target = path.startsWith('/') ? path.substring(1) : path;
+        window.location.href = target;
     };
 
     // Sidebar Toggle
@@ -199,13 +202,17 @@
     // Load User Data into Sidebar
     auth.onAuthStateChanged(async (user) => {
         if (user) {
-            const docRef = doc(db, "users", user.uid);
-            const userDoc = await getDoc(docRef);
-            if (userDoc.exists()) {
-                const data = userDoc.data();
-                document.getElementById('side-user-name').innerText = data.name || "AlinGo User";
-                document.getElementById('side-user-rating').innerText = `★ ${data.rating || '5.0'} ${data.role || 'Rider'}`;
-                if(data.profilePic) document.getElementById('side-user-img').src = data.profilePic;
+            try {
+                const docRef = doc(db, "users", user.uid);
+                const userDoc = await getDoc(docRef);
+                if (userDoc.exists()) {
+                    const data = userDoc.data();
+                    document.getElementById('side-user-name').innerText = data.name || "AlinGo User";
+                    document.getElementById('side-user-rating').innerText = `★ ${data.rating || '5.0'} ${data.role || 'Rider'}`;
+                    if(data.profilePic) document.getElementById('side-user-img').src = data.profilePic;
+                }
+            } catch (err) {
+                console.error("Firestore Error:", err);
             }
         } else {
             document.getElementById('side-user-name').innerText = "Guest User";
