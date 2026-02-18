@@ -1,151 +1,214 @@
 <!DOCTYPE html>
-<html lang="ur">
+<html lang="ur" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AlinGo - Ride & Food</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link rel="stylesheet" href="src/global.css">
-    <style>
-        .logo-wrapper { display: flex; justify-content: center; align-items: center; flex-grow: 1; cursor: pointer; }
-        .app-logo { height: 45px; width: auto; filter: drop-shadow(0 0 10px #39FF14); object-fit: contain; }
-        .navbar { display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 5px 0; }
-        
-        /* صرف رائیڈ اور فوڈ کے بڑے بٹنز */
-        .main-services {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            padding: 25px 15px;
-        }
-        .service-card {
-            background: rgba(57, 255, 20, 0.05);
-            border: 2px solid rgba(57, 255, 20, 0.3);
-            border-radius: 25px;
-            padding: 30px 10px;
-            text-align: center;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .service-card:active { transform: scale(0.95); background: rgba(57, 255, 20, 0.2); }
-        .service-card i { font-size: 3rem; display: block; margin-bottom: 15px; filter: drop-shadow(0 0 10px #39FF14); }
-        .service-card span { font-size: 1rem; font-weight: bold; color: #fff; letter-spacing: 1px; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AlinGo | Ride & Food</title>
 
-        /* ایڈمن مانیٹرنگ صرف رائیڈ اور فوڈ */
-        .hidden { display: none; }
-        #admin-panel {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999;
-            background: #000; padding: 40px 20px; box-sizing: border-box;
-        }
-        .admin-stat-card { 
-            background: #111; padding: 25px; border-radius: 20px; margin-bottom: 20px; 
-            border-left: 5px solid #ff0000;
-        }
-        .admin-stat-card h4 { color: #ff0000; margin: 0; font-size: 0.8rem; text-transform: uppercase; }
-        .admin-stat-card p { margin: 10px 0 0; font-size: 1.5rem; font-weight: bold; color: white; }
-    </style>
+<!-- Leaflet -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+
+<link rel="stylesheet" href="src/global.css">
+
+<style>
+
+:root{
+    --neon:#39FF14;
+    --dark:#000;
+}
+
+body{
+    margin:0;
+    background:#000;
+    color:#fff;
+    font-family:sans-serif;
+    overflow-x:hidden;
+}
+
+/* ===== MAP ===== */
+
+#map-container{
+    height:55vh;
+    border-radius:25px;
+    margin:15px;
+    overflow:hidden;
+    box-shadow:0 0 30px rgba(57,255,20,0.2);
+}
+
+/* ===== Lightning Overlay ===== */
+
+.lightning-line{
+    position:absolute;
+    width:100%;
+    height:100%;
+    pointer-events:none;
+    background:linear-gradient(90deg, transparent, rgba(57,255,20,0.6), transparent);
+    animation:flash 3s infinite linear;
+}
+
+@keyframes flash{
+    0%{transform:translateX(-100%);}
+    100%{transform:translateX(100%);}
+}
+
+/* ===== Services ===== */
+
+.main-services{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+    padding:20px;
+}
+
+.service-card{
+    background:rgba(57,255,20,0.05);
+    border:2px solid rgba(57,255,20,0.3);
+    border-radius:25px;
+    padding:35px 10px;
+    text-align:center;
+    cursor:pointer;
+    transition:0.3s;
+    box-shadow:0 0 20px rgba(57,255,20,0.15);
+}
+
+.service-card:hover{
+    background:rgba(57,255,20,0.15);
+    box-shadow:0 0 30px var(--neon);
+}
+
+.service-card i{
+    font-size:3rem;
+    display:block;
+    margin-bottom:15px;
+    text-shadow:0 0 15px var(--neon);
+}
+
+.service-card span{
+    font-weight:bold;
+    letter-spacing:1px;
+}
+
+/* ===== Action Button ===== */
+
+.action-panel{
+    padding:20px;
+    text-align:center;
+}
+
+.glow-button{
+    width:100%;
+    padding:15px;
+    border:none;
+    border-radius:20px;
+    background:var(--neon);
+    color:#000;
+    font-weight:bold;
+    font-size:1rem;
+    cursor:pointer;
+    box-shadow:0 0 25px var(--neon);
+}
+
+/* ===== Footer ===== */
+
+.footer-nav{
+    display:flex;
+    justify-content:space-around;
+    padding:10px 0;
+    background:#111;
+    border-top:1px solid rgba(57,255,20,0.2);
+}
+
+.nav-btn{
+    text-align:center;
+    font-size:0.8rem;
+    cursor:pointer;
+}
+
+.icon-circle{
+    font-size:1.4rem;
+    margin-bottom:5px;
+}
+
+</style>
 </head>
 <body>
 
-    <div class="lightning-wrapper">
-        <div class="bolt"></div>
-        <div class="bolt"></div>
-        <div class="bolt"></div>
+<!-- MAP -->
+<div style="position:relative;">
+    <div id="map-container"></div>
+    <div class="lightning-line"></div>
+</div>
+
+<!-- SERVICES -->
+<div class="main-services">
+    <div class="service-card" onclick="goToPath('src/screens/SelectRide.html')">
+        <i>🚗</i>
+        <span>GET A RIDE</span>
     </div>
 
-    <div class="app-shell">
-        <header class="navbar">
-            <div class="menu-trigger"><span></span><span></span><span></span></div>
-            <div class="logo-wrapper" onclick="adminTrigger()">
-                <img src="assets/logo.png" alt="AlinGo" class="app-logo">
-            </div>
-            <div class="profile-glow"></div>
-        </header>
+    <div class="service-card" onclick="alert('Food Service Coming Soon')">
+        <i>🍱</i>
+        <span>ORDER FOOD</span>
+    </div>
+</div>
 
-        <section id="admin-panel" class="hidden">
-            <h2 style="color:red; text-align:center; font-style: italic; margin-bottom: 30px;">SERVICE MONITOR</h2>
-            
-            <div class="admin-stat-card">
-                <h4>LIVE RIDES</h4>
-                <p>14 Vehicles Active</p>
-            </div>
-            
-            <div class="admin-stat-card">
-                <h4>FOOD ORDERS</h4>
-                <p>06 Orders in Transit</p>
-            </div>
-            
-            <div class="admin-stat-card">
-                <h4>TOTAL REVENUE</h4>
-                <p>Rs. 84,200.00</p>
-            </div>
+<!-- QUICK BOOK -->
+<div class="action-panel">
+    <button class="glow-button" onclick="goToPath('src/screens/SelectRide.html')">
+        BOOK NOW
+    </button>
+</div>
 
-            <button class="glow-button" style="background:red; width:100%; margin-top:40px;" onclick="toggleAdmin()">CLOSE MONITOR</button>
-        </section>
-
-        <div id="map-container" class="neon-box"></div>
-
-        <div class="main-services">
-            <div class="service-card" onclick="goToPath('src/screens/SelectRide.html')">
-                <i>🚗</i>
-                <span>GET A RIDE</span>
-            </div>
-            <div class="service-card" onclick="alert('Food Menu Coming Soon')">
-                <i>🍱</i>
-                <span>ORDER FOOD</span>
-            </div>
-        </div>
-
-        <div class="action-panel neon-box">
-            <span class="side-label">QUICK</span>
-            <button class="glow-button" onclick="goToPath('src/screens/SelectRide.html')">BOOK NOW</button>
-            <div class="loc-tag">
-                <span class="pin">📍</span>
-                <small>MULTAN</small>
-            </div>
-        </div>
-
-        <footer class="footer-nav">
-            <div class="nav-btn active" onclick="location.href='index.html'">
-                <div class="icon-circle">🏠</div><span>HOME</span>
-            </div>
-            <div class="nav-btn" onclick="goToPath('src/screens/SelectRide.html')">
-                <div class="icon-circle">🚗</div><span>RIDES</span>
-            </div>
-            <div class="nav-btn" onclick="alert('No active orders')">
-                <div class="icon-circle">📦</div><span>ORDERS</span>
-            </div>
-            <div class="nav-btn" onclick="goToPath('src/screens/Profile.html')">
-                <div class="icon-circle">👤</div><span>PROFILE</span>
-            </div>
-        </footer>
+<!-- FOOTER -->
+<footer class="footer-nav">
+    <div class="nav-btn" onclick="location.href='index.html'">
+        <div class="icon-circle">🏠</div>
+        HOME
     </div>
 
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script>
-        var map = L.map('map-container', {zoomControl: false}).setView([30.1575, 71.5249], 14);
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(map);
+    <div class="nav-btn" onclick="goToPath('src/screens/SelectRide.html')">
+        <div class="icon-circle">🚗</div>
+        RIDES
+    </div>
 
-        // 404 ایرر سے بچنے کے لیے ڈائنامک پاتھ فنکشن
-        function goToPath(target) {
-            // ورسل کے لیے پاتھ ایڈجسٹمنٹ
-            const isVercel = window.location.hostname.includes("vercel.app");
-            window.location.href = isVercel ? target : "/" + target;
-        }
+    <div class="nav-btn" onclick="goToPath('src/screens/Profile.html')">
+        <div class="icon-circle">👤</div>
+        PROFILE
+    </div>
+</footer>
 
-        let logoClicks = 0;
-        function adminTrigger() {
-            logoClicks++;
-            if (logoClicks === 5) {
-                toggleAdmin();
-                logoClicks = 0;
-            }
-            setTimeout(() => { logoClicks = 0; }, 3000);
-        }
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-        function toggleAdmin() {
-            document.getElementById('admin-panel').classList.toggle('hidden');
-        }
-    </script>
+<script>
+
+var map = L.map('map-container',{zoomControl:false})
+.setView([30.1575,71.5249],14);
+
+L.tileLayer(
+'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
+).addTo(map);
+
+
+// Neon Route Line
+var neonRoute = L.polyline([
+    [30.1575,71.5249],
+    [30.1650,71.5300],
+    [30.1700,71.5350]
+],{
+    color:'#39FF14',
+    weight:6,
+    opacity:0.8
+}).addTo(map);
+
+
+// 404 Safe Navigation
+function goToPath(target){
+    const isVercel = window.location.hostname.includes("vercel.app");
+    window.location.href = isVercel ? target : "/" + target;
+}
+
+</script>
+
 </body>
 </html>
