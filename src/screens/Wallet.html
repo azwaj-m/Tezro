@@ -10,6 +10,7 @@
             --neon: #39FF14;
             --dark-bg: #000;
             --card-bg: #111;
+            --danger: #ff4444;
         }
 
         body {
@@ -20,6 +21,8 @@
             display: flex; flex-direction: column; align-items: center;
         }
 
+        .back-btn { align-self: flex-start; color: var(--neon); text-decoration: none; margin-bottom: 20px; display: flex; align-items: center; gap: 5px; font-weight: bold; }
+
         /* Balance Card */
         .balance-card {
             width: 100%; max-width: 400px;
@@ -29,15 +32,33 @@
             padding: 30px 20px;
             text-align: center;
             box-shadow: 0 0 20px rgba(57, 255, 20, 0.2);
-            margin-bottom: 30px;
+            margin-bottom: 20px;
+            transition: 0.3s;
         }
 
         .balance-label { font-size: 14px; color: #888; text-transform: uppercase; letter-spacing: 1px; }
         .balance-amount { font-size: 3rem; font-weight: bold; color: var(--neon); margin: 10px 0; }
         .currency { font-size: 1.2rem; color: white; }
+        
+        #statusTag { font-size: 14px; font-weight: bold; margin-top: 5px; }
+
+        /* Blocked Alert Message */
+        .blocked-msg {
+            width: 100%; max-width: 400px;
+            background: rgba(255, 68, 68, 0.15);
+            color: var(--danger);
+            padding: 15px;
+            border-radius: 15px;
+            display: none; /* Hidden by default */
+            margin-bottom: 25px;
+            border: 1px solid var(--danger);
+            font-size: 13px;
+            text-align: center;
+            box-sizing: border-box;
+        }
 
         /* Payment Methods */
-        .section-title { width: 100%; max-width: 400px; font-size: 18px; margin-bottom: 15px; font-weight: bold; }
+        .section-title { width: 100%; max-width: 400px; font-size: 18px; margin-bottom: 15px; font-weight: bold; color: #fff; }
 
         .payment-option {
             width: 100%; max-width: 400px;
@@ -49,10 +70,10 @@
             margin-bottom: 12px;
             cursor: pointer;
             transition: 0.3s;
+            box-sizing: border-box;
         }
 
         .payment-option:active { transform: scale(0.98); border-color: var(--neon); }
-
         .method-info { display: flex; align-items: center; gap: 15px; }
         .method-icon { width: 40px; height: 40px; border-radius: 8px; object-fit: contain; }
 
@@ -61,46 +82,51 @@
             background: var(--neon);
             color: black;
             border: none;
-            padding: 15px;
+            padding: 18px;
             border-radius: 15px;
             font-size: 16px;
             font-weight: bold;
-            margin-top: 20px;
-            box-shadow: 0 0 15px var(--neon);
+            margin-top: 10px;
+            box-shadow: 0 0 15px rgba(57, 255, 20, 0.4);
             cursor: pointer;
         }
 
         /* History Section */
-        .history-list { width: 100%; max-width: 400px; margin-top: 30px; }
+        .history-list { width: 100%; max-width: 400px; margin-top: 35px; }
         .history-item {
             display: flex; justify-content: space-between;
-            padding: 12px 0; border-bottom: 1px solid #222;
+            padding: 15px 0; border-bottom: 1px solid #222;
             font-size: 14px;
         }
         .status-plus { color: var(--neon); }
-        .status-minus { color: #ff4444; }
-
-        .back-btn { align-self: flex-start; color: var(--neon); text-decoration: none; margin-bottom: 20px; display: flex; align-items: center; gap: 5px; }
+        .status-minus { color: var(--danger); }
     </style>
 </head>
 <body>
 
     <a href="../../index.html" class="back-btn">⬅ Back to Home</a>
 
-    <div class="balance-card">
-        <div class="balance-label">AlinGo Credits</div>
-        <div class="balance-amount"><span class="currency">Rs.</span> <span id="wallet-balance">0.00</span></div>
-        <p style="font-size: 12px; color: #555;">Top up to enjoy seamless rides</p>
+    <div class="balance-card" id="mainCard">
+        <div class="balance-label">AlinGo Wallet Balance</div>
+        <div class="balance-amount">
+            <span class="currency">Rs.</span> 
+            <span id="wallet-balance">0.00</span>
+        </div>
+        <div id="statusTag">Checking Status...</div>
     </div>
 
-    <div class="section-title">Top Up Method</div>
+    <div id="blockedAlert" class="blocked-msg">
+        ⚠️ **توجہ فرمائیں:** آپ کا بیلنس ختم ہو چکا ہے۔ نئی رائیڈ شروع کرنے کے لیے ایزی پیسہ یا جیز کیش سے کم از کم 100 روپے جمع کروائیں۔
+    </div>
+
+    <div class="section-title">Select Recharge Method</div>
 
     <div class="payment-option" onclick="selectMethod('EasyPaisa')">
         <div class="method-info">
             <img src="https://upload.wikimedia.org/wikipedia/commons/b/be/Easypaisa_logo.png" class="method-icon" alt="EasyPaisa">
             <span>EasyPaisa</span>
         </div>
-        <div style="color: var(--neon);">●</div>
+        <div id="ep-tick" style="color: var(--neon); display: none;">●</div>
     </div>
 
     <div class="payment-option" onclick="selectMethod('JazzCash')">
@@ -108,47 +134,88 @@
             <img src="https://upload.wikimedia.org/wikipedia/commons/0/0e/JazzCash_logo.png" class="method-icon" alt="JazzCash">
             <span>JazzCash</span>
         </div>
-        <div style="color: #444;">○</div>
+        <div id="jc-tick" style="color: var(--neon); display: none;">●</div>
     </div>
 
-    <button class="add-funds-btn" onclick="addMoney()">Add Money</button>
+    <button class="add-funds-btn" id="rechargeBtn" onclick="addMoney()">TOP UP WALLET (ری چارج)</button>
 
     <div class="history-list">
         <div class="section-title">Recent Transactions</div>
-        <div class="history-item">
-            <div>Ride to Gulgasht Colony</div>
-            <div class="status-minus">- Rs. 150</div>
-        </div>
-        <div class="history-item">
-            <div>Top up via EasyPaisa</div>
-            <div class="status-plus">+ Rs. 500</div>
+        <div id="transactionContainer">
+            <div class="history-item">
+                <div>Standard Trip (Commission)</div>
+                <div class="status-minus">- Rs. 45.00</div>
+            </div>
         </div>
     </div>
 
     <script type="module">
         import { auth, db } from '../firebase-config.js';
-        import { doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { doc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // Load Balance from Firestore
-        auth.onAuthStateChanged(async (user) => {
+        let selectedMethod = "";
+
+        // Real-time Balance Listener
+        auth.onAuthStateChanged((user) => {
             if (user) {
                 const userRef = doc(db, "users", user.uid);
-                const snap = await getDoc(userRef);
-                if (snap.exists()) {
-                    document.getElementById('wallet-balance').innerText = snap.data().walletBalance || "0.00";
-                }
+                
+                // onSnapshot handles real-time updates
+                onSnapshot(userRef, (docSnap) => {
+                    if (docSnap.exists()) {
+                        const data = docSnap.data();
+                        const balance = data.walletBalance || 0;
+                        const role = data.role || 'rider'; // Get user role
+
+                        updateUI(balance, role);
+                    }
+                });
+            } else {
+                window.location.href = "../screens/Login.html";
             }
         });
 
+        function updateUI(balance, role) {
+            const balanceElem = document.getElementById('wallet-balance');
+            const statusTag = document.getElementById('statusTag');
+            const blockedAlert = document.getElementById('blockedAlert');
+            const mainCard = document.getElementById('mainCard');
+
+            balanceElem.innerText = balance.toFixed(2);
+
+            // Logic: If driver and balance is negative
+            if (role === 'driver' && balance < 0) {
+                statusTag.innerText = "Account Suspended (بلاک ہے)";
+                statusTag.style.color = "var(--danger)";
+                blockedAlert.style.display = "block";
+                mainCard.style.borderColor = "var(--danger)";
+                balanceElem.style.color = "var(--danger)";
+            } else {
+                statusTag.innerText = "Account Active (بحال ہے)";
+                statusTag.style.color = "var(--neon)";
+                blockedAlert.style.display = "none";
+                mainCard.style.borderColor = "var(--neon)";
+                balanceElem.style.color = "var(--neon)";
+            }
+        }
+
         window.selectMethod = (method) => {
-            alert(method + " selected as payment method.");
+            selectedMethod = method;
+            document.getElementById('ep-tick').style.display = (method === 'EasyPaisa') ? 'block' : 'none';
+            document.getElementById('jc-tick').style.display = (method === 'JazzCash') ? 'block' : 'none';
         };
 
         window.addMoney = () => {
-            const amount = prompt("Enter amount to add (Min: Rs. 100):");
+            if (!selectedMethod) {
+                alert("Please select a payment method first!\nپہلے ادائیگی کا طریقہ منتخب کریں۔");
+                return;
+            }
+            const amount = prompt(`Enter amount to add via ${selectedMethod} (Min: Rs. 100):`);
             if (amount && amount >= 100) {
-                alert("Redirecting to Secure Payment Gateway...");
-                // یہاں آپ اپنی ادائیگی کی API جوڑ سکتے ہیں
+                alert(`Redirecting to ${selectedMethod} Gateway...`);
+                // Here you would integrate the actual API or payment link
+            } else if (amount) {
+                alert("Minimum amount is Rs. 100.");
             }
         };
     </script>
