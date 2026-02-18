@@ -3,229 +3,185 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AlinGo | City Services</title>
+    <title>AlinGo | City Ride & Food</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link rel="stylesheet" href="src/global.css">
     <style>
         :root {
-            --neon-green: #39FF14;
-            --dark-bg: #000000;
-            --glass: rgba(255, 255, 255, 0.05);
-            --neon-shadow: 0 0 15px rgba(57, 255, 20, 0.4);
+            --neon: #39FF14;
+            --dark-card: #0f0f0f;
+            --neon-glow: 0 0 10px rgba(57, 255, 20, 0.4);
         }
 
         body {
+            background-color: #000;
             margin: 0;
             padding: 0;
-            background: var(--dark-bg);
-            font-family: 'Segoe UI', Roboto, sans-serif;
-            overflow-x: hidden;
+            font-family: 'Segoe UI', sans-serif;
             color: white;
+            overflow-x: hidden;
         }
 
-        /* Side Menu Styling (inDrive Style) */
-        .side-menu {
-            position: fixed;
-            top: 0;
-            left: -100%;
-            width: 80%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.95);
-            backdrop-filter: blur(10px);
-            z-index: 10000;
-            transition: 0.4s;
-            border-right: 2px solid var(--neon-green);
-            padding: 20px;
-        }
-        .side-menu.active { left: 0; }
-        .menu-overlay {
+        /* Lightning Effect Background */
+        .lightning-bg {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5);
-            display: none; z-index: 9999;
+            background: radial-gradient(circle at 50% 50%, rgba(57, 255, 20, 0.05) 0%, transparent 80%);
+            z-index: -1;
         }
 
-        .menu-header { border-bottom: 1px solid #333; padding-bottom: 20px; margin-bottom: 20px; }
-        .menu-item {
-            display: flex; align-items: center; gap: 15px;
-            padding: 15px; border-radius: 12px; cursor: pointer;
-            transition: 0.3s; margin-bottom: 5px;
+        /* Navbar & Logo */
+        .navbar {
+            padding: 10px 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
-        .menu-item:hover { background: var(--glass); color: var(--neon-green); }
 
-        /* App Shell Adjustments */
-        .app-shell { position: relative; width: 100%; min-height: 100vh; overflow: hidden; }
+        .menu-btn { font-size: 24px; color: var(--neon); cursor: pointer; }
 
-        /* Map with Neon Glow */
+        /* Map with Neon Border */
         #map-container {
-            height: 35vh;
-            width: 92%;
-            margin: 15px auto;
-            border-radius: 25px;
-            border: 2px solid var(--neon-green);
-            box-shadow: var(--neon-shadow);
-            z-index: 1;
+            height: 38vh;
+            width: 90%;
+            margin: 10px auto;
+            border: 2px solid var(--neon);
+            border-radius: 20px;
+            box-shadow: var(--neon-glow);
+            overflow: hidden;
         }
 
-        /* inDrive Style Services Grid */
-        .services-container {
-            padding: 0 15px;
-            margin-top: -20px;
-            z-index: 10;
-            position: relative;
-        }
-
-        .service-row {
+        /* Main Services Grid */
+        .main-services {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            margin-bottom: 12px;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            padding: 15px;
+            margin-bottom: 80px; /* Space for footer */
         }
 
-        .service-box {
-            background: rgba(15, 15, 15, 0.9);
-            border: 1px solid rgba(57, 255, 20, 0.2);
+        .service-card {
+            background: var(--dark-card);
+            border: 1.5px solid rgba(57, 255, 20, 0.2);
             border-radius: 20px;
             padding: 20px 10px;
             text-align: center;
-            box-shadow: var(--neon-shadow);
-            width: 90%; /* Three-quarters feel */
-            margin: auto;
+            box-shadow: var(--neon-glow);
+            transition: 0.3s;
         }
 
-        .service-box i { font-size: 2.5rem; display: block; margin-bottom: 10px; }
-        .service-box span { font-weight: bold; font-size: 0.9rem; color: #fff; }
+        .service-card:active { transform: scale(0.95); border-color: var(--neon); }
+        .service-card img { width: 50px; height: auto; margin-bottom: 10px; }
+        .service-card span { display: block; font-weight: bold; font-size: 13px; letter-spacing: 1px; }
 
-        /* Floating Install Button */
-        .install-btn {
-            background: var(--neon-green);
-            color: black;
-            font-weight: bold;
-            padding: 10px 20px;
-            border-radius: 30px;
+        /* Bottom Navigation (Fixed Alignment) */
+        .footer-nav {
             position: fixed;
-            bottom: 85px;
-            right: 15px;
-            z-index: 999;
-            box-shadow: 0 0 20px var(--neon-green);
-            display: none; /* Shows via JS */
+            bottom: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            border-top: 1px solid var(--neon);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
         }
 
-        /* Role Badge */
-        .role-badge {
-            font-size: 0.7rem;
-            background: var(--neon-green);
+        .nav-item {
+            text-align: center;
+            color: #888;
+            font-size: 10px;
+            flex: 1;
+        }
+
+        .nav-item.active { color: var(--neon); }
+        .nav-icon {
+            font-size: 20px;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        /* Install App Button */
+        .install-pwa {
+            background: var(--neon);
             color: #000;
-            padding: 2px 8px;
-            border-radius: 5px;
-            vertical-align: middle;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 12px;
+            box-shadow: 0 0 15px var(--neon);
+            margin: 10px auto;
+            display: block;
         }
     </style>
 </head>
 <body>
 
-<div class="menu-overlay" id="overlay" onclick="toggleMenu()"></div>
-<div class="side-menu" id="sideMenu">
-    <div class="menu-header">
-        <h2 style="color:var(--neon-green)">AlinGo</h2>
-        <p id="user-display">Guest User <span class="role-badge">RIDER</span></p>
+<div class="lightning-bg"></div>
+
+<header class="navbar">
+    <div class="menu-btn">☰</div>
+    <img src="assets/logo.png" alt="AlinGo" style="height: 35px;">
+    <div style="width: 24px;"></div> </header>
+
+<div id="map-container"></div>
+
+<button class="install-pwa" id="installApp">INSTALL ALINGO</button>
+
+<div class="main-services">
+    <div class="service-card" onclick="location.href='src/screens/SelectRide.html'">
+        <img src="https://cdn-icons-png.flaticon.com/512/744/744465.png" alt="Ride">
+        <span>CITY RIDE</span>
     </div>
-    <div class="menu-item" onclick="goToPath('src/screens/Profile.html')">👤 My Profile</div>
-    <div class="menu-item" onclick="goToPath('src/screens/SelectRide.html')">🚗 Book a Ride</div>
-    <div class="menu-item" onclick="alert('Food Menu Soon')">🍱 Order Food</div>
-    <div class="menu-item" onclick="alert('Courier Service Soon')">📦 AlinGo Delivery</div>
-    <div class="menu-item" onclick="goToPath('src/screens/Login.html')">🔄 Switch Role (Driver/Courier)</div>
-    <hr style="border: 0.5px solid #333; margin: 20px 0;">
-    <div class="menu-item">⚙️ Settings</div>
-    <div class="menu-item" style="color: #ff4444;">🚪 Logout</div>
+    <div class="service-card" onclick="alert('Coming Soon')">
+        <img src="https://cdn-icons-png.flaticon.com/512/3075/3075977.png" alt="Food">
+        <span>FOOD</span>
+    </div>
+    <div class="service-card" onclick="alert('Coming Soon')">
+        <img src="https://cdn-icons-png.flaticon.com/512/2311/2311514.png" alt="Courier">
+        <span>COURIER</span>
+    </div>
+    <div class="service-card" onclick="location.href='src/screens/Profile.html'">
+        <img src="https://cdn-icons-png.flaticon.com/512/633/633611.png" alt="Wallet">
+        <span>WALLET</span>
+    </div>
 </div>
 
-<div class="app-shell">
-    <header class="navbar" style="padding: 15px;">
-        <div class="menu-trigger" onclick="toggleMenu()" style="cursor: pointer;">
-            <div style="width:25px; height:3px; background:var(--neon-green); margin: 5px 0;"></div>
-            <div style="width:20px; height:3px; background:var(--neon-green); margin: 5px 0;"></div>
-            <div style="width:25px; height:3px; background:var(--neon-green); margin: 5px 0;"></div>
-        </div>
-        <div class="logo-wrapper">
-            <img src="assets/logo.png" alt="AlinGo" class="app-logo" style="height: 40px;">
-        </div>
-        <div class="profile-icon" onclick="goToPath('src/screens/Profile.html')" style="font-size: 1.5rem; cursor:pointer;">👤</div>
-    </header>
-
-    <div id="map-container"></div>
-
-    <div class="services-container">
-        <div class="service-row">
-            <div class="service-box" onclick="goToPath('src/screens/SelectRide.html')">
-                <i>🚗</i>
-                <span>CITY RIDE</span>
-            </div>
-            <div class="service-box" onclick="alert('Food Coming Soon')">
-                <i>🍱</i>
-                <span>FOOD</span>
-            </div>
-        </div>
-        <div class="service-row">
-            <div class="service-box" onclick="alert('Delivery Coming Soon')">
-                <i>📦</i>
-                <span>COURIER</span>
-            </div>
-            <div class="service-box" onclick="goToPath('src/screens/Profile.html')">
-                <i>💳</i>
-                <span>WALLET</span>
-            </div>
-        </div>
+<nav class="footer-nav">
+    <div class="nav-item active" onclick="location.href='index.html'">
+        <span class="nav-icon">🏠</span>Home
     </div>
-
-    <button class="install-btn" id="installBtn">INSTALL APP</button>
-
-    <footer class="footer-nav" style="border-top: 1px solid var(--neon-green); background: rgba(0,0,0,0.9);">
-        <div class="nav-btn active" onclick="location.href='index.html'">🏠<span>Home</span></div>
-        <div class="nav-btn" onclick="goToPath('src/screens/SelectRide.html')">🚗<span>Rides</span></div>
-        <div class="nav-btn" onclick="alert('No orders')">📦<span>Orders</span></div>
-        <div class="nav-btn" onclick="goToPath('src/screens/Profile.html')">👤<span>Account</span></div>
-    </footer>
-</div>
+    <div class="nav-item" onclick="location.href='src/screens/SelectRide.html'">
+        <span class="nav-icon">🚗</span>Rides
+    </div>
+    <div class="nav-item" onclick="alert('No Orders')">
+        <span class="nav-icon">📦</span>Orders
+    </div>
+    <div class="nav-item" onclick="location.href='src/screens/Profile.html'">
+        <span class="nav-icon">👤</span>Account
+    </div>
+</nav>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-    // Initialize Map
+    // Map Initialization
     var map = L.map('map-container', {zoomControl: false}).setView([30.1575, 71.5249], 14);
     L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(map);
 
-    // Dynamic Navigation
-    function goToPath(target) {
-        window.location.href = target;
-    }
-
-    // Menu Controls
-    function toggleMenu() {
-        const menu = document.getElementById('sideMenu');
-        const overlay = document.getElementById('overlay');
-        menu.classList.toggle('active');
-        overlay.style.display = menu.classList.contains('active') ? 'block' : 'none';
-    }
-
-    // Role Logic Simulation (For build)
-    window.onload = () => {
-        const userRole = localStorage.getItem('userRole') || 'RIDER';
-        document.querySelector('.role-badge').innerText = userRole;
-    };
-
-    // Install App Logic
+    // Install App Feature
     let deferredPrompt;
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
-        document.getElementById('installBtn').style.display = 'block';
+        document.getElementById('installApp').style.display = 'block';
     });
 
-    document.getElementById('installBtn').addEventListener('click', () => {
+    document.getElementById('installApp').addEventListener('click', () => {
         if (deferredPrompt) {
             deferredPrompt.prompt();
             deferredPrompt.userChoice.then((choice) => {
-                if (choice.outcome === 'accepted') document.getElementById('installBtn').style.display = 'none';
+                if (choice.outcome === 'accepted') document.getElementById('installApp').style.display = 'none';
             });
         }
     });
