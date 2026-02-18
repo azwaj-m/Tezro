@@ -2,205 +2,177 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AlinGo | Mobility & Beyond</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AlinGo - Super App</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link rel="stylesheet" href="src/global.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
     <style>
         :root {
-            --accent-blue: #0088ff; /* نیلے رنگ کا لہجہ */
-            --glow-blue: rgba(0, 136, 255, 0.6);
-            --dark-bg: #050505;
+            --neon-blue: #00D1FF;
+            --dark-blue: rgba(0, 209, 255, 0.2);
+            --bg-black: #050505;
         }
 
-        body {
-            background-color: var(--dark-bg);
+        body, html {
+            margin: 0; padding: 0;
+            background: var(--bg-black);
+            font-family: 'Inter', sans-serif;
             color: white;
-            font-family: 'Segoe UI', Roboto, sans-serif;
-            margin: 0;
             overflow-x: hidden;
         }
 
-        /* سائیڈ مینیو ان ڈرائیو اسٹائل */
-        .side-menu {
-            position: fixed;
-            top: 0;
-            left: -280px;
-            width: 280px;
-            height: 100%;
-            background: #111;
-            z-index: 10000;
-            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 10px 0 30px rgba(0,0,0,0.5);
-            padding-top: 60px;
+        /* Lightning Effect Background */
+        .lightning-bg {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% 50%, #001a33 0%, #000 100%);
+            z-index: -2;
         }
 
-        .side-menu.active { left: 0; }
-
-        .menu-item {
-            padding: 15px 25px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: 0.3s;
-            border-bottom: 1px solid #1a1a1a;
+        /* Sidebar inDrive Style */
+        .sidebar {
+            position: fixed; top: 0; left: -280px; width: 280px; height: 100%;
+            background: #111; z-index: 10000; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 5px 0 20px rgba(0, 209, 255, 0.3);
+            border-right: 2px solid var(--neon-blue);
         }
-
-        .menu-item:hover { background: rgba(0, 136, 255, 0.1); color: var(--accent-blue); }
-        .menu-item i { font-size: 1.2rem; }
-
-        /* ہوم پیج لے آؤٹ (inDrive Style) */
-        .app-header {
-            padding: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: transparent;
-            position: absolute;
-            top: 0;
-            width: 100%;
-            z-index: 1000;
-            box-sizing: border-box;
-        }
-
-        #map-container {
-            height: 55vh; /* نقشہ اب آدھا نظر آئے گا */
-            width: 100%;
-            background: #000;
-            z-index: 1;
-        }
-
-        .service-selection {
-            background: var(--dark-bg);
-            border-top-left-radius: 30px;
-            border-top-right-radius: 30px;
-            margin-top: -30px;
-            position: relative;
-            z-index: 10;
-            padding: 20px;
-            box-shadow: 0 -10px 30px rgba(0,0,0,0.5);
-        }
-
-        .service-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-
-        .service-box {
-            background: #111;
-            border: 1px solid #222;
-            border-radius: 20px;
-            padding: 20px;
-            text-align: center;
-            transition: 0.3s;
-        }
-
-        .service-box:active { border-color: var(--accent-blue); transform: scale(0.95); }
-        .service-box i { font-size: 2.5rem; display: block; margin-bottom: 10px; color: var(--accent-blue); filter: drop-shadow(0 0 5px var(--glow-blue)); }
-        .service-box span { font-weight: bold; font-size: 0.9rem; }
-
-        /* Booking Button */
-        .primary-action {
-            background: var(--accent-blue);
-            color: white;
-            width: 100%;
-            padding: 18px;
-            border: none;
-            border-radius: 15px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            box-shadow: 0 10px 20px rgba(0, 136, 255, 0.3);
-            cursor: pointer;
-        }
-
-        .menu-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 9999;
-        }
-        .menu-overlay.active { display: block; }
+        .sidebar.active { left: 0; }
         
-        .blue-glow-text { color: var(--accent-blue); text-shadow: 0 0 10px var(--glow-blue); }
+        .sidebar-header { padding: 40px 20px; background: #1a1a1a; border-bottom: 1px solid #333; }
+        .user-profile { display: flex; align-items: center; gap: 15px; }
+        .user-profile img { width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--neon-blue); }
+
+        .menu-items { padding: 20px 0; }
+        .menu-item { 
+            padding: 15px 25px; display: flex; align-items: center; gap: 20px;
+            text-decoration: none; color: #ccc; transition: 0.3s;
+        }
+        .menu-item i { color: var(--neon-blue); font-size: 1.2rem; }
+        .menu-item:active { background: var(--dark-blue); color: var(--neon-blue); }
+
+        /* Main Header */
+        .navbar {
+            padding: 15px; display: flex; align-items: center; justify-content: space-between;
+            background: rgba(0,0,0,0.8); backdrop-filter: blur(10px);
+        }
+        .menu-btn { font-size: 1.5rem; color: var(--neon-blue); cursor: pointer; }
+        .app-logo { height: 35px; filter: drop-shadow(0 0 8px var(--neon-blue)); }
+
+        /* Map with Lightning Border */
+        #map-container {
+            height: 45vh; width: 92%; margin: 15px auto;
+            border-radius: 25px; border: 2px solid var(--neon-blue);
+            box-shadow: 0 0 15px var(--neon-blue), inset 0 0 15px var(--neon-blue);
+            position: relative; overflow: hidden;
+        }
+
+        /* Main Services (inDrive Style Grid) */
+        .services-container {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 15px;
+            padding: 10px 15px;
+        }
+        .service-card {
+            background: #1a1a1a; border-radius: 20px; padding: 20px;
+            text-align: center; border: 1px solid #333; position: relative;
+        }
+        .service-card i { font-size: 2.5rem; color: var(--neon-blue); margin-bottom: 10px; display: block; }
+        .service-card.active { border-color: var(--neon-blue); box-shadow: 0 0 10px var(--dark-blue); }
+
+        /* Three-Quarter Buttons */
+        .btn-wrapper { display: flex; justify-content: center; padding: 20px 0; }
+        .glow-button {
+            width: 75%; padding: 16px; border-radius: 50px;
+            background: var(--neon-blue); color: black; font-weight: 800;
+            border: none; font-size: 1.1rem; text-transform: uppercase;
+            box-shadow: 0 0 20px var(--neon-blue); transition: 0.3s;
+        }
+        .glow-button:active { transform: scale(0.95); box-shadow: 0 0 5px var(--neon-blue); }
+
+        /* Overlay */
+        .overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7); z-index: 9999; display: none;
+        }
+        .overlay.active { display: block; }
     </style>
 </head>
 <body>
 
-    <div class="menu-overlay" id="overlay" onclick="toggleMenu()"></div>
-    <nav class="side-menu" id="sideMenu">
-        <div class="menu-item" onclick="location.href='src/screens/Profile.html'"><i>👤</i> <strong>My AlinGo Profile</strong></div>
-        <div class="menu-item" onclick="goToPath('src/screens/SelectRide.html')"><i>🚗</i> <strong>Book AlinGo Ride</strong></div>
-        <div class="menu-item" onclick="alert('Food coming soon')"><i>🍱</i> <strong>AlinGo Eats</strong></div>
-        <div class="menu-item"><i>💬</i> <strong>Support Chat</strong></div>
-        <div class="menu-item"><i>📜</i> <strong>Travel History</strong></div>
-        <div class="menu-item" style="margin-top: 50px; color: #555;"><small>Version 2.0.1</small></div>
+    <div class="lightning-bg"></div>
+    <div class="overlay" onclick="toggleMenu()"></div>
+
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="user-profile">
+                <img src="https://ui-avatars.com/api/?name=User&background=00D1FF&color=000" alt="User">
+                <div>
+                    <h3 style="margin:0; font-size: 1.1rem;">AlinGo Rider</h3>
+                    <small style="color:var(--neon-blue)">View Profile</small>
+                </div>
+            </div>
+        </div>
+        <div class="menu-items">
+            <a href="#" class="menu-item" onclick="goToPath('src/screens/RideTracking.html')"><i class="fas fa-history"></i> Ride History</a>
+            <a href="#" class="menu-item" onclick="goToPath('src/screens/Profile.html')"><i class="fas fa-wallet"></i> AlinGo Wallet</a>
+            <a href="#" class="menu-item"><i class="fas fa-percent"></i> Promotions</a>
+            <a href="#" class="menu-item"><i class="fas fa-headset"></i> Support</a>
+            <a href="#" class="menu-item"><i class="fas fa-cog"></i> Settings</a>
+        </div>
     </nav>
 
     <div class="app-shell">
-        <header class="app-header">
-            <div onclick="toggleMenu()" style="cursor:pointer; font-size: 1.5rem;">☰</div>
-            <img src="assets/logo.png" alt="AlinGo" style="height:35px; filter: drop-shadow(0 0 5px var(--glow-blue));">
-            <div onclick="goToPath('src/screens/Profile.html')" style="font-size: 1.5rem;">👤</div>
-        </header>
+        <header class="navbar">
+            <i class="fas fa-bars menu-btn" onclick="toggleMenu()"></i>
+            <img src="assets/logo.png" alt="AlinGo" class="app-logo">
+            <div style="width: 24px;"></div> </header>
 
         <div id="map-container"></div>
 
-        <section class="service-selection">
-            <h3 style="margin-bottom: 20px;">Choose <span class="blue-glow-text">AlinGo</span> Service</h3>
-            
-            <div class="service-grid">
-                <div class="service-box" onclick="goToPath('src/screens/SelectRide.html')">
-                    <i>🚕</i>
-                    <span>CITY RIDE</span>
-                </div>
-                <div class="service-box" onclick="alert('Coming soon')">
-                    <i>📦</i>
-                    <span>COURIER</span>
-                </div>
-                <div class="service-box" onclick="alert('Food Menu Coming Soon')">
-                    <i>🍕</i>
-                    <span>FOOD DELIVERY</span>
-                </div>
-                <div class="service-box" onclick="alert('Coming soon')">
-                    <i>🚚</i>
-                    <span>FREIGHT</span>
-                </div>
+        <div class="services-container">
+            <div class="service-card active" onclick="selectService('ride')">
+                <i class="fas fa-car-side"></i>
+                <span style="font-weight:bold">CITY RIDE</span>
             </div>
+            <div class="service-card" onclick="alert('Food coming soon')">
+                <i class="fas fa-hamburger"></i>
+                <span style="font-weight:bold">FOOD DELIVERY</span>
+            </div>
+        </div>
 
-            <button class="primary-action" onclick="goToPath('src/screens/SelectRide.html')">REQUEST A RIDE</button>
-        </section>
+        <div class="btn-wrapper">
+            <button class="glow-button" onclick="goToPath('src/screens/SelectRide.html')">
+                FIND A DRIVER
+            </button>
+        </div>
     </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        // نقشہ سیٹ اپ (Multan)
+        // Map Initialization
         var map = L.map('map-container', {zoomControl: false}).setView([30.1575, 71.5249], 14);
         L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(map);
-
-        // بلو مارکر (Blue Neon Style)
-        var circle = L.circle([30.1575, 71.5249], {
-            color: '#0088ff',
-            fillColor: '#0088ff',
+        
+        // Custom Blue Pulse Marker
+        var marker = L.circleMarker([30.1575, 71.5249], {
+            color: '#00D1FF',
+            fillColor: '#00D1FF',
             fillOpacity: 0.5,
-            radius: 200
+            radius: 8
         }).addTo(map);
 
         function toggleMenu() {
-            document.getElementById('sideMenu').classList.toggle('active');
-            document.getElementById('overlay').classList.toggle('active');
+            document.getElementById('sidebar').classList.toggle('active');
+            document.querySelector('.overlay').classList.toggle('active');
         }
 
         function goToPath(target) {
             const isVercel = window.location.hostname.includes("vercel.app");
             window.location.href = isVercel ? target : "/" + target;
+        }
+
+        function selectService(type) {
+            // Logic to switch UI if needed
+            console.log("Service Selected: " + type);
         }
     </script>
 </body>
