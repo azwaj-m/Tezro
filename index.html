@@ -20,97 +20,52 @@
             color: white; overflow-x: hidden;
         }
 
-        /* --- App Switcher (Careem Style) --- */
+        /* --- App Switcher Active Logic --- */
         .app-switcher {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            padding: 10px;
-            background: rgba(57, 255, 20, 0.05);
-            border-bottom: 1px solid rgba(57, 255, 20, 0.1);
+            display: flex; justify-content: center; gap: 15px; padding: 10px;
+            background: rgba(57, 255, 20, 0.05); border-bottom: 1px solid rgba(57, 255, 20, 0.1);
         }
         .switch-tab {
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: bold;
-            cursor: pointer;
-            border: 1px solid transparent;
+            padding: 5px 15px; border-radius: 20px; font-size: 12px; font-weight: bold;
+            cursor: pointer; border: 1px solid transparent; transition: 0.3s;
         }
-        .switch-tab.active {
-            background: var(--neon);
-            color: #000;
-            box-shadow: 0 0 10px var(--neon);
-        }
+        .switch-tab.active { background: var(--neon); color: #000; box-shadow: 0 0 10px var(--neon); }
 
-        /* --- Improved Sidebar --- */
+        /* --- Sidebar & Overlay --- */
         .sidebar {
-            position: fixed;
-            top: 0; left: calc(-1 * var(--sidebar-width));
-            width: var(--sidebar-width);
-            height: 100%;
-            background: #050505;
-            z-index: 2000;
-            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            border-right: 1px solid var(--neon);
-            overflow-y: auto;
+            position: fixed; top: 0; left: calc(-1 * var(--sidebar-width));
+            width: var(--sidebar-width); height: 100%; background: #050505;
+            z-index: 2000; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border-right: 1px solid var(--neon); overflow-y: auto;
         }
         .sidebar.active { left: 0; }
-        
         .sidebar-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8);
-            z-index: 1999; display: none; backdrop-filter: blur(4px);
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); z-index: 1999; display: none; backdrop-filter: blur(4px);
         }
 
-        .user-section {
-            padding: 40px 20px 20px;
-            background: linear-gradient(180deg, rgba(57, 255, 20, 0.15) 0%, transparent 100%);
-        }
-        .profile-img {
-            width: 60px; height: 60px; border-radius: 50%;
-            border: 2px solid var(--neon); margin-bottom: 10px;
-        }
+        .user-section { padding: 40px 20px 20px; background: linear-gradient(180deg, rgba(57, 255, 20, 0.15) 0%, transparent 100%); }
+        .profile-img { width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--neon); margin-bottom: 10px; object-fit: cover; }
 
         .menu-group { border-bottom: 1px solid #1a1a1a; padding: 10px 0; }
-        .menu-label { 
-            font-size: 11px; color: #555; padding: 10px 25px; 
-            text-transform: uppercase; letter-spacing: 1px; 
-        }
+        .menu-label { font-size: 11px; color: #555; padding: 10px 25px; text-transform: uppercase; letter-spacing: 1px; }
         
         .menu-item {
             padding: 12px 25px; display: flex; align-items: center;
-            gap: 15px; color: #eee; text-decoration: none; transition: 0.2s;
+            gap: 15px; color: #eee; text-decoration: none; transition: 0.2s; cursor: pointer;
         }
-        .menu-item:active { background: var(--glass); color: var(--neon); }
-        .menu-item i { font-size: 18px; width: 25px; }
+        .menu-item:hover { background: var(--glass); color: var(--neon); }
 
-        /* --- Map & Home Layout --- */
-        #map-container {
-            height: 35vh; width: 92%; margin: 15px auto;
-            border: 1.5px solid var(--neon); border-radius: 25px;
-            box-shadow: 0 0 15px rgba(57, 255, 20, 0.2);
-        }
-
-        .services-grid {
-            display: grid; grid-template-columns: repeat(2, 1fr);
-            gap: 15px; padding: 15px;
-        }
-        .service-card {
-            background: #0f0f0f; border-radius: 20px; padding: 20px;
-            text-align: center; border: 1px solid rgba(57, 255, 20, 0.1);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-        }
+        /* --- Home Layout --- */
+        #map-container { height: 35vh; width: 92%; margin: 15px auto; border: 1.5px solid var(--neon); border-radius: 25px; box-shadow: 0 0 15px rgba(57, 255, 20, 0.2); }
+        .services-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 15px; }
+        .service-card { background: #0f0f0f; border-radius: 20px; padding: 20px; text-align: center; border: 1px solid rgba(57, 255, 20, 0.1); transition: 0.3s; cursor: pointer; }
+        .service-card:active { transform: scale(0.95); border-color: var(--neon); }
         .service-card i { font-size: 2.5rem; display: block; margin-bottom: 10px; }
 
         /* --- Footer --- */
-        .footer {
-            position: fixed; bottom: 0; width: 100%;
-            background: #000; display: flex; justify-content: space-around;
-            padding: 12px 0; border-top: 1px solid #1a1a1a; z-index: 1000;
-        }
-        .footer-item { text-align: center; color: #666; font-size: 10px; flex: 1; }
+        .footer { position: fixed; bottom: 0; width: 100%; background: #000; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #1a1a1a; z-index: 1000; }
+        .footer-item { text-align: center; color: #666; font-size: 10px; flex: 1; cursor: pointer; text-decoration: none; }
         .footer-item.active { color: var(--neon); }
     </style>
 </head>
@@ -120,91 +75,122 @@
 
 <nav class="sidebar" id="sidebar">
     <div class="user-section">
-        <img src="https://ui-avatars.com/api/?name=AlinGo+User&background=39FF14&color=000" class="profile-img">
-        <div style="font-weight: bold; font-size: 18px;">AlinGo User</div>
-        <div style="color: var(--neon); font-size: 12px;">★ 4.9 Rider Rating</div>
+        <img src="https://ui-avatars.com/api/?name=User&background=39FF14&color=000" id="side-user-img" class="profile-img">
+        <div id="side-user-name" style="font-weight: bold; font-size: 18px;">Loading...</div>
+        <div id="side-user-rating" style="color: var(--neon); font-size: 12px;">★ 5.0 Rider</div>
     </div>
 
     <div class="menu-group">
-        <a href="index.html" class="menu-item"><i>🏠</i> Home</a>
-        <a href="#" class="menu-item"><i>📦</i> My Rides / Orders</a>
-        <a href="#" class="menu-item"><i>💳</i> Payments & Wallet</a>
+        <a onclick="navigateTo('index.html')" class="menu-item"><i>🏠</i> Home</a>
+        <a onclick="alert('Opening Ride History...')" class="menu-item"><i>📦</i> My Rides / Orders</a>
+        <a onclick="navigateTo('src/screens/Profile.html')" class="menu-item"><i>💳</i> Payments & Wallet</a>
     </div>
 
     <div class="menu-group">
         <div class="menu-label">Offers</div>
-        <a href="#" class="menu-item"><i>🎁</i> Rewards & Promos</a>
-        <a href="#" class="menu-item"><i>🤝</i> Refer a Friend</a>
+        <a onclick="alert('No active promos')" class="menu-item"><i>🎁</i> Rewards & Promos</a>
+        <a onclick="alert('Referral link: ALINGO-500')" class="menu-item"><i>🤝</i> Refer a Friend</a>
     </div>
 
     <div class="menu-group">
         <div class="menu-label">Support</div>
-        <a href="#" class="menu-item"><i>🛡️</i> Safety Toolkit</a>
-        <a href="#" class="menu-item"><i>🧾</i> Help Center</a>
-        <a href="#" class="menu-item"><i>⚙️</i> Settings</a>
-    </div>
-
-    <div class="menu-group" style="border:none;">
-        <a href="#" class="menu-item" style="color: var(--neon); font-weight: bold;">
-            <i>🚀</i> Become a Driver
-        </a>
+        <a onclick="alert('Safety Mode Active')" class="menu-item"><i>🛡️</i> Safety Toolkit</a>
+        <a onclick="alert('Support Chat Opening...')" class="menu-item"><i>🧾</i> Help Center</a>
+        <a onclick="handleLogout()" class="menu-item" style="color: #ff4444;"><i>🚪</i> Logout</a>
     </div>
 </nav>
 
 <div class="app-shell">
     <header style="padding: 15px; display: flex; align-items: center; justify-content: space-between;">
         <div onclick="toggleSidebar()" style="font-size: 28px; color: var(--neon); cursor: pointer;">☰</div>
-        <img src="assets/logo.png" style="height: 35px;">
-        <div style="font-size: 24px;">🔔</div>
+        <img src="assets/logo.png" style="height: 35px;" onclick="location.reload()">
+        <div style="font-size: 24px; cursor: pointer;" onclick="alert('No new notifications')">🔔</div>
     </header>
 
     <div class="app-switcher">
-        <div class="switch-tab active">🚗 Rides</div>
-        <div class="switch-tab" onclick="alert('Food coming soon')">🍔 Food</div>
-        <div class="switch-tab" onclick="alert('Marketplace coming soon')">🛍️ Shop</div>
+        <div class="switch-tab active" id="tab-rides" onclick="switchApp('rides')">🚗 Rides</div>
+        <div class="switch-tab" id="tab-food" onclick="switchApp('food')">🍔 Food</div>
+        <div class="switch-tab" id="tab-shop" onclick="switchApp('shop')">🛍️ Shop</div>
     </div>
 
     <div id="map-container"></div>
 
-    <div class="services-grid">
-        <div class="service-card" onclick="location.href='src/screens/SelectRide.html'">
-            <i>🚗</i>
-            <span>City Ride</span>
+    <div class="services-grid" id="main-services">
+        <div class="service-card" onclick="navigateTo('src/screens/SelectRide.html')">
+            <i>🚗</i><span>City Ride</span>
         </div>
-        <div class="service-card">
-            <i>🏍️</i>
-            <span>Bike</span>
+        <div class="service-card" onclick="alert('Bike service coming to your area soon!')">
+            <i>🏍️</i><span>Bike</span>
         </div>
-        <div class="service-card">
-            <i>📦</i>
-            <span>Delivery</span>
+        <div class="service-card" onclick="alert('Select items for delivery')">
+            <i>📦</i><span>Delivery</span>
         </div>
-        <div class="service-card">
-            <i>👑</i>
-            <span>VVIP</span>
+        <div class="service-card" onclick="navigateTo('src/screens/SelectRide.html')">
+            <i>👑</i><span>VVIP</span>
         </div>
     </div>
 
     <footer class="footer">
-        <div class="footer-item active">🏠<br>Home</div>
-        <div class="footer-item">🚗<br>Rides</div>
-        <div class="footer-item">📦<br>Activity</div>
-        <div class="footer-item" onclick="location.href='src/screens/Profile.html'">👤<br>Account</div>
+        <a onclick="navigateTo('index.html')" class="footer-item active">🏠<br>Home</a>
+        <a onclick="navigateTo('src/screens/SelectRide.html')" class="footer-item">🚗<br>Rides</a>
+        <div class="footer-item" onclick="alert('No active activity')">📦<br>Activity</div>
+        <a onclick="navigateTo('src/screens/Profile.html')" class="footer-item">👤<br>Account</a>
     </footer>
 </div>
 
+
+
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script>
+<script type="module">
+    import { auth, db } from '/src/firebase-config.js';
+    import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    // Navigation Function
+    window.navigateTo = (path) => {
+        window.location.href = path;
+    };
+
     // Sidebar Toggle
-    function toggleSidebar() {
+    window.toggleSidebar = () => {
         const sb = document.getElementById('sidebar');
         const ov = document.getElementById('overlay');
         const isActive = sb.classList.contains('active');
         sb.classList.toggle('active');
         ov.style.display = isActive ? 'none' : 'block';
-    }
+    };
 
-    // Leaflet Dark Map
+    // App Switcher Logic
+    window.switchApp = (type) => {
+        document.querySelectorAll('.switch-tab').forEach(t => t.classList.remove('active'));
+        document.getElementById(`tab-${type}`).classList.add('active');
+        if(type !== 'rides') alert(`${type.toUpperCase()} module is loading...`);
+    };
+
+    // Logout Logic
+    window.handleLogout = () => {
+        auth.signOut().then(() => {
+            alert("Logged out successfully");
+            navigateTo('src/screens/Login.html');
+        });
+    };
+
+    // Load User Data into Sidebar
+    auth.onAuthStateChanged(async (user) => {
+        if (user) {
+            const docRef = doc(db, "users", user.uid);
+            const userDoc = await getDoc(docRef);
+            if (userDoc.exists()) {
+                const data = userDoc.data();
+                document.getElementById('side-user-name').innerText = data.name || "AlinGo User";
+                document.getElementById('side-user-rating').innerText = `★ ${data.rating || '5.0'} ${data.role || 'Rider'}`;
+                if(data.profilePic) document.getElementById('side-user-img').src = data.profilePic;
+            }
+        } else {
+            document.getElementById('side-user-name').innerText = "Guest User";
+        }
+    });
+
+    // Initialize Map
     var map = L.map('map-container', {zoomControl: false}).setView([30.1575, 71.5249], 14);
     L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(map);
 </script>
