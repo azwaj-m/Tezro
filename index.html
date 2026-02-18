@@ -1,213 +1,180 @@
 <!DOCTYPE html>
 <html lang="ur" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AlinGo | Ride & Food</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AlinGo | Ride & Food</title>
 
-<!-- Leaflet -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    <link rel="stylesheet" href="src/global.css">
 
-<link rel="stylesheet" href="src/global.css">
+    <style>
+        :root {
+            --neon: #39FF14;
+            --dark-bg: #000000;
+            --card-bg: rgba(57, 255, 20, 0.05);
+        }
 
-<style>
+        body {
+            margin: 0;
+            background: var(--dark-bg);
+            color: #fff;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            overflow-x: hidden;
+        }
 
-:root{
-    --neon:#39FF14;
-    --dark:#000;
-}
+        /* ===== MAP SECTION ===== */
+        #map-container {
+            height: 50vh;
+            border-radius: 0 0 40px 40px; /* نیچے سے گول ڈیزائن */
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(57, 255, 20, 0.2);
+            border-bottom: 2px solid var(--neon);
+        }
 
-body{
-    margin:0;
-    background:#000;
-    color:#fff;
-    font-family:sans-serif;
-    overflow-x:hidden;
-}
+        /* ===== LIGHTNING EFFECT ===== */
+        .lightning-line {
+            position: absolute;
+            top: 0; width: 100%; height: 4px;
+            background: var(--neon);
+            box-shadow: 0 0 20px var(--neon);
+            z-index: 10;
+            animation: moveLine 3s infinite linear;
+        }
 
-/* ===== MAP ===== */
+        @keyframes moveLine {
+            0% { top: 0; opacity: 0; }
+            50% { opacity: 1; }
+            100% { top: 50vh; opacity: 0; }
+        }
 
-#map-container{
-    height:55vh;
-    border-radius:25px;
-    margin:15px;
-    overflow:hidden;
-    box-shadow:0 0 30px rgba(57,255,20,0.2);
-}
+        /* ===== SERVICES GRID ===== */
+        .main-services {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            padding: 25px 15px;
+            margin-top: -30px; /* میپ کے اوپر تھوڑا سا چڑھا ہوا */
+            position: relative;
+            z-index: 20;
+        }
 
-/* ===== Lightning Overlay ===== */
+        .service-card {
+            background: rgba(15, 15, 15, 0.9);
+            border: 1px solid rgba(57, 255, 20, 0.3);
+            border-radius: 25px;
+            padding: 25px 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.3s;
+            backdrop-filter: blur(10px);
+        }
 
-.lightning-line{
-    position:absolute;
-    width:100%;
-    height:100%;
-    pointer-events:none;
-    background:linear-gradient(90deg, transparent, rgba(57,255,20,0.6), transparent);
-    animation:flash 3s infinite linear;
-}
+        .service-card:active { transform: scale(0.95); }
+        .service-card i { font-size: 2.5rem; display: block; margin-bottom: 10px; }
+        .service-card span { font-weight: bold; font-size: 0.9rem; color: var(--neon); }
 
-@keyframes flash{
-    0%{transform:translateX(-100%);}
-    100%{transform:translateX(100%);}
-}
+        /* ===== QUICK ACTION ===== */
+        .action-panel { padding: 0 20px 20px; }
+        .glow-button {
+            width: 100%;
+            padding: 18px;
+            border: none;
+            border-radius: 20px;
+            background: var(--neon);
+            color: #000;
+            font-weight: 900;
+            font-size: 1.1rem;
+            box-shadow: 0 0 20px rgba(57, 255, 20, 0.4);
+            cursor: pointer;
+        }
 
-/* ===== Services ===== */
+        /* ===== BOTTOM NAV ===== */
+        .footer-nav {
+            display: flex;
+            justify-content: space-around;
+            padding: 15px 0;
+            background: #080808;
+            border-top: 1px solid rgba(57, 255, 20, 0.2);
+            position: fixed;
+            bottom: 0; width: 100%;
+        }
 
-.main-services{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:20px;
-    padding:20px;
-}
-
-.service-card{
-    background:rgba(57,255,20,0.05);
-    border:2px solid rgba(57,255,20,0.3);
-    border-radius:25px;
-    padding:35px 10px;
-    text-align:center;
-    cursor:pointer;
-    transition:0.3s;
-    box-shadow:0 0 20px rgba(57,255,20,0.15);
-}
-
-.service-card:hover{
-    background:rgba(57,255,20,0.15);
-    box-shadow:0 0 30px var(--neon);
-}
-
-.service-card i{
-    font-size:3rem;
-    display:block;
-    margin-bottom:15px;
-    text-shadow:0 0 15px var(--neon);
-}
-
-.service-card span{
-    font-weight:bold;
-    letter-spacing:1px;
-}
-
-/* ===== Action Button ===== */
-
-.action-panel{
-    padding:20px;
-    text-align:center;
-}
-
-.glow-button{
-    width:100%;
-    padding:15px;
-    border:none;
-    border-radius:20px;
-    background:var(--neon);
-    color:#000;
-    font-weight:bold;
-    font-size:1rem;
-    cursor:pointer;
-    box-shadow:0 0 25px var(--neon);
-}
-
-/* ===== Footer ===== */
-
-.footer-nav{
-    display:flex;
-    justify-content:space-around;
-    padding:10px 0;
-    background:#111;
-    border-top:1px solid rgba(57,255,20,0.2);
-}
-
-.nav-btn{
-    text-align:center;
-    font-size:0.8rem;
-    cursor:pointer;
-}
-
-.icon-circle{
-    font-size:1.4rem;
-    margin-bottom:5px;
-}
-
-</style>
+        .nav-btn { text-align: center; color: #666; font-size: 0.7rem; transition: 0.3s; }
+        .nav-btn.active { color: var(--neon); }
+        .icon-circle { font-size: 1.5rem; margin-bottom: 4px; }
+    </style>
 </head>
 <body>
 
-<!-- MAP -->
 <div style="position:relative;">
     <div id="map-container"></div>
     <div class="lightning-line"></div>
 </div>
 
-<!-- SERVICES -->
 <div class="main-services">
-    <div class="service-card" onclick="goToPath('src/screens/SelectRide.html')">
+    <div class="service-card" onclick="safeNav('src/screens/SelectRide.html')">
         <i>🚗</i>
-        <span>GET A RIDE</span>
+        <span>رائیڈ بک کریں</span>
     </div>
 
-    <div class="service-card" onclick="alert('Food Service Coming Soon')">
-        <i>🍱</i>
-        <span>ORDER FOOD</span>
+    <div class="service-card" onclick="alert('کھانے کی سروس جلد آرہی ہے!')">
+        <i>🍕</i>
+        <span>کھانا منگوائیں</span>
     </div>
 </div>
 
-<!-- QUICK BOOK -->
 <div class="action-panel">
-    <button class="glow-button" onclick="goToPath('src/screens/SelectRide.html')">
-        BOOK NOW
+    <button class="glow-button" onclick="safeNav('src/screens/SelectRide.html')">
+        ابھی بک کریں (QUICK BOOK)
     </button>
 </div>
 
-<!-- FOOTER -->
-<footer class="footer-nav">
-    <div class="nav-btn" onclick="location.href='index.html'">
-        <div class="icon-circle">🏠</div>
-        HOME
+<div style="height: 80px;"></div> <footer class="footer-nav">
+    <div class="nav-btn active" onclick="location.href='index.html'">
+        <div class="icon-circle">🏠</div> ہوم
     </div>
-
-    <div class="nav-btn" onclick="goToPath('src/screens/SelectRide.html')">
-        <div class="icon-circle">🚗</div>
-        RIDES
+    <div class="nav-btn" onclick="safeNav('src/screens/SelectRide.html')">
+        <div class="icon-circle">⚡</div> رائیڈز
     </div>
-
-    <div class="nav-btn" onclick="goToPath('src/screens/Profile.html')">
-        <div class="icon-circle">👤</div>
-        PROFILE
+    <div class="nav-btn" onclick="safeNav('src/screens/Profile.html')">
+        <div class="icon-circle">👤</div> پروفائل
     </div>
 </footer>
 
-<!-- Leaflet JS -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-<script>
+<script type="module">
+    // Firebase لاجک چیک کرنے کے لیے
+    import { auth } from './src/firebase-config.js';
 
-var map = L.map('map-container',{zoomControl:false})
-.setView([30.1575,71.5249],14);
+    // Map Initialization
+    var map = L.map('map-container', {zoomControl:false}).setView([30.1575, 71.5249], 14);
 
-L.tileLayer(
-'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
-).addTo(map);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(map);
 
+    // ڈیزائن کے مطابق نیون روٹ
+    L.polyline([
+        [30.1575, 71.5249],
+        [30.1650, 71.5300],
+        [30.1700, 71.5350]
+    ], {color: '#39FF14', weight: 5, opacity: 0.6}).addTo(map);
 
-// Neon Route Line
-var neonRoute = L.polyline([
-    [30.1575,71.5249],
-    [30.1650,71.5300],
-    [30.1700,71.5350]
-],{
-    color:'#39FF14',
-    weight:6,
-    opacity:0.8
-}).addTo(map);
-
-
-// 404 Safe Navigation
-function goToPath(target){
-    const isVercel = window.location.hostname.includes("vercel.app");
-    window.location.href = isVercel ? target : "/" + target;
-}
-
+    // سمارٹ نیویگیشن فنکشن
+    window.safeNav = function(target) {
+        // پروفائل کے لیے چیک کریں کہ یوزر لاگ ان ہے یا نہیں
+        if (target.includes('Profile.html')) {
+            auth.onAuthStateChanged(user => {
+                if (user) {
+                    window.location.href = target;
+                } else {
+                    window.location.href = 'src/screens/Login.html';
+                }
+            });
+        } else {
+            window.location.href = target;
+        }
+    }
 </script>
 
 </body>
