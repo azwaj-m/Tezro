@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ur">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AlinGo | Transaction History</title>
+    <style>
+        :root { --neon: #39FF14; --danger: #ff4444; --bg: #000; --card: #111; }
+        body { background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 20px; }
+        
+        .header { display: flex; align-items: center; gap: 15px; margin-bottom: 25px; }
+        .back-btn { color: var(--neon); text-decoration: none; font-size: 20px; }
+
+        .summary-card {
+            background: linear-gradient(135deg, #111, #050505);
+            border: 1px solid #222; padding: 20px; border-radius: 20px;
+            text-align: center; margin-bottom: 25px;
+        }
+        .summary-card h3 { color: #888; font-size: 14px; margin: 0; }
+        .summary-card p { font-size: 32px; font-weight: bold; color: var(--neon); margin: 10px 0; }
+
+        .history-list { display: flex; flex-direction: column; gap: 12px; }
+        .history-item {
+            background: var(--card); padding: 15px; border-radius: 15px;
+            display: flex; justify-content: space-between; align-items: center;
+            border-left: 4px solid #333;
+        }
+        .history-item.minus { border-left-color: var(--danger); }
+        .history-item.plus { border-left-color: var(--neon); }
+
+        .info h4 { margin: 0; font-size: 15px; }
+        .info span { font-size: 11px; color: #666; }
+        
+        .amount { text-align: right; }
+        .amount-val { font-weight: bold; font-size: 16px; }
+        .status { font-size: 10px; display: block; }
+        .type-minus { color: var(--danger); }
+        .type-plus { color: var(--neon); }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <a href="Wallet.html" class="back-btn">⬅</a>
+        <h2 style="margin: 0;">لین دین کی تفصیل (History)</h2>
+    </div>
+
+    <div class="summary-card">
+        <h3>موجودہ والٹ بیلنس</h3>
+        <p id="current-balance">Rs. 0.00</p>
+    </div>
+
+    <div class="history-list" id="transactions-container">
+        <p style="text-align: center; color: #444;">لوڈنگ ہو رہی ہے...</p>
+    </div>
+
+    <script type="module">
+        import { auth, db } from '../firebase-config.js';
+        import { collection, query, where, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                loadTransactions(user.uid);
+                loadBalance(user.uid);
+            }
+        });
+
+        // بیلنس دکھانے کے لیے
+        function loadBalance(uid) {
+            onSnapshot(doc(db, "users", uid), (doc) => {
+                if (doc.exists()) {
+                    document.getElementById('current-balance').innerText = `Rs. ${doc.data().walletBalance.toFixed(2)}`;
+                }
+            });
+        }
+
+        // ٹرانزیکشن ہسٹری لوڈ کرنے کے لیے
+        function loadTransactions(uid) {
+            const transRef = collection(db, "transactions");
+            const q = query(transRef, where("userId", "==", uid), orderBy("timestamp", "desc"));
+
+            onSnapshot(q, (snapshot) => {
+                const container = document.getElementById('transactions-container');
+                container.innerHTML = "";
+
+                if (snapshot.empty) {
+                    container.innerHTML = "<p style='text-align:center; color:#555;'>کوئی ریکارڈ نہیں ملا۔</p>";
+                    return;
+                }
+
+                snapshot.forEach((doc) => {
+                    const data = doc.data();
+                    const isMinus = data.type === "commission";
+                    const item = document.createElement('div');
+                    item.className = `history-item ${isMinus ? 'minus' : 'plus'}`;
+                    
+                    item.innerHTML = `
+                        <div class="info">
+                            <h4>${data.description}</h4>
+                            <span>${new Date(data.timestamp?.toDate()).toLocaleString('ur-PK')}</span>
+                        </div>
+                        <div class="amount">
+                            <div class="amount-val ${isMinus ? 'type-minus' : 'type-plus'}">
+                                ${isMinus ? '-' : '+'} Rs. ${Math.abs(data.amount).toFixed(2)}
+                            </div>
+                            <span class="status">${isMinus ? 'کمیشن کٹوتی' : 'والٹ ری چارج'}</span>
+                        </div>
+                    `;
+                    container.appendChild(item);
+                });
+            });
+        }
+    </script>
+</body>
+</html>
