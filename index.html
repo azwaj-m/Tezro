@@ -9,122 +9,246 @@
     <link rel="stylesheet" href="src/global.css">
     
     <style>
-        :root { --neon: #39FF14; --dark: #000; --glass: rgba(255, 255, 255, 0.05); }
-        
-        body { background: var(--dark); color: #fff; font-family: 'Segoe UI', sans-serif; margin: 0; overflow-x: hidden; }
+        :root {
+            --neon: #39FF14;
+            --dark-bg: #000000;
+            --glass: rgba(255, 255, 255, 0.05);
+        }
 
-        /* Header & Logo */
-        .navbar { display: flex; align-items: center; justify-content: space-between; padding: 15px; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid rgba(57, 255, 20, 0.1); }
-        .logo-wrapper { flex-grow: 1; text-align: center; cursor: pointer; }
-        .app-logo { height: 40px; filter: drop-shadow(0 0 8px var(--neon)); transition: 0.3s; }
-        .app-logo:active { transform: scale(0.9); }
+        /* سائیڈ مینیو (InDrive Style) */
+        .side-menu {
+            position: fixed;
+            top: 0;
+            right: -280px; /* شروع میں چھپا ہوا */
+            width: 280px;
+            height: 100%;
+            background: #111;
+            z-index: 10000;
+            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: -10px 0 30px rgba(0,0,0,0.5);
+            padding: 20px;
+            border-left: 1px solid var(--neon);
+        }
 
-        /* Map Container */
-        #map-container { height: 250px; margin: 15px; border-radius: 25px; border: 1px solid var(--neon); box-shadow: 0 0 20px rgba(57, 255, 20, 0.2); overflow: hidden; z-index: 1; }
+        .side-menu.active { right: 0; }
 
-        /* Main Services Grid */
-        .main-services { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 10px 15px; }
-        .service-card { background: var(--glass); border: 1px solid rgba(57, 255, 20, 0.2); border-radius: 25px; padding: 25px 10px; text-align: center; transition: 0.3s; cursor: pointer; position: relative; overflow: hidden; }
-        .service-card:hover { border-color: var(--neon); background: rgba(57, 255, 20, 0.05); }
-        .service-card i { font-size: 2.5rem; display: block; margin-bottom: 10px; filter: drop-shadow(0 0 5px var(--neon)); }
-        .service-card span { font-size: 0.9rem; font-weight: bold; letter-spacing: 1px; color: #fff; }
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            display: none;
+            z-index: 9999;
+        }
 
-        /* Admin Panel Overlay */
-        #admin-panel { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 2000; padding: 40px 20px; box-sizing: border-box; display: none; flex-direction: column; }
-        .admin-stat-card { background: #111; padding: 20px; border-radius: 20px; margin-bottom: 15px; border-right: 5px solid red; }
-        .admin-stat-card h4 { color: red; margin: 0; font-size: 0.7rem; text-transform: uppercase; }
-        .admin-stat-card p { margin: 5px 0 0; font-size: 1.4rem; font-weight: bold; color: #fff; }
+        .menu-overlay.active { display: block; }
 
-        /* Footer Navigation */
-        .footer-nav { position: fixed; bottom: 0; width: 100%; background: rgba(0,0,0,0.9); display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid rgba(255,255,255,0.1); z-index: 1000; }
-        .nav-btn { text-align: center; color: #666; font-size: 0.7rem; cursor: pointer; transition: 0.3s; }
-        .nav-btn i { font-size: 1.5rem; display: block; margin-bottom: 2px; }
-        .nav-btn.active { color: var(--neon); }
+        .user-profile-brief {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #333;
+            margin-bottom: 20px;
+        }
 
-        .hidden { display: none !important; }
+        .user-profile-brief img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid var(--neon);
+        }
+
+        .menu-items { list-style: none; padding: 0; }
+        .menu-items li {
+            padding: 15px 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: #ccc;
+        }
+
+        .menu-items li:hover { background: var(--glass); color: var(--neon); }
+        .menu-items li i { font-style: normal; font-size: 1.2rem; }
+
+        /* مین ہوم اسکرین */
+        #map-container {
+            height: 45vh;
+            width: 100%;
+            border-bottom: 2px solid var(--neon);
+        }
+
+        .main-services {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            padding: 20px;
+            margin-top: -30px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .service-card {
+            background: #111;
+            border: 1px solid var(--glass);
+            border-radius: 20px;
+            padding: 25px 10px;
+            text-align: center;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            cursor: pointer;
+        }
+
+        .service-card i { font-size: 2.5rem; display: block; margin-bottom: 10px; }
+        .service-card span { font-weight: bold; font-size: 0.9rem; color: #fff; }
+
+        /* ٹاپ بار */
+        .navbar {
+            position: absolute;
+            top: 20px;
+            width: 90%;
+            left: 5%;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .menu-btn {
+            background: #000;
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            border: 1px solid var(--neon);
+        }
+
+        .menu-btn span { width: 20px; height: 2px; background: var(--neon); }
+
+        .admin-panel-hidden { display: none; }
     </style>
 </head>
 <body>
 
-<div class="app-shell">
-    <header class="navbar">
-        <div class="menu-trigger" style="font-size: 1.5rem;">☰</div>
-        <div class="logo-wrapper" onclick="adminTrigger()">
-            <img src="assets/logo.png" alt="AlinGo" class="app-logo">
+    <div class="menu-overlay" id="overlay" onclick="toggleMenu()"></div>
+    <div class="side-menu" id="sideMenu">
+        <div class="user-profile-brief" onclick="goToPath('src/screens/Profile.html')">
+            <img src="https://ui-avatars.com/api/?name=User&background=39FF14&color=000" id="menu-avatar">
+            <div>
+                <strong id="menu-user-name">لوڈنگ...</strong><br>
+                <small style="color:var(--neon)">پروفائل دیکھیں</small>
+            </div>
         </div>
-        <div class="profile-icon" onclick="goToPath('src/screens/Profile.html')" style="cursor:pointer; font-size: 1.5rem;">👤</div>
-    </header>
-
-    <div id="map-container"></div>
-
-    <div class="main-services">
-        <div class="service-card" onclick="goToPath('src/screens/SelectRide.html')">
-            <i>🚗</i>
-            <span>GET A RIDE</span>
-        </div>
-        <div class="service-card" onclick="alert('Food Menu Coming Soon!')">
-            <i>🍱</i>
-            <span>ORDER FOOD</span>
-        </div>
+        
+        <ul class="menu-items">
+            <li onclick="goToPath('src/screens/SelectRide.html')"><i>🚗</i> سواری بک کریں</li>
+            <li onclick="alert('جلد آ رہا ہے')"><i>🍱</i> کھانا آرڈر کریں</li>
+            <li onclick="goToPath('src/screens/Profile.html')"><i>💰</i> میرا والیٹ</li>
+            <li onclick="alert('ہسٹری خالی ہے')"><i>📜</i> میری رائیڈز</li>
+            <li onclick="alert('24/7 سپورٹ فعال ہے')"><i>🎧</i> ہیلپ سینٹر</li>
+            <li style="margin-top: 50px; color: #ff4444;" onclick="logout()"><i>🚪</i> لاگ آؤٹ</li>
+        </ul>
     </div>
 
-    <section id="admin-panel">
-        <h2 style="color:red; text-align:center; font-style: italic; margin-bottom: 30px;">SERVICE MONITOR</h2>
-        <div class="admin-stat-card">
-            <h4>LIVE RIDES</h4>
-            <p>14 Vehicles Active</p>
+    <div class="app-shell">
+        <header class="navbar">
+            <div class="menu-btn" onclick="toggleMenu()">
+                <span></span><span></span><span></span>
+            </div>
+            <img src="assets/logo.png" alt="AlinGo" style="height: 40px;" onclick="adminTrigger()">
+            <div style="width: 45px;"></div> </header>
+
+        <div id="map-container"></div>
+
+        <div class="main-services">
+            <div class="service-card" onclick="goToPath('src/screens/SelectRide.html')">
+                <i>🚕</i>
+                <span>سواری حاصل کریں</span>
+            </div>
+            <div class="service-card" onclick="alert('فوڈ مینیو جلد آ رہا ہے')">
+                <i>🍕</i>
+                <span>کھانا آرڈر کریں</span>
+            </div>
         </div>
-        <div class="admin-stat-card">
-            <h4>FOOD ORDERS</h4>
-            <p>06 Orders in Transit</p>
+
+        <div style="padding: 20px;">
+            <div class="admin-stat-card" style="background: var(--glass); padding: 15px; border-radius: 15px; display: flex; align-items: center; gap: 10px;">
+                <span style="font-size: 1.5rem;">📍</span>
+                <div>
+                    <small style="color: #888;">آپ کی لوکیشن</small>
+                    <p style="margin:0; font-weight: bold; color: var(--neon);">ملتان، پاکستان</p>
+                </div>
+            </div>
         </div>
-        <div class="admin-stat-card">
-            <h4>TOTAL REVENUE</h4>
-            <p>Rs. 84,200.00</p>
-        </div>
-        <button onclick="toggleAdmin()" style="background:red; color:white; border:none; padding:15px; border-radius:15px; width:100%; font-weight:bold; margin-top:auto;">CLOSE MONITOR</button>
-    </section>
 
-    <footer class="footer-nav">
-        <div class="nav-btn active" onclick="location.href='index.html'"><i>🏠</i><span>HOME</span></div>
-        <div class="nav-btn" onclick="goToPath('src/screens/SelectRide.html')"><i>🚗</i><span>RIDES</span></div>
-        <div class="nav-btn" onclick="alert('No active orders')"><i>📦</i><span>ORDERS</span></div>
-        <div class="nav-btn" onclick="goToPath('src/screens/Profile.html')"><i>👤</i><span>PROFILE</span></div>
-    </footer>
-</div>
+        <footer class="footer-nav">
+            <div class="nav-btn active" onclick="location.href='index.html'">
+                <div class="icon-circle">🏠</div><span>ہوم</span>
+            </div>
+            <div class="nav-btn" onclick="goToPath('src/screens/SelectRide.html')">
+                <div class="icon-circle">🚕</div><span>سواری</span>
+            </div>
+            <div class="nav-btn" onclick="goToPath('src/screens/Profile.html')">
+                <div class="icon-circle">👤</div><span>پروفائل</span>
+            </div>
+        </footer>
+    </div>
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script type="module">
+        import { auth, db } from './src/firebase-config.js';
+        import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-<script>
-    // Map Initialization
-    var map = L.map('map-container', {zoomControl: false}).setView([30.1575, 71.5249], 14);
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-        attribution: '&copy; OpenStreetMap'
-    }).addTo(map);
+        // نقشہ سیٹ اپ
+        var map = L.map('map-container', {zoomControl: false, attributionControl: false}).setView([30.1575, 71.5249], 14);
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(map);
+        
+        // یوزر ڈیٹا لوڈ کریں
+        auth.onAuthStateChanged(async (user) => {
+            if (user) {
+                const userDoc = await getDoc(doc(db, "users", user.uid));
+                if (userDoc.exists()) {
+                    document.getElementById('menu-user-name').innerText = userDoc.data().name;
+                }
+            } else {
+                document.getElementById('menu-user-name').innerText = "مہمان صارف";
+            }
+        });
 
-    // Dynamic Path Function for Vercel & Local
-    function goToPath(target) {
-        // اگر لوکل فائل ہے تو "./" اور ورسل کے لیے سادہ پاتھ
-        const isLocal = window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost";
-        window.location.href = isLocal ? "/" + target : target;
-    }
-
-    // Secret Admin Trigger
-    let logoClicks = 0;
-    function adminTrigger() {
-        logoClicks++;
-        if (logoClicks === 5) {
-            toggleAdmin();
-            logoClicks = 0;
+        window.logout = () => {
+            auth.signOut().then(() => location.reload());
         }
-        setTimeout(() => { logoClicks = 0; }, 3000);
-    }
+    </script>
 
-    function toggleAdmin() {
-        const panel = document.getElementById('admin-panel');
-        panel.style.display = (panel.style.display === 'flex') ? 'none' : 'flex';
-    }
-</script>
+    <script>
+        function toggleMenu() {
+            document.getElementById('sideMenu').classList.toggle('active');
+            document.getElementById('overlay').classList.toggle('active');
+        }
 
+        function goToPath(target) {
+            const isVercel = window.location.hostname.includes("vercel.app");
+            window.location.href = isVercel ? target : "/" + target;
+        }
+
+        let logoClicks = 0;
+        function adminTrigger() {
+            logoClicks++;
+            if (logoClicks === 5) {
+                alert("ایڈمن پینل فعال ہو رہا ہے...");
+                logoClicks = 0;
+            }
+            setTimeout(() => { logoClicks = 0; }, 3000);
+        }
+    </script>
 </body>
 </html>
