@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ur">
+<head>
+    <meta charset="UTF-8">
+    <title>AlinGo | Admin Access</title>
+    <style>
+        :root { --neon: #39FF14; --bg: #000; }
+        body { background: var(--bg); color: white; font-family: sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        .login-box { background: #111; padding: 30px; border-radius: 20px; border: 1px solid var(--neon); width: 320px; text-align: center; }
+        input { width: 100%; padding: 12px; margin: 10px 0; background: #000; border: 1px solid #333; color: white; border-radius: 8px; box-sizing: border-box; }
+        .btn { width: 100%; padding: 12px; background: var(--neon); color: #000; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .change-pass-link { font-size: 12px; color: #888; cursor: pointer; text-decoration: underline; margin-top: 15px; display: block; }
+    </style>
+</head>
+<body>
+
+    <div class="login-box" id="loginForm">
+        <h2 style="color: var(--neon);">Admin Access</h2>
+        <p style="font-size: 13px;">خفیہ رسائی صرف انتظامیہ کے لیے</p>
+        <input type="password" id="adminPass" placeholder="پاسورڈ درج کریں">
+        <button class="btn" onclick="verifyAdmin()">Login</button>
+        <span class="change-pass-link" onclick="toggleView(true)">پاسورڈ تبدیل کریں؟</span>
+    </div>
+
+    <div class="login-box" id="changePassForm" style="display: none;">
+        <h2 style="color: var(--neon);">Change Password</h2>
+        <input type="password" id="currentPass" placeholder="موجودہ پاسورڈ">
+        <input type="password" id="newPass" placeholder="نیا پاسورڈ">
+        <button class="btn" onclick="updatePassword()">Update Password</button>
+        <span class="change-pass-link" onclick="toggleView(false)">واپس لاگ ان پر جائیں</span>
+    </div>
+
+    <script type="module">
+        import { db } from '../firebase-config.js';
+        import { doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const adminDocRef = doc(db, "system", "adminConfig");
+
+        window.toggleView = (isChange) => {
+            document.getElementById('loginForm').style.display = isChange ? 'none' : 'block';
+            document.getElementById('changePassForm').style.display = isChange ? 'block' : 'none';
+        }
+
+        window.verifyAdmin = async () => {
+            const inputPass = document.getElementById('adminPass').value;
+            const snap = await getDoc(adminDocRef);
+            
+            if (snap.exists() && snap.data().password === inputPass) {
+                sessionStorage.setItem("isAdmin", "true"); // عارضی سیشن
+                window.location.href = "AdminPanel.html";
+            } else {
+                alert("غلط پاسورڈ! رسائی ممنوع ہے۔");
+            }
+        }
+
+        window.updatePassword = async () => {
+            const curr = document.getElementById('currentPass').value;
+            const next = document.getElementById('newPass').value;
+            const snap = await getDoc(adminDocRef);
+
+            if (snap.exists() && snap.data().password === curr) {
+                if(next.length < 6) return alert("نیا پاسورڈ کم از کم 6 ہندسوں کا ہونا چاہیے۔");
+                await updateDoc(adminDocRef, { password: next });
+                alert("پاسورڈ کامیابی سے تبدیل ہو گیا۔");
+                toggleView(false);
+            } else {
+                alert("موجودہ پاسورڈ غلط ہے۔");
+            }
+        }
+    </script>
+</body>
+</html>
