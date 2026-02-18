@@ -1,7 +1,3 @@
-import { useEffect } from "react";
-import L from "leaflet";
-import "leaflet/dist/leaflet.css";
-
 function RideMap() {
   useEffect(() => {
     const map = L.map("map").setView([31.5204, 74.3587], 13);
