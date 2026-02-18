@@ -2,7 +2,7 @@ import { defineConfig } from 'vite';
 import { resolve } from 'path';
 
 export default defineConfig({
-  // اگر آپ کی فائلیں 'public' فولڈر سے باہر ہیں تو یہ بیس پاتھ ضروری ہے
+  // اگر آپ کی فائلیں 'public' فولڈرسے باہر ہیں تو یہ بیس پاتھ ضروری ہے
   base: './', 
   build: {
     rollupOptions: {
