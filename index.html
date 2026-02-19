@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AlinGo | Super App</title>
+    <title>Tezro | Super App</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
         :root {
@@ -89,7 +89,7 @@
     <div class="menu-group">
         <div class="menu-label">Offers</div>
         <a onclick="alert('No active promos')" class="menu-item"><i>🎁</i> Rewards & Promos</a>
-        <a onclick="alert('Referral link: ALINGO-500')" class="menu-item"><i>🤝</i> Refer a Friend</a>
+        <a onclick="alert('Referral link: Tezro-500')" class="menu-item"><i>🤝</i> Refer a Friend</a>
     </div>
 
     <div class="menu-group">
@@ -207,7 +207,7 @@
                 const userDoc = await getDoc(docRef);
                 if (userDoc.exists()) {
                     const data = userDoc.data();
-                    document.getElementById('side-user-name').innerText = data.name || "AlinGo User";
+                    document.getElementById('side-user-name').innerText = data.name || "Tezro User";
                     document.getElementById('side-user-rating').innerText = `★ ${data.rating || '5.0'} ${data.role || 'Rider'}`;
                     if(data.profilePic) document.getElementById('side-user-img').src = data.profilePic;
                 }
