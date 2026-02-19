@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ur">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tezro | چلو کہیں چلیں</title>
+    <link rel="stylesheet" href="../../styles/global.css">
+    <style>
+        .home-container {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        /* Search Box Design */
+        .search-section {
+            background: rgba(15, 15, 15, 0.9);
+            border: 1px solid #222;
+            padding: 20px;
+            border-radius: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+            background: #000;
+            border: 1px solid #333;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            padding: 0 15px;
+        }
+
+        .input-group i { color: var(--neon-green); margin-right: 10px; }
+        .input-group input { border: none; margin-bottom: 0; background: transparent; }
+
+        /* Quick Shortcuts */
+        .shortcuts {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .shortcut-item {
+            text-align: center;
+            font-size: 11px;
+            color: #888;
+            cursor: pointer;
+        }
+
+        .shortcut-icon {
+            background: #111;
+            width: 50px;
+            height: 50px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 5px;
+            border: 1px solid #222;
+            color: var(--neon-green);
+            transition: 0.3s;
+        }
+
+        .shortcut-item:hover .shortcut-icon {
+            border-color: var(--neon-green);
+            box-shadow: 0 0 15px rgba(0, 255, 102, 0.2);
+        }
+
+        /* Banner */
+        .promo-banner {
+            background: linear-gradient(90deg, #00ff66 0%, #008033 100%);
+            border-radius: 20px;
+            padding: 20px;
+            color: black;
+            position: relative;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="navbar">
+        <div style="font-weight: 800; font-size: 1.5rem;">TEZRO</div>
+        <div style="display: flex; gap: 15px;">
+            <button onclick="location.href='Wallet.html'" style="padding: 5px 12px; font-size: 12px;">💰 والٹ</button>
+            <button onclick="location.href='Profile.html'" style="padding: 5px 12px; font-size: 12px;">👤 پروفائل</button>
+        </div>
+    </header>
+
+    <div class="home-container">
+        
+        <div>
+            <h2 style="margin: 0;">سلام، <span id="userName">مسافر</span>!</h2>
+            <p style="color: #666; font-size: 14px;">آج آپ کہاں جانا چاہیں گے؟</p>
+        </div>
+
+        <div class="promo-banner">
+            <h3 style="margin: 0;">50% OFF</h3>
+            <p style="margin: 5px 0 0; font-size: 12px;">پہلی 3 رائیڈز پر خصوصی ڈسکاؤنٹ</p>
+        </div>
+
+        <div class="search-section">
+            <div class="input-group">
+                <span>📍</span>
+                <input type="text" id="pickup" placeholder="موجودہ جگہ (Pickup Location)" readonly value="آپ کی موجودہ جگہ">
+            </div>
+            <div class="input-group">
+                <span>🏁</span>
+                <input type="text" id="destination" placeholder="منزل کہاں ہے؟ (Destination)">
+            </div>
+            <button class="btn" style="width: 100%; margin-top: 10px;" onclick="searchRide()">رائیڈ تلاش کریں</button>
+        </div>
+
+        <div class="shortcuts">
+            <div class="shortcut-item" onclick="setQuickDest('Home')">
+                <div class="shortcut-icon">🏠</div>
+                <span>گھر</span>
+            </div>
+            <div class="shortcut-item" onclick="setQuickDest('Office')">
+                <div class="shortcut-icon">💼</div>
+                <span>دفتر</span>
+            </div>
+            <div class="shortcut-item" onclick="location.href='MyRides.html'">
+                <div class="shortcut-icon">🕒</div>
+                <span>ہسٹری</span>
+            </div>
+            <div class="shortcut-item" onclick="location.href='Safety.html'">
+                <div class="shortcut-icon">🛡️</div>
+                <span>تحفظ</span>
+            </div>
+        </div>
+
+    </div>
+
+    <footer class="footer">
+        <div onclick="location.reload()" style="color: var(--neon-green);">🏠 ہوم</div>
+        <div onclick="location.href='MyRides.html'">🚗 رائیڈز</div>
+        <div onclick="location.href='Wallet.html'">💳 والٹ</div>
+        <div onclick="location.href='Profile.html'">⚙️ سیٹنگز</div>
+    </footer>
+
+    <script type="module">
+        import { auth, db } from '../firebase-config.js';
+        import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // صارف کا نام لوڈ کرنا
+        auth.onAuthStateChanged(async (user) => {
+            if (user) {
+                const docRef = doc(db, "users", user.uid);
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    document.getElementById('userName').innerText = docSnap.data().name.split(' ')[0];
+                }
+            } else {
+                window.location.href = "Login.html";
+            }
+        });
+
+        // رائیڈ تلاش کرنے کا فنکشن
+        window.searchRide = () => {
+            const dest = document.getElementById('destination').value;
+            if (!dest) {
+                alert("براہ کرم اپنی منزل درج کریں۔");
+                return;
+            }
+            // منزل کو سیشن میں محفوظ کریں اور سلیکشن اسکرین پر جائیں
+            sessionStorage.setItem("destination", dest);
+            window.location.href = "SelectRide.html";
+        };
+
+        window.setQuickDest = (place) => {
+            alert(place + " کی لوکیشن ابھی سیٹ نہیں کی گئی۔");
+        };
+    </script>
+</body>
+</html>
