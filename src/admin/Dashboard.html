@@ -2,116 +2,170 @@
 <html lang="ur">
 <head>
     <meta charset="UTF-8">
-    <title>Tezro Admin | Control Center</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tezro Dashboard | Admin</title>
+    <link rel="stylesheet" href="../../styles/global.css">
     <style>
-        :root { --neon: #39FF14; --danger: #ff4444; --bg: #050505; }
-        body { background: var(--bg); color: white; font-family: 'Segoe UI', Tahoma; margin: 0; display: flex; }
+        .admin-wrapper { display: flex; min-height: 100vh; }
         
         /* Sidebar */
-        .admin-sidebar { width: 250px; background: #111; height: 100vh; border-right: 1px solid #222; padding: 20px; }
-        .nav-item { padding: 15px; cursor: pointer; border-radius: 10px; margin-bottom: 5px; }
-        .nav-item:hover, .nav-item.active { background: var(--neon); color: black; font-weight: bold; }
+        .admin-sidebar {
+            width: 250px; background: #0a0a0a; border-right: 1px solid #222;
+            padding: 20px; display: flex; flex-direction: column; gap: 10px;
+        }
 
         /* Main Content */
-        .main-panel { flex: 1; padding: 30px; overflow-y: auto; }
-        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 30px; }
-        .stat-card { background: #1a1a1a; padding: 20px; border-radius: 15px; border-left: 5px solid var(--neon); }
+        .main-content { flex: 1; padding: 30px; background: #050505; }
         
-        /* User Table */
-        table { width: 100%; border-collapse: collapse; background: #111; border-radius: 15px; overflow: hidden; }
-        th { background: #222; color: var(--neon); padding: 15px; text-align: left; }
-        td { padding: 15px; border-bottom: 1px solid #222; }
-        
-        /* Action Buttons */
-        .btn { padding: 8px 15px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin-right: 5px; }
-        .btn-block { background: var(--danger); color: white; }
-        .btn-restore { background: var(--neon); color: black; }
-        .btn-contact { background: #0084ff; color: white; }
+        .stats-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px; margin-bottom: 30px;
+        }
+        .stat-card {
+            background: rgba(0, 255, 102, 0.05); border: 1px solid #1a1a1a;
+            padding: 20px; border-radius: 15px; text-align: center;
+        }
+        .stat-card h3 { font-size: 2rem; margin: 10px 0; color: var(--neon-green); }
 
-        .badge { padding: 3px 8px; border-radius: 5px; font-size: 11px; }
-        .badge-low { background: rgba(255, 0, 0, 0.2); color: #ff4444; border: 1px solid #ff4444; }
+        /* Table Style */
+        .data-table {
+            width: 100%; border-collapse: collapse; background: #0f0f0f;
+            border-radius: 10px; overflow: hidden; margin-top: 20px;
+        }
+        .data-table th, .data-table td {
+            padding: 15px; text-align: left; border-bottom: 1px solid #222;
+        }
+        .data-table th { background: #111; color: var(--neon-green); }
+
+        .settings-box {
+            background: #111; padding: 20px; border-radius: 15px;
+            border-left: 4px solid var(--neon-green); margin-bottom: 30px;
+        }
     </style>
 </head>
 <body>
 
-    <div class="admin-sidebar">
-        <h2 style="color: var(--neon);">Tezro Admin</h2>
-        <div class="nav-item active">Dashboard</div>
-        <div class="nav-item">Flagged Users</div>
-        <div class="nav-item">Appeals Center</div>
-        <div class="nav-item">System Settings</div>
-    </div>
+<div class="admin-wrapper">
+    <nav class="admin-sidebar">
+        <h2 style="font-size: 1.5rem;">TEZRO <span style="color:white">ADMIN</span></h2>
+        <button onclick="location.reload()">🔄 Refresh Data</button>
+        <button onclick="logoutAdmin()" style="border-color: #ff4444; color: #ff4444;">🚪 Logout</button>
+    </nav>
 
-    <div class="main-panel">
-        <h1>Monitoring Dashboard (نگرانی کا مرکز)</h1>
-        
+    <main class="main-content">
+        <header style="display: flex; justify-content: space-between; align-items: center;">
+            <h1>Dashboard Overview</h1>
+            <div id="admin-name" style="color: #888;">Admin: Loading...</div>
+        </header>
+
         <div class="stats-grid">
-            <div class="stat-card"><h3>Active Drivers</h3><p>1,240</p></div>
-            <div class="stat-card" style="border-color: red;"><h3>Under Review</h3><p>14 Users</p></div>
-            <div class="stat-card"><h3>Pending Appeals</h3><p>5</p></div>
+            <div class="stat-card">
+                <p>Total Revenue</p>
+                <h3 id="total-revenue">Rs. 0</h3>
+            </div>
+            <div class="stat-card">
+                <p>Total Rides</p>
+                <h3 id="total-rides">0</h3>
+            </div>
+            <div class="stat-card">
+                <p>Active Drivers</p>
+                <h3 id="active-drivers">0</h3>
+            </div>
         </div>
 
-        <h3>Flagged Accounts (زیرِ نظر اکاؤنٹس)</h3>
-        <table>
+        <div class="settings-box">
+            <h3>Global Settings</h3>
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <label>Commission Rate (%): </label>
+                <input type="number" id="commissionInput" style="width: 80px; margin-bottom: 0;">
+                <button onclick="updateCommission()" style="padding: 8px 15px;">Update</button>
+            </div>
+        </div>
+
+        <h3>Drivers Management</h3>
+        <table class="data-table">
             <thead>
                 <tr>
-                    <th>User / Driver</th>
-                    <th>Role</th>
-                    <th>Rating</th>
-                    <th>Top Complaint</th>
-                    <th>Actions</th>
+                    <th>Name</th>
+                    <th>Status</th>
+                    <th>Balance</th>
+                    <th>Action</th>
                 </tr>
             </thead>
-            <tbody id="userTable">
-                <tr>
-                    <td>احمد خان</td>
-                    <td>Driver</td>
-                    <td><span class="badge badge-low">★ 2.1</span></td>
-                    <td>بدتمیزی (Abusive Behavior)</td>
-                    <td>
-                        <button class="btn btn-block" onclick="updateStatus('Block')">Block</button>
-                        <button class="btn btn-contact" onclick="contactUser('+923001234567')">WhatsApp</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>سارہ علی</td>
-                    <td>Rider</td>
-                    <td><span class="badge badge-low">★ 1.8</span></td>
-                    <td>تاخیر (Consistently Late)</td>
-                    <td>
-                        <button class="btn btn-block" onclick="updateStatus('Block')">Block</button>
-                        <button class="btn btn-contact" onclick="contactUser('+923000000000')">WhatsApp</button>
-                    </td>
-                </tr>
-            </tbody>
+            <tbody id="drivers-list">
+                </tbody>
         </table>
+    </main>
+</div>
 
-        <h3 style="margin-top: 40px;">Pending Appeals (بحالی کی اپیلیں)</h3>
-        <div id="appealSection" style="background: #111; padding: 20px; border-radius: 15px;">
-            <p><strong>ڈرائیور عمر:</strong> "میں معذرت خواہ ہوں، اس دن گاڑی خراب تھی اس لیے تلخ کلامی ہوئی۔ براہ کرم میرا اکاؤنٹ بحال کریں۔"</p>
-            <button class="btn btn-restore" onclick="restoreAccount()">Restore Account (بحال کریں)</button>
-        </div>
-    </div>
+<script type="module">
+    import { auth, db } from '../firebase-config.js';
+    import { collection, getDocs, doc, updateDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    <script>
-        function updateStatus(action) {
-            let reason = prompt("بلاک کرنے کی وجہ لکھیں (Reason for blocking):");
-            if(reason) {
-                alert("Account " + action + "ed successfully. User notified.");
-                // یہاں فائر بیس میں status: 'blocked' اپڈیٹ ہوگا
-            }
+    // لاگ آؤٹ فنکشن
+    window.logoutAdmin = () => {
+        auth.signOut().then(() => window.location.href = "../screens/AdminLogin.html");
+    };
+
+    // ڈیٹا لوڈ کرنا
+    async function loadDashboardData() {
+        // 1. کمیشن ریٹ لوڈ کریں
+        onSnapshot(doc(db, "system", "appConfig"), (doc) => {
+            if(doc.exists()) document.getElementById('commissionInput').value = doc.data().commission;
+        });
+
+        // 2. ڈرائیورز کی فہرست
+        onSnapshot(collection(db, "users"), (snapshot) => {
+            const list = document.getElementById('drivers-list');
+            list.innerHTML = "";
+            let driverCount = 0;
+
+            snapshot.forEach((user) => {
+                const data = user.data();
+                if(data.role === "driver") {
+                    driverCount++;
+                    const row = `
+                        <tr>
+                            <td>${data.name}</td>
+                            <td><span class="${data.isBlocked ? 'badge-offline' : 'badge-online'}">${data.isBlocked ? 'Blocked' : 'Active'}</span></td>
+                            <td>Rs. ${data.walletBalance || 0}</td>
+                            <td>
+                                <button onclick="toggleBlock('${user.id}', ${data.isBlocked})" style="padding: 5px 10px; font-size: 10px; border-color: ${data.isBlocked ? '#00ff66' : '#ff4444'};">
+                                    ${data.isBlocked ? 'Unblock' : 'Block'}
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                    list.innerHTML += row;
+                }
+            });
+            document.getElementById('active-drivers').innerText = driverCount;
+        });
+    }
+
+    // بلاک / ان بلاک لاجک
+    window.toggleBlock = async (uid, currentStatus) => {
+        if(confirm("Are you sure you want to change this driver's status?")) {
+            await updateDoc(doc(db, "users", uid), { isBlocked: !currentStatus });
         }
+    };
 
-        function restoreAccount() {
-            if(confirm("کیا آپ اس صارف کو ایک آخری موقع دینا چاہتے ہیں؟")) {
-                alert("Account Restored! User rating reset to 3.0 for a fresh start.");
-                // یہاں فائر بیس میں status: 'active' ہوگا
-            }
-        }
+    // کمیشن اپڈیٹ کریں
+    window.updateCommission = async () => {
+        const val = document.getElementById('commissionInput').value;
+        await updateDoc(doc(db, "system", "appConfig"), { commission: parseInt(val) });
+        alert("Commission Updated!");
+    };
 
-        function contactUser(phone) {
-            window.open(`https://wa.me/${phone}?text=Tezro Support: We noticed some complaints regarding your behavior...`, '_blank');
+    // سیکیورٹی چیک: اگر ایڈمن لاگ ان نہیں ہے تو واپس بھیجیں
+    auth.onAuthStateChanged(user => {
+        if (!user) window.location.href = "../screens/AdminLogin.html";
+        else {
+            document.getElementById('admin-name').innerText = `Admin: ${user.email}`;
+            loadDashboardData();
         }
-    </script>
+    });
+</script>
+
 </body>
 </html>
