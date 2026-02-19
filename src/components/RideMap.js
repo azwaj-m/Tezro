@@ -9,7 +9,7 @@ function RideMap() {
       }
     ).addTo(map);
 
-    L.marker([31.5204, 74.3587]).addTo(map).bindPopup("AlinGo Ride");
+    L.marker([31.5204, 74.3587]).addTo(map).bindPopup("Tezro Ride");
 
     return () => map.remove();
   }, []);
