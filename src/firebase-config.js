@@ -16,5 +16,5 @@ export const db = getFirestore(app);
 export const auth = getAuth(app);
 export const googleProvider = new GoogleAuthProvider();
 
-// فون لاگ ان کے لیے ضروری ایکسپورٹس
+// فون لاگ ان کے لیے ضروریی  ایکسپورٹس
 export { RecaptchaVerifier, signInWithPhoneNumber };
