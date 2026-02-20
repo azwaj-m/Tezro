@@ -1,0 +1,29 @@
+<script type="module">
+    import { auth, db } from '../firebase-config.js';
+    import { doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    window.saveProfile = async () => {
+        const user = auth.currentUser;
+        const name = document.getElementById('userName').value;
+        const role = document.getElementById('userRole').value; // Rider or Driver
+
+        if (!user || !name) return alert("براہ کرم تمام معلومات درج کریں");
+
+        try {
+            // Firestore میں یوزر کا ڈیٹا محفوظ کرنا
+            await setDoc(doc(db, "users", user.uid), {
+                name: name,
+                phone: user.phoneNumber || "",
+                email: user.email || "",
+                role: role,
+                walletBalance: 0,
+                createdAt: new Date()
+            });
+            
+            // ڈیٹا محفوظ ہونے کے بعد ہوم اسکرین پر بھیجیں
+            window.location.href = "HomeScreen.html";
+        } catch (error) {
+            alert("پروفائل سیٹ اپ میں غلطی: " + error.message);
+        }
+    };
+</script>
