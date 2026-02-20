@@ -1,14 +1,99 @@
-<div class="login-container neon-box">
-    <h2>AlinGo Login</h2>
-    <button onclick="loginWithGoogle()" class="google-btn">Login with Google</button>
-    
-    <hr>
-    
-    <input type="tel" id="phone" placeholder="+92 300 1234567">
-    <button onclick="sendOTP()" class="glow-button">Send OTP</button>
-    
-    <div id="otp-section" class="hidden">
-        <input type="text" id="otp" placeholder="Enter 6-digit OTP">
-        <button onclick="verifyOTP()" class="glow-button">Verify & Login</button>
+<!DOCTYPE html>
+<html lang="ur">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tezro | Login</title>
+    <link rel="stylesheet" href="../../styles/global.css">
+    <style>
+        .login-box { padding: 30px; margin-top: 50px; text-align: center; }
+        .auth-btn { 
+            width: 100%; padding: 15px; margin: 10px 0; border-radius: 12px; 
+            border: 1px solid #333; cursor: pointer; font-weight: bold; font-size: 16px;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+        }
+        .google-btn { background: #fff; color: #000; }
+        .phone-btn { background: var(--neon-green); color: #000; border: none; }
+        #otp-section { display: none; margin-top: 20px; }
+        input { width: 100%; padding: 12px; background: #111; border: 1px solid #333; color: #fff; border-radius: 8px; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <div class="app-shell">
+        <div class="login-box">
+            <h1 style="color: var(--neon-green); font-size: 3rem; margin-bottom: 10px;">TEZRO</h1>
+            <p style="color: #888;">سفر کا نیا انداز</p>
+
+            <div id="login-methods">
+                <button id="googleLogin" class="auth-btn google-btn">
+                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20">
+                    Google کے ساتھ لاگ ان کریں
+                </button>
+
+                <div style="margin: 20px 0; color: #444;">OR</div>
+
+                <div id="phone-input-section">
+                    <input type="text" id="phone-number" placeholder="+923001234567">
+                    <div id="recaptcha-container"></div>
+                    <button id="send-otp" class="auth-btn phone-btn">فون نمبر سے آگے بڑھیں</button>
+                </div>
+
+                <div id="otp-section">
+                    <input type="text" id="otp-code" placeholder="6 ہندسوں کا کوڈ درج کریں">
+                    <button id="verify-otp" class="auth-btn phone-btn">تصدیق کریں</button>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
+
+    <script type="module">
+        import { auth, googleProvider, RecaptchaVerifier, signInWithPhoneNumber } from '../firebase-config.js';
+        import { signInWithPopup } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+        // --- 1. Google Login ---
+        document.getElementById('googleLogin').onclick = async () => {
+            try {
+                const result = await signInWithPopup(auth, googleProvider);
+                console.log("User Logged in:", result.user);
+                window.location.href = "HomeScreen.html";
+            } catch (error) {
+                alert("Google Login Error: " + error.message);
+            }
+        };
+
+        // --- 2. Phone Login Setup ---
+        window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
+            'size': 'invisible'
+        });
+
+        document.getElementById('send-otp').onclick = async () => {
+            const phoneNumber = document.getElementById('phone-number').value;
+            if(!phoneNumber.startsWith('+')) {
+                alert("براہ کرم نمبر انٹرنیشنل فارمیٹ میں لکھیں (مثلاً +92)");
+                return;
+            }
+
+            try {
+                const appVerifier = window.recaptchaVerifier;
+                window.confirmationResult = await signInWithPhoneNumber(auth, phoneNumber, appVerifier);
+                document.getElementById('phone-input-section').style.display = 'none';
+                document.getElementById('otp-section').style.display = 'block';
+                alert("کوڈ بھیج دیا گیا ہے!");
+            } catch (error) {
+                alert("SMS Error: " + error.message);
+                if(window.recaptchaVerifier) window.recaptchaVerifier.render();
+            }
+        };
+
+        document.getElementById('verify-otp').onclick = async () => {
+            const code = document.getElementById('otp-code').value;
+            try {
+                await window.confirmationResult.confirm(code);
+                window.location.href = "HomeScreen.html";
+            } catch (error) {
+                alert("غلط کوڈ! دوبارہ کوشش کریں۔");
+            }
+        };
+    </script>
+</body>
+</html>
