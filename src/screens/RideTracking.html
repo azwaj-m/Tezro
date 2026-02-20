@@ -68,10 +68,11 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     
     <script type="module">
-        // امپورٹ کرتے وقت فائل کے نام کا خاص خیال رکھیں
-        import { processRideCommission } from '../RideComplete.js';
-        import { auth } from '../firebase-config.js';
+        // دو بار ../ کا مطلب ہے دو فولڈر پیچھے جانا (screens سے نکل کر src میں، اور پھر مین روٹ پر)
+     import { processRideCommission } from '../../RideComplete.js'; 
+     import { auth } from '../firebase-config.js'; // اگر یہ src کے اندر ہے تو ایک ہی بار ../ آئے گا
 
+        
         // 1. میپ انیشلائزیشن
         var map = L.map('map-container', {zoomControl: false}).setView([30.1575, 71.5249], 15);
         
