@@ -3,21 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Tezro | Super App</title>
+    <title>Tezro | Premium Super App</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link rel="stylesheet" href="src/styles/global.css">
     <style>
-        :root { --neon: #39FF14; --dark-bg: #000; --sidebar-width: 300px; --glass: rgba(255, 255, 255, 0.05); }
-        body { background-color: var(--dark-bg); margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; color: white; overflow-x: hidden; }
-        .sidebar { position: fixed; top: 0; left: -300px; width: var(--sidebar-width); height: 100%; background: #050505; z-index: 2000; transition: 0.4s; border-right: 1px solid var(--neon); }
-        .sidebar.active { left: 0; }
-        .sidebar-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1999; display: none; backdrop-filter: blur(4px); }
-        #map-container { height: 35vh; width: 92%; margin: 15px auto; border: 1.5px solid var(--neon); border-radius: 25px; }
-        .services-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 15px; }
-        .service-card { background: #0f0f0f; border-radius: 20px; padding: 20px; text-align: center; border: 1px solid rgba(57, 255, 20, 0.1); cursor: pointer; }
-        .footer { position: fixed; bottom: 0; width: 100%; background: #000; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #1a1a1a; z-index: 1000; }
-        .footer-item { text-align: center; color: #666; font-size: 10px; flex: 1; cursor: pointer; text-decoration: none; }
-        .footer-item.active { color: var(--neon); }
+        :root {
+            --neon: #39FF14;
+            --neon-glow: 0 0 15px rgba(57, 255, 20, 0.4);
+            --dark-bg: #050505;
+            --glass: rgba(255, 255, 255, 0.05);
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            margin: 0; font-family: 'Segoe UI', Roboto, sans-serif;
+            color: white; overflow-x: hidden;
+        }
+
+        /* --- Sidebar Premium Design --- */
+        .sidebar {
+            position: fixed; top: 0; left: -300px;
+            width: 300px; height: 100%; background: #000;
+            z-index: 2000; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border-right: 1px solid var(--neon);
+        }
+        .sidebar.active { left: 0; box-shadow: 10px 0 50px rgba(0,0,0,0.9); }
+        
+        .user-card {
+            padding: 50px 25px 30px;
+            background: linear-gradient(135deg, rgba(57, 255, 20, 0.2) 0%, transparent 100%);
+            border-bottom: 1px solid rgba(57, 255, 20, 0.1);
+        }
+        .profile-ring {
+            width: 75px; height: 75px; border-radius: 50%;
+            border: 3px solid var(--neon); padding: 3px;
+            box-shadow: var(--neon-glow);
+        }
+        .profile-ring img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+
+        .menu-list { padding: 20px 0; }
+        .menu-item {
+            padding: 15px 25px; display: flex; align-items: center; gap: 18px;
+            color: #ccc; text-decoration: none; font-size: 15px;
+            transition: 0.3s; border-left: 3px solid transparent;
+        }
+        .menu-item i { font-style: normal; font-size: 20px; }
+        .menu-item:hover { 
+            background: rgba(57, 255, 20, 0.05); 
+            color: var(--neon); border-left-color: var(--neon);
+        }
+
+        /* --- Home Buttons with Neon Shade --- */
+        .services-container {
+            padding: 20px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px;
+        }
+        .service-card {
+            background: #111; border-radius: 24px; padding: 25px 15px;
+            text-align: center; border: 1px solid rgba(57, 255, 20, 0.1);
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative; overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+        .service-card:hover {
+            border-color: var(--neon);
+            box-shadow: var(--neon-glow);
+            transform: translateY(-5px);
+        }
+        .service-card i { 
+            font-size: 3rem; display: block; margin-bottom: 12px;
+            filter: drop-shadow(0 0 10px rgba(57, 255, 20, 0.3));
+        }
+        .service-card span { font-weight: 600; letter-spacing: 0.5px; font-size: 14px; }
+        
+        .vvip-card { border: 1px solid gold !important; }
+        .vvip-card:hover { box-shadow: 0 0 20px rgba(255, 215, 0, 0.4); }
+
+        #map-container { 
+            height: 38vh; width: 92%; margin: 15px auto; 
+            border-radius: 28px; border: 2px solid rgba(57, 255, 20, 0.2);
+            overflow: hidden; box-shadow: var(--neon-glow);
+        }
+
+        .sidebar-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(5px); z-index: 1999; display: none;
+        }
     </style>
 </head>
 <body>
@@ -25,48 +94,48 @@
 <div class="sidebar-overlay" id="overlay" onclick="toggleSidebar()"></div>
 
 <nav class="sidebar" id="sidebar">
-    <div style="padding: 40px 20px 20px; background: linear-gradient(180deg, rgba(57,255,20,0.15), transparent);">
-        <img src="https://ui-avatars.com/api/?name=User&background=39FF14&color=000" id="side-user-img" style="width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--neon);">
-        <div id="side-user-name" style="font-weight: bold; font-size: 18px; margin-top: 10px;">Loading...</div>
-        <div id="side-user-rating" style="color: var(--neon); font-size: 12px;">★ 5.0 Rider</div>
+    <div class="user-card">
+        <div class="profile-ring">
+            <img src="https://ui-avatars.com/api/?name=Tezro+User&background=000&color=39FF14" id="side-img">
+        </div>
+        <h3 id="side-name" style="margin: 15px 0 5px; letter-spacing: 1px;">Loading...</h3>
+        <p id="side-role" style="color: var(--neon); font-size: 12px; margin: 0;">★ 5.0 Premium Member</p>
     </div>
 
-    <div style="padding: 10px 0;">
-        <a onclick="navigateTo('index.html')" class="menu-item" style="display:block; padding:15px 25px; color:white; text-decoration:none;">🏠 Home</a>
-        <a onclick="navigateTo('src/screens/Profile.html')" class="menu-item" style="display:block; padding:15px 25px; color:white; text-decoration:none;">💳 Payments & Wallet</a>
-        <a onclick="handleLogout()" class="menu-item" style="display:block; padding:15px 25px; color: #ff4444; text-decoration:none;">🚪 Logout</a>
+    <div class="menu-list">
+        <a onclick="navigateTo('index.html')" class="menu-item"><i>🏠</i> Home</a>
+        <a onclick="navigateTo('src/screens/RideHistory.html')" class="menu-item"><i>🕒</i> Ride History</a>
+        <a onclick="navigateTo('src/screens/Wallet.html')" class="menu-item"><i>💳</i> My Wallet & Top-up</a>
+        <a onclick="navigateTo('src/screens/Profile.html')" class="menu-item"><i>👤</i> Profile Settings</a>
+        <div style="height: 1px; background: rgba(255,255,255,0.05); margin: 10px 25px;"></div>
+        <a onclick="alert('Tezro Support is here')" class="menu-item"><i>🎧</i> Help & Support</a>
+        <a onclick="handleLogout()" class="menu-item" style="color: #ff4d4d;"><i>🚪</i> Logout</a>
     </div>
 </nav>
 
 <div class="app-shell">
-    <header style="padding: 15px; display: flex; align-items: center; justify-content: space-between;">
-        <div onclick="toggleSidebar()" style="font-size: 28px; color: var(--neon); cursor: pointer;">☰</div>
-        <img src="assets/logo.png" id="adminLogoTrigger" style="height: 35px; cursor: pointer;" onclick="secretAdminTap()" alt="TEZRO">
-        <div style="font-size: 24px; cursor: pointer;" onclick="alert('No notifications')">🔔</div>
+    <header style="padding: 20px; display: flex; align-items: center; justify-content: space-between;">
+        <div onclick="toggleSidebar()" style="font-size: 30px; color: var(--neon); cursor: pointer; text-shadow: var(--neon-glow);">☰</div>
+        <img src="assets/logo.png" id="adminTrigger" onclick="secretAdminTap()" style="height: 40px; cursor: pointer;">
+        <div style="font-size: 26px; color: var(--neon);">🔔</div>
     </header>
 
     <div id="map-container"></div>
 
-    <div class="services-grid">
+    <div class="services-container">
         <div class="service-card" onclick="navigateTo('src/screens/SelectRide.html')">
-            <i>🚗</i><br><span>City Ride</span>
+            <i>🚗</i><span>City Ride</span>
         </div>
-        <div class="service-card" onclick="alert('Coming soon!')">
-            <i>🏍️</i><br><span>Bike</span>
+        <div class="service-card" onclick="alert('Bike service launching soon!')">
+            <i>🏍️</i><span>Bike Express</span>
         </div>
-        <div class="service-card" onclick="alert('Coming soon!')">
-            <i>📦</i><br><span>Delivery</span>
+        <div class="service-card" onclick="alert('Delivery module is active')">
+            <i>📦</i><span>Fast Delivery</span>
         </div>
-        <div class="service-card" onclick="navigateTo('src/screens/SelectRide.html')">
-            <i>👑</i><br><span>VVIP</span>
+        <div class="service-card vvip-card" onclick="navigateTo('src/screens/SelectRide.html')">
+            <i style="filter: drop-shadow(0 0 10px gold);">👑</i><span style="color: gold;">VVIP Luxury</span>
         </div>
     </div>
-
-    <footer class="footer">
-        <a onclick="navigateTo('index.html')" class="footer-item active">🏠<br>Home</a>
-        <a onclick="navigateTo('src/screens/SelectRide.html')" class="footer-item">🚗<br>Rides</a>
-        <a onclick="navigateTo('src/screens/Profile.html')" class="footer-item">👤<br>Account</a>
-    </footer>
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -74,24 +143,8 @@
     import { auth, db } from './src/firebase-config.js';
     import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    // --- 404 FIX: Admin Tap Logic ---
-    let tapCount = 0;
-    let lastTap = 0;
-    window.secretAdminTap = () => {
-        const currentTime = Date.now();
-        if (currentTime - lastTap > 1000) tapCount = 0;
-        tapCount++;
-        lastTap = currentTime;
-        if (tapCount === 10) {
-            tapCount = 0;
-            // درست راستہ (Path)
-            window.location.href = "src/screens/AdminLogin.html"; 
-        }
-    };
-
-    // --- 404 FIX: Navigation Logic ---
+    // --- Path Correction Logic ---
     window.navigateTo = (path) => {
-        // Vercel پر 404 سے بچنے کے لیے سلیش ہٹا کر چیک کریں
         window.location.href = path;
     };
 
@@ -102,28 +155,30 @@
         ov.style.display = sb.classList.contains('active') ? 'block' : 'none';
     };
 
-    window.handleLogout = () => {
-        auth.signOut().then(() => {
-            window.location.href = "src/screens/Login.html";
-        });
+    // Admin Secret Logic (10 Taps)
+    let taps = 0; let lastTap = 0;
+    window.secretAdminTap = () => {
+        const now = Date.now();
+        if (now - lastTap > 1000) taps = 0;
+        taps++; lastTap = now;
+        if (taps === 10) navigateTo('src/screens/AdminLogin.html');
     };
 
-    // User Data Loader
+    // Firebase User Loader
     auth.onAuthStateChanged(async (user) => {
         if (user) {
-            const docSnap = await getDoc(doc(db, "users", user.uid));
-            if (docSnap.exists()) {
-                const data = docSnap.data();
-                document.getElementById('side-user-name').innerText = data.name || "Tezro User";
+            const snap = await getDoc(doc(db, "users", user.uid));
+            if (snap.exists()) {
+                document.getElementById('side-name').innerText = snap.data().name;
+                document.getElementById('side-role').innerText = `★ 5.0 ${snap.data().role || 'User'}`;
             }
         } else {
-            // اگر یوزر لاگ ان نہیں تو لاگ ان پیج پر بھیجیں
-            window.location.href = "src/screens/Login.html";
+            navigateTo('src/screens/Login.html');
         }
     });
 
-    // Map Init
-    var map = L.map('map-container', {zoomControl: false}).setView([30.1575, 71.5249], 14);
+    // Dark Mode Map
+    const map = L.map('map-container', {zoomControl: false}).setView([30.1575, 71.5249], 14);
     L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(map);
 </script>
 </body>
