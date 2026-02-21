@@ -1,40 +1,40 @@
-import { Link } from "react-router-dom";
-import { useEffect } from "react";
-import L from "leaflet";
-import "leaflet/dist/leaflet.css";
+import { auth, db } from '../firebase-config.js';
 
-export default function HomeScreen() {
+// --- Admin Panel Hidden Trigger (10 Taps) ---
+let tapCount = 0;
+document.getElementById('admin-trigger').addEventListener('click', () => {
+    tapCount++;
+    if (tapCount === 10) {
+        window.location.href = 'AdminLogin.html';
+    }
+    setTimeout(() => tapCount = 0, 5000);
+});
 
-  useEffect(() => {
-    const map = L.map("homeMap", {
-      zoomControl: false,
-      attributionControl: false,
-    }).setView([31.5204, 74.3587], 13);
-
-    L.tileLayer(
-      "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
-    ).addTo(map);
-
-    return () => map.remove();
-  }, []);
-
-  return (
-    <div className="home-container">
-      <h1>AlinGo</h1>
-
-      <div className="map-preview">
-        <div id="homeMap" style={{ height: "300px" }}></div>
-      </div>
-
-      <div className="button-grid">
-        <Link to="/ride">
-          <button className="neon-btn">🚗 Ride</button>
-        </Link>
-
-        <Link to="/sports">
-          <button className="neon-btn">⚽ Sports</button>
-        </Link>
-      </div>
-    </div>
-  );
+// --- Initialize Leaflet Map ---
+function initMap() {
+    const map = L.map('map-section', {zoomControl: false}).setView([30.15, 71.52], 13);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(map);
+    
+    // Get User Location
+    navigator.geolocation.getCurrentPosition(pos => {
+        const { latitude, longitude } = pos.coords;
+        map.setView([latitude, longitude], 15);
+        L.marker([latitude, longitude]).addTo(map).bindPopup("You are here").openPopup();
+    });
 }
+
+// --- Check Login Status ---
+auth.onAuthStateChanged(user => {
+    if (!user) {
+        window.location.href = 'Login.html';
+    } else {
+        console.log("Welcome to Tezro Super App");
+        initMap();
+    }
+});
+
+// Sidebar Toggle Logic
+document.getElementById('menu-trigger').onclick = () => {
+    // یہاں آپ سائیڈ بار کو شو/ہائیڈ کرنے کا کوڈ لکھیں گے
+    alert("Sidebar Opening..."); 
+};
