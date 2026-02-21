@@ -1,0 +1,43 @@
+:root {
+  --neon: #39FF14;
+  --bg: #050505;
+  --card-bg: #121212;
+}
+
+body { background: var(--bg); color: white; margin: 0; font-family: 'Inter', sans-serif; }
+
+.app-header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 15px 20px; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px);
+  position: sticky; top: 0; z-index: 100;
+}
+
+.app-logo { height: 40px; filter: drop-shadow(0 0 5px var(--neon)); cursor: pointer; }
+
+.install-badge {
+  background: var(--neon); color: black; border: none; padding: 5px 12px;
+  border-radius: 20px; font-weight: bold; font-size: 12px;
+}
+
+.map-frame {
+  height: 250px; margin: 15px; border-radius: 25px;
+  border: 1px solid rgba(57, 255, 20, 0.3); box-shadow: 0 0 20px rgba(57, 255, 20, 0.1);
+}
+
+.services-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 15px; }
+
+.s-card {
+  background: var(--card-bg); padding: 20px; border-radius: 20px;
+  text-align: center; border: 1px solid #222; transition: 0.3s;
+}
+
+.s-card:hover { border-color: var(--neon); box-shadow: 0 0 15px rgba(57, 255, 20, 0.2); }
+
+.s-icon { font-size: 35px; margin-bottom: 8px; }
+.full-width { grid-column: span 2; }
+
+.sidebar {
+  position: fixed; left: -280px; top: 0; width: 260px; height: 100%;
+  background: #000; border-right: 1px solid var(--neon); transition: 0.4s; z-index: 1000;
+}
+.sidebar.active { left: 0; }
