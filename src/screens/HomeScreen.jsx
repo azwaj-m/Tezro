@@ -1,85 +1,80 @@
-import React, { useState, useEffect } from "react";
-import Sidebar from "../components/Sidebar";
-import BottomNav from "../components/BottomNav";
-import RideMap from "../components/RideMap";
-import "../global.css";
+import React, { useEffect, useState } from "react";
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
+import "../../styles/global.css"; // آپ کی مین سی ایس ایس
 
 export default function HomeScreen() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [adminTaps, setAdminTaps] = useState(0);
+  const [sidebarActive, setSidebarActive] = useState(false);
 
-  // Admin Panel Trigger (10 Taps on Logo)
-  const handleAdminTap = () => {
-    setAdminTaps(prev => prev + 1);
-    if (adminTaps + 1 === 10) {
-      window.location.href = "/src/screens/AdminLogin.html";
-    }
-    setTimeout(() => setAdminTaps(0), 3000); // Reset taps after 3 seconds
+  useEffect(() => {
+    // نقشہ صرف ایک بار لوڈ ہو
+    const container = L.DomUtil.get("map");
+    if (container != null) { container._leaflet_id = null; }
+
+    const map = L.map("map", { zoomControl: false }).setView([31.5204, 74.3587], 13);
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
+
+    // یوزر کی لوکیشن حاصل کرنا
+    navigator.geolocation.getCurrentPosition((pos) => {
+      const { latitude, longitude } = pos.coords;
+      map.setView([latitude, longitude], 15);
+      L.marker([latitude, longitude]).addTo(map).bindPopup("You are here").openPopup();
+    });
+  }, []);
+
+  const navigateTo = (path) => {
+    window.location.href = path;
   };
 
   return (
-    <div className="app-shell">
-      {/* Sidebar Component */}
-      <Sidebar isOpen={sidebarOpen} close={() => setSidebarOpen(false)} />
-
-      {/* Modern Header */}
-      <header className="premium-header">
-        <button className="icon-btn" onClick={() => setSidebarOpen(true)}>☰</button>
-        <div className="main-logo" onClick={handleAdminTap}>
-          <img src="/assets/logo.png" alt="Tezro Logo" />
-        </div>
-        <button className="icon-btn">🔔</button>
-      </header>
-
-      {/* Live Map Section */}
-      <div className="map-wrapper">
-         <RideMap />
+    <div className="app-container">
+      {/* Sidebar */}
+      <div className={`sidebar ${sidebarActive ? "active" : ""}`} id="sidebar">
+        <div className="sidebar-close" onClick={() => setSidebarActive(false)}>✖</div>
+        <a onClick={() => navigateTo("src/screens/Profile.html")}>👤 Profile</a>
+        <a onClick={() => navigateTo("src/screens/Orders.html")}>📦 Orders</a>
+        <a onClick={() => navigateTo("src/screens/Wallet.html")}>💳 Wallet</a>
+        <a onClick={() => navigateTo("src/screens/Support.html")}>🎧 Support</a>
+        <a onClick={() => navigateTo("src/screens/Safety.html")}>🛡️ Safety</a>
+        <div className="divider"></div>
+        <a onClick={() => navigateTo("CommunityTerms.html")}>📄 Terms</a>
       </div>
 
-      {/* --- Super App Services Grid --- */}
-      <div className="services-container">
-        <h3 className="section-title">Tezro Super Services</h3>
-        <div className="super-grid">
-          
-          {/* RIDE (Indriver/Uber Style) */}
-          <div className="service-box ride-glow" onClick={() => window.location.href="/src/screens/SelectRide.html"}>
-            <div className="icon">🚗</div>
-            <span>City Ride</span>
-            <small>Fastest Pickup</small>
-          </div>
+      {/* Header */}
+      <div className="header">
+        <div className="menu-icon" onClick={() => setSidebarActive(!sidebarActive)}>☰</div>
+        <img src="/assets/logo.png" className="logo" alt="Tezro" onClick={() => navigateTo("index.html")} />
+        <button className="install-btn">Install</button>
+      </div>
 
-          {/* FOOD (Foodpanda Style) */}
-          <div className="service-box food-glow" onClick={() => window.location.href="/src/screens/FoodHome.html"}>
-            <div className="icon">🍔</div>
-            <span>Food Delivery</span>
-            <small>Best Flavors</small>
-          </div>
+      {/* Live Map */}
+      <div id="map"></div>
 
-          {/* E-COMMERCE (Amazon/Draz Style) */}
-          <div className="service-box mart-glow" onClick={() => window.location.href="/src/screens/ShopHome.html"}>
-            <div className="icon">🛒</div>
-            <span>Tezro Mart</span>
-            <small>Shop Anything</small>
-          </div>
-
-          {/* LOGISTICS (TCS Style) */}
-          <div className="service-box parcel-glow" onClick={() => window.location.href="/src/screens/ParcelHome.html"}>
-            <div className="icon">📦</div>
-            <span>Send Parcel</span>
-            <small>Door to Door</small>
-          </div>
-
-          {/* BOOKING (Hotel/Hall Style) */}
-          <div className="service-box booking-glow" onClick={() => window.location.href="/src/screens/BookingHome.html"}>
-            <div className="icon">🏨</div>
-            <span>Bookings</span>
-            <small>Hotel & Halls</small>
-          </div>
-
+      {/* Services Grid */}
+      <div className="grid">
+        <div className="card" onClick={() => navigateTo("src/screens/SelectRide.html")}>
+          <span>🚗</span> Ride
+        </div>
+        <div className="card" onClick={() => navigateTo("src/screens/FoodHome.html")}>
+          <span>🍔</span> Food
+        </div>
+        <div className="card" onClick={() => navigateTo("src/screens/ShopHome.html")}>
+          <span>🛒</span> Shop
+        </div>
+        <div className="card" onClick={() => navigateTo("src/screens/ParcelHome.html")}>
+          <span>📦</span> Parcel
+        </div>
+        <div className="card hotel" onClick={() => navigateTo("src/screens/BookingHome.html")}>
+          <span>🏨</span> Hotels & Halls
         </div>
       </div>
 
-      <BottomNav />
+      {/* Bottom Nav */}
+      <div className="bottom-nav">
+        <div className="active">🏠<br />Home</div>
+        <div onClick={() => navigateTo("src/screens/Orders.html")}>📋<br />Activity</div>
+        <div onClick={() => navigateTo("src/screens/Profile.html")}>👤<br />Profile</div>
+      </div>
     </div>
   );
 }
