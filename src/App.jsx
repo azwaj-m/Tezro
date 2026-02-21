@@ -52,22 +52,22 @@ export default function TezroApp() {
 
       {/* ایڈمن پینل کا خفیہ حصہ */}
       {showAdmin && (
-        <div style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100%", background: "#000", padding: "20px", z"; overflowY: "auto" }}>
+        <div style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100%", background: "#000", padding: "20px", zIndex: 100, overflowY: "auto" }}>
           <h2 style={{color: "#1db954"}}>Tezro Control Panel</h2>
           <hr border="1px solid #333" />
           
           <div style={{ marginTop: "20px" }}>
             <label>کمیشن (فیصد):</label>
-            <input type="number" style={{width: "100%", padding: "10px", margin: "10px 0"}} value={adminSettings.commission} onChange={(e) => setAdminSettings({...adminSettings, commission: e.target.value})} />
+            <input type="number" style={{width: "100%", padding: "10px", margin: "10px 0", color: "#000"}} value={adminSettings.commission} onChange={(e) => setAdminSettings({...adminSettings, commission: e.target.value})} />
             
             <label>نیا اشتہار لکھیں:</label>
-            <input type="text" style={{width: "100%", padding: "10px", margin: "10px 0"}} value={adminSettings.promoText} onChange={(e) => setAdminSettings({...adminSettings, promoText: e.target.value})} />
+            <input type="text" style={{width: "100%", padding: "10px", margin: "10px 0", color: "#000"}} value={adminSettings.promoText} onChange={(e) => setAdminSettings({...adminSettings, promoText: e.target.value})} />
             
             <label>لوگو کا لنک (URL):</label>
-            <input type="text" style={{width: "100%", padding: "10px", margin: "10px 0"}} value={adminSettings.logoUrl} onChange={(e) => setAdminSettings({...adminSettings, logoUrl: e.target.value})} />
+            <input type="text" style={{width: "100%", padding: "10px", margin: "10px 0", color: "#000"}} value={adminSettings.logoUrl} onChange={(e) => setAdminSettings({...adminSettings, logoUrl: e.target.value})} />
 
             <label>نیا ایڈمن پاسورڈ:</label>
-            <input type="text" style={{width: "100%", padding: "10px", margin: "10px 0"}} value={adminSettings.password} onChange={(e) => setAdminSettings({...adminSettings, password: e.target.value})} />
+            <input type="text" style={{width: "100%", padding: "10px", margin: "10px 0", color: "#000"}} value={adminSettings.password} onChange={(e) => setAdminSettings({...adminSettings, password: e.target.value})} />
 
             <button onClick={() => setShowAdmin(false)} style={{ background: "#1db954", width: "100%", padding: "15px", border: "none", color: "#fff", fontWeight: "bold", marginTop: "20px", borderRadius: "10px" }}>
               تبدیلیاں محفوظ کریں اور باہر نکلیں
