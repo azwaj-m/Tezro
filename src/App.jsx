@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 
-export default function TezroApp() {
-  // ایپ کی وہ سیٹنگز جو ایڈمن (آپ) بغیر کوڈ کے بدل سکتے ہیں
+export default function App() { // نام App کر دیا گیا ہے
   const [adminSettings, setAdminSettings] = useState({
     commission: 10,
-    logoUrl: "https://via.placeholder.com/80", // یہاں اپنا اصلی لوگو لنک ڈالیں
+    logoUrl: "https://via.placeholder.com/80", 
     promoText: "Tezro: Safe & Fast Delivery!",
-    password: "123" // ایڈمن پینل کا پاسورڈ
+    password: "123" 
   });
 
   const [rider] = useState({ name: "Ali Ahmed", wallet: 2500, rating: 2.5 });
@@ -21,7 +20,6 @@ export default function TezroApp() {
   return (
     <div style={{ backgroundColor: "#000", color: "#fff", minHeight: "100vh", padding: "15px", fontFamily: "Arial" }}>
       
-      {/* ہیڈر: لوگو پر کلک کرنے سے ایڈمن کھلے گا */}
       <div style={{ textAlign: "center", marginBottom: "20px" }}>
         <img 
           src={adminSettings.logoUrl} 
@@ -31,12 +29,10 @@ export default function TezroApp() {
         <p style={{fontSize: "10px", color: "#444"}}>Admin Access: Tap Logo</p>
       </div>
 
-      {/* اشتہاری پٹی (Admin Controlled) */}
       <div style={{ background: "#1db954", color: "#000", padding: "10px", borderRadius: "10px", textAlign: "center", fontWeight: "bold" }}>
         📢 {adminSettings.promoText}
       </div>
 
-      {/* رائیڈر کارڈ اور آٹو سجیشن */}
       <div style={{ background: "#111", padding: "20px", borderRadius: "15px", marginTop: "20px", border: "1px solid #222" }}>
         <h3>رائیڈر پروفائل</h3>
         <p>والٹ: Rs. {rider.wallet}</p>
@@ -50,27 +46,26 @@ export default function TezroApp() {
         )}
       </div>
 
-      {/* ایڈمن پینل کا خفیہ حصہ */}
       {showAdmin && (
         <div style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100%", background: "#000", padding: "20px", zIndex: 100, overflowY: "auto" }}>
           <h2 style={{color: "#1db954"}}>Tezro Control Panel</h2>
-          <hr border="1px solid #333" />
+          <hr style={{border: "1px solid #333"}} />
           
           <div style={{ marginTop: "20px" }}>
             <label>کمیشن (فیصد):</label>
-            <input type="number" style={{width: "100%", padding: "10px", margin: "10px 0", color: "#000"}} value={adminSettings.commission} onChange={(e) => setAdminSettings({...adminSettings, commission: e.target.value})} />
+            <input type="number" style={{width: "100%", padding: "10px", margin: "10px 0", color: "#000", backgroundColor: "#fff"}} value={adminSettings.commission} onChange={(e) => setAdminSettings({...adminSettings, commission: e.target.value})} />
             
             <label>نیا اشتہار لکھیں:</label>
-            <input type="text" style={{width: "100%", padding: "10px", margin: "10px 0", color: "#000"}} value={adminSettings.promoText} onChange={(e) => setAdminSettings({...adminSettings, promoText: e.target.value})} />
+            <input type="text" style={{width: "100%", padding: "10px", margin: "10px 0", color: "#000", backgroundColor: "#fff"}} value={adminSettings.promoText} onChange={(e) => setAdminSettings({...adminSettings, promoText: e.target.value})} />
             
             <label>لوگو کا لنک (URL):</label>
-            <input type="text" style={{width: "100%", padding: "10px", margin: "10px 0", color: "#000"}} value={adminSettings.logoUrl} onChange={(e) => setAdminSettings({...adminSettings, logoUrl: e.target.value})} />
+            <input type="text" style={{width: "100%", padding: "10px", margin: "10px 0", color: "#000", backgroundColor: "#fff"}} value={adminSettings.logoUrl} onChange={(e) => setAdminSettings({...adminSettings, logoUrl: e.target.value})} />
 
             <label>نیا ایڈمن پاسورڈ:</label>
-            <input type="text" style={{width: "100%", padding: "10px", margin: "10px 0", color: "#000"}} value={adminSettings.password} onChange={(e) => setAdminSettings({...adminSettings, password: e.target.value})} />
+            <input type="text" style={{width: "100%", padding: "10px", margin: "10px 0", color: "#000", backgroundColor: "#fff"}} value={adminSettings.password} onChange={(e) => setAdminSettings({...adminSettings, password: e.target.value})} />
 
             <button onClick={() => setShowAdmin(false)} style={{ background: "#1db954", width: "100%", padding: "15px", border: "none", color: "#fff", fontWeight: "bold", marginTop: "20px", borderRadius: "10px" }}>
-              تبدیلیاں محفوظ کریں اور باہر نکلیں
+              تمام تبدیلیاں محفوظ کریں
             </button>
           </div>
         </div>
