@@ -2,98 +2,66 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Tezro</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tezro Super App</title>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 
 <style>
 :root{
     --primary:#39FF14;
-    --bg-dark:#0a0f14;
-    --bg-light:#111827;
-    --card:#121a22;
-    --text:#ffffff;
-    --gray:#9ca3af;
+    --dark:#0a0f14;
+    --glass:rgba(255,255,255,0.05);
 }
 
-/* ===== BODY ===== */
 body{
     margin:0;
     font-family:system-ui;
-    background:linear-gradient(135deg,#0a0f14,#111827);
-    color:var(--text);
-    padding-bottom:80px;
+    background:linear-gradient(135deg,#0a0f14,#111827,#0a0f14);
+    background-size:400% 400%;
+    animation:bgMove 15s infinite alternate;
+    color:white;
+    overflow-x:hidden;
+    padding-bottom:90px;
 }
 
-/* ===== HEADER ===== */
+@keyframes bgMove{
+    0%{background-position:left;}
+    100%{background-position:right;}
+}
+
+/* HEADER */
 .header{
     display:flex;
     justify-content:space-between;
     align-items:center;
-    padding:20px;
+    padding:15px 20px;
 }
 
 .logo{
-    font-size:22px;
-    font-weight:800;
-    color:var(--primary);
-    letter-spacing:2px;
-    text-shadow:0 0 10px var(--primary);
+    height:40px;
 }
 
-/* ===== SIDEBAR ===== */
-.sidebar{
-    position:fixed;
-    top:0;
-    left:-280px;
-    width:260px;
-    height:100%;
-    background:#000;
-    transition:.4s;
-    z-index:2000;
-    border-right:2px solid var(--primary);
-}
-
-.sidebar.active{ left:0; }
-
-.sidebar-user{
-    padding:40px 20px;
-    border-bottom:1px solid #222;
-}
-
-.sidebar-item{
-    display:block;
-    padding:15px 20px;
-    color:#ccc;
-    text-decoration:none;
-    transition:.3s;
-}
-
-.sidebar-item:hover{
-    background:#111;
-    color:var(--primary);
-}
-
-/* ===== HERO SECTION ===== */
-.hero{
-    margin:10px 20px;
-    padding:25px;
+.install-btn{
+    background:var(--primary);
+    border:none;
+    padding:8px 15px;
     border-radius:20px;
-    background:linear-gradient(145deg,#111827,#0f172a);
-    border:1px solid #1f2937;
-    box-shadow:0 0 40px rgba(57,255,20,.08);
+    font-weight:bold;
+    cursor:pointer;
 }
 
-.hero h2{
-    margin:0;
-    font-size:20px;
+/* MAP */
+#map{
+    height:220px;
+    margin:10px 15px;
+    border-radius:20px;
+    overflow:hidden;
+    border:2px solid var(--primary);
+    box-shadow:0 0 25px rgba(57,255,20,.3);
 }
 
-.hero p{
-    margin:5px 0 0;
-    color:var(--gray);
-}
-
-/* ===== GRID ===== */
+/* SERVICES GRID */
 .grid{
     display:grid;
     grid-template-columns:repeat(2,1fr);
@@ -102,40 +70,61 @@ body{
 }
 
 .card{
-    height:140px;
+    background:var(--glass);
+    backdrop-filter:blur(15px);
+    border:1px solid rgba(57,255,20,.3);
     border-radius:20px;
-    background:var(--card);
+    height:130px;
     display:flex;
     flex-direction:column;
     justify-content:center;
     align-items:center;
-    cursor:pointer;
     transition:.3s;
-    border:1px solid #1f2937;
+    cursor:pointer;
 }
 
 .card:hover{
+    box-shadow:0 0 30px rgba(57,255,20,.6);
     transform:translateY(-5px);
-    box-shadow:0 0 25px rgba(57,255,20,.2);
 }
 
 .card span{
-    font-size:40px;
+    font-size:35px;
 }
 
-.card h3{
-    margin:8px 0 0;
-    font-size:14px;
-    font-weight:600;
-}
-
-/* ===== HOTEL FULL WIDTH ===== */
 .hotel{
     grid-column:span 2;
-    height:110px;
 }
 
-/* ===== BOTTOM NAV ===== */
+/* SIDEBAR */
+.sidebar{
+    position:fixed;
+    left:-260px;
+    top:0;
+    width:250px;
+    height:100%;
+    background:#000;
+    border-right:2px solid var(--primary);
+    transition:.4s;
+    z-index:2000;
+    padding-top:60px;
+}
+
+.sidebar.active{left:0;}
+
+.sidebar a{
+    display:block;
+    padding:15px 20px;
+    color:#ccc;
+    text-decoration:none;
+}
+
+.sidebar a:hover{
+    background:#111;
+    color:var(--primary);
+}
+
+/* BOTTOM NAV */
 .bottom-nav{
     position:fixed;
     bottom:0;
@@ -145,85 +134,71 @@ body{
     display:flex;
     justify-content:space-around;
     align-items:center;
-    border-top:1px solid #1f2937;
+    border-top:1px solid #222;
 }
 
-.nav-item{
+.bottom-nav div{
     font-size:12px;
-    color:var(--gray);
-}
-
-.nav-item.active{
-    color:var(--primary);
+    text-align:center;
 }
 </style>
 </head>
-
 <body>
 
 <!-- Sidebar -->
-<nav class="sidebar" id="sidebar">
-    <div class="sidebar-user">
-        <h3>Tezro User</h3>
-        <p style="color:var(--primary);font-size:12px;">Super App Access</p>
-    </div>
-
-    <a class="sidebar-item" onclick="navigateTo('src/screens/Profile.html')">👤 Profile</a>
-    <a class="sidebar-item" onclick="navigateTo('src/screens/Orders.html')">📦 Orders</a>
-    <a class="sidebar-item" onclick="navigateTo('src/screens/Wallet.html')">💳 Wallet</a>
-    <a class="sidebar-item" onclick="navigateTo('src/screens/Support.html')">🎧 Support</a>
-    <a class="sidebar-item" style="color:red;" onclick="handleLogout()">🚪 Logout</a>
-</nav>
+<div class="sidebar" id="sidebar">
+    <a href="src/screens/Profile.html">👤 Profile</a>
+    <a href="src/screens/Orders.html">📦 Orders</a>
+    <a href="src/screens/Wallet.html">💳 Wallet</a>
+    <a href="src/screens/Support.html">🎧 Support</a>
+</div>
 
 <!-- Header -->
 <div class="header">
     <div onclick="toggleSidebar()" style="font-size:22px;color:var(--primary);cursor:pointer;">☰</div>
-    <div class="logo">TEZRO</div>
-    <div>🔔</div>
+    <img src="assets/logo.png" class="logo">
+    <button class="install-btn" id="installBtn">Install</button>
 </div>
 
-<!-- Hero Section -->
-<div class="hero">
-    <h2>All-in-One Super Services</h2>
-    <p>Ride • Shopping • Food • Parcel • Hotel Booking</p>
-</div>
+<!-- LIVE MAP -->
+<div id="map"></div>
 
-<!-- Main Grid -->
+<!-- SERVICES -->
 <div class="grid">
-
     <div class="card" onclick="navigateTo('src/screens/SelectRide.html')">
         <span>🚗</span>
-        <h3>Book Ride</h3>
+        Ride
     </div>
 
     <div class="card" onclick="navigateTo('src/screens/FoodHome.html')">
         <span>🍔</span>
-        <h3>Food Delivery</h3>
+        Food
     </div>
 
     <div class="card" onclick="navigateTo('src/screens/ShopHome.html')">
         <span>🛒</span>
-        <h3>Online Shopping</h3>
+        Shop
     </div>
 
     <div class="card" onclick="navigateTo('src/screens/ParcelHome.html')">
         <span>📦</span>
-        <h3>Send Parcel</h3>
+        Parcel
     </div>
 
     <div class="card hotel" onclick="navigateTo('src/screens/BookingHome.html')">
         <span>🏨</span>
-        <h3>Hotels & Wedding Halls</h3>
+        Hotels & Halls
     </div>
-
 </div>
 
 <!-- Bottom Nav -->
-<nav class="bottom-nav">
-    <div class="nav-item active">🏠<br>Home</div>
-    <div class="nav-item" onclick="navigateTo('src/screens/Orders.html')">📋<br>Activity</div>
-    <div class="nav-item" onclick="navigateTo('src/screens/Profile.html')">👤<br>Profile</div>
-</nav>
+<div class="bottom-nav">
+    <div>🏠<br>Home</div>
+    <div onclick="navigateTo('src/screens/Orders.html')">📋<br>Activity</div>
+    <div onclick="navigateTo('src/screens/Profile.html')">👤<br>Profile</div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script>
 function toggleSidebar(){
@@ -233,6 +208,25 @@ function toggleSidebar(){
 function navigateTo(path){
     window.location.href = path;
 }
+
+/* Leaflet Live Map */
+var map = L.map('map').setView([31.5204, 74.3587], 13); // Lahore default
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+    maxZoom:19,
+}).addTo(map);
+
+/* PWA Install */
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+});
+
+document.getElementById('installBtn').addEventListener('click', async () => {
+    if(deferredPrompt){
+        deferredPrompt.prompt();
+    }
+});
 </script>
 
 </body>
