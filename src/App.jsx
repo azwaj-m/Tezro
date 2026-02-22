@@ -1,3 +1,4 @@
+import FoodHome from "./screens/FoodHome";
 import React, { useState } from "react";
 
 export default function App() { // نام App کر دیا گیا ہے
