@@ -1,9 +1,14 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App.jsx' // اب یہ صرف App.jsx کو ڈھونڈے گا
+import React from 'react';
+import HomeScreen from './screens/HomeScreen'; // آپ کا نیا نیون ڈیزائن
+import './global.css'; // اگر آپ کے پاس گلوبل اسٹائلز ہیں
 
-ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-)
+function App() {
+  return (
+    <div className="App">
+      {/* یہاں سے آپ کی پوری Tezro Super App شروع ہوتی ہے */}
+      <HomeScreen /> 
+    </div>
+  );
+}
+
+export default App;
