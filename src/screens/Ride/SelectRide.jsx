@@ -82,3 +82,4 @@ const styles = {
   rideCard: { display: "flex", justifyContent: "space-between", alignItems: "center", padding: "12px 15px", borderRadius: "15px", marginBottom: "10px", cursor: "pointer" },
   confirmBtn: { width: "100%", padding: "15px", borderRadius: "15px", border: "none", fontWeight: "bold", fontSize: "16px", marginTop: "10px" }
 };
+
