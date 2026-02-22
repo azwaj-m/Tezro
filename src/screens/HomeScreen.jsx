@@ -1,28 +1,36 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Sidebar from "../components/Sidebar";
 import RideMap from "../components/RideMap";
 import BottomNav from "../components/BottomNav";
+import AdminDashboard from "./Admin/Dashboard"; // فرض کریں آپ نے یہ فائل بنائی ہے
 import "../global.css";
 
 export default function HomeScreen() {
-
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [tapCount, setTapCount] = useState(0);
+  const [isAdmin, setIsAdmin] = useState(false); // ایڈمن لاجک کے لیے اسٹیٹ
 
   const handleLogoTap = () => {
-    const newCount = tapCount + 1;
-    setTapCount(newCount);
+    setTapCount((prev) => {
+      const newCount = prev + 1;
+      if (newCount === 10) {
+        setIsAdmin(true); // .html پر جانے کے بجائے اسٹیٹ بدلیں
+        return 0;
+      }
+      return newCount;
+    });
 
-    if (newCount === 10) {
-      window.location.href = "/admin/Dashboard.html";
-    }
-
+    // 3 سیکنڈ بعد کاؤنٹر ری سیٹ کریں
     setTimeout(() => setTapCount(0), 3000);
   };
 
+  // اگر ایڈمن موڈ آن ہو جائے تو ڈیش بورڈ دکھائیں
+  if (isAdmin) {
+    return <AdminDashboard onBack={() => setIsAdmin(false)} />;
+  }
+
   return (
     <div className="app">
-
       <Sidebar open={sidebarOpen} close={() => setSidebarOpen(false)} />
 
       {/* HEADER */}
@@ -30,12 +38,17 @@ export default function HomeScreen() {
         <div className="menu" onClick={() => setSidebarOpen(true)}>☰</div>
 
         <div className="logo" onClick={handleLogoTap}>
-          <img src="/assets/logo.png" alt="Tezro"/>
+          {/* Fallback ٹیکسٹ تاکہ لوگو غائب ہونے پر نام نظر آئے */}
+          <img 
+            src="/assets/logo.png" 
+            alt="TEZRO" 
+            onError={(e) => { e.target.style.display='none'; e.target.parentNode.innerText='TEZRO'; }}
+            style={{ height: '35px' }}
+          />
         </div>
 
-        <div className="bell">
-          🔔
-          <span className="notify-dot"></span>
+        <div className="bell" style={{ position: 'relative' }}>
+          🔔 <span className="notify-dot"></span>
         </div>
       </header>
 
@@ -44,28 +57,24 @@ export default function HomeScreen() {
         <RideMap />
 
         <div className="ride-bar">
-          <div className="where-input">
-            📍 Where to?
-          </div>
-          <button className="ride-btn">
-            Ride Now →
-          </button>
+          <div className="where-input">📍 Where to?</div>
+          <button className="ride-btn">Ride Now →</button>
         </div>
 
         <div className="quick-row">
-          <div>📍 Set Pickup</div>
-          <div>💳 Wallet</div>
-          <div>⭐ Promotions</div>
+          <div className="quick-item">📍 Set Pickup</div>
+          <div className="quick-item">💳 Wallet</div>
+          <div className="quick-item">⭐ Promos</div>
         </div>
       </div>
 
-      {/* SERVICES */}
-      <div className="services">
-        <div className="card ride">🚗 Ride</div>
-        <div className="card food">🍔 Food</div>
-        <div className="card shop">🛒 Shop</div>
-        <div className="card parcel">📦 Parcel</div>
-        <div className="card booking">🏨 Booking</div>
+      {/* SERVICES GRID */}
+      <div className="services-grid">
+        <div className="service-card ride">🚗<br/>Ride</div>
+        <div className="service-card food">🍔<br/>Food</div>
+        <div className="service-card shop">🛒<br/>Shop</div>
+        <div className="service-card parcel">📦<br/>Parcel</div>
+        <div className="service-card hotel" style={{ gridColumn: 'span 2' }}>🏨 Booking</div>
       </div>
 
       <BottomNav />
