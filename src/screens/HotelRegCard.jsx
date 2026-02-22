@@ -23,3 +23,4 @@ export default function HotelRegCard({ guestName, roomType, stayDuration }) {
     </div>
   );
 }
+
