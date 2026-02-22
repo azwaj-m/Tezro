@@ -73,3 +73,4 @@ const styles = {
   acceptBtn: { flex: 2, background: "#39FF14", color: "#000", border: "none", padding: "12px", borderRadius: "10px", fontWeight: "bold" },
   rejectBtn: { flex: 1, background: "#333", color: "#fff", border: "none", padding: "12px", borderRadius: "10px" }
 };
+
