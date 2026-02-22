@@ -5,7 +5,7 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   build: {
-    // یہاں سے تمام پرانی .html فائلوں کے لنکس نکال دیں
+    // یہاں سے تمام پران .html فائلوں کے لنکس نکال دیں
     rollupOptions: {
       input: {
         main: 'index.html', // صرف مین انڈیکس فائل ہونی چاہیے
