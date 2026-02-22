@@ -6,7 +6,7 @@ export default function App() {
   const [currentPage, setCurrentPage] = useState("home");
   const [sidebarActive, setSidebarActive] = useState(false);
 
-  // نقشہ لوڈ کرنے کا اثر
+  // نقشہ لوڈ کرنےکا اثر
   useEffect(() => {
     if (currentPage === "home") {
       const map = L.map("map").setView([31.5204, 74.3587], 13);
