@@ -66,3 +66,4 @@ const styles = {
   input: { width: "100%", padding: "12px", marginBottom: "15px", borderRadius: "10px", border: "1px solid #333", background: "#000", color: "#fff" },
   btn: { width: "100%", padding: "15px", borderRadius: "10px", border: "none", background: "#39FF14", color: "#000", fontWeight: "bold", fontSize: "16px", cursor: "pointer" }
 };
+
