@@ -20,7 +20,8 @@ export default function HomeScreen() {
         <div style={styles.mapOverlay}>
            <div style={styles.searchBar}>
              <span>🔍 Where to?</span>
-             <button style={styles.rideBtn}>Ride Now ></button>
+             {/* یہاں میں نے ایرر ٹھیک کر دیا ہے: &gt; کا استعمال کیا ہے */}
+             <button style={styles.rideBtn}>Ride Now &gt;</button>
            </div>
         </div>
       </div>
