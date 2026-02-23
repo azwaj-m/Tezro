@@ -1,14 +1,12 @@
-import React from 'react';
-import HomeScreen from './screens/HomeScreen'; // آپ کا نیا نیون ڈیزائن
-import './global.css'; // اگر آپ کے پاس گلوبل اسٹائلز ہیں
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import { BrowserRouter } from 'react-router-dom'
+import App from './App.jsx'
 
-function App() {
-  return (
-    <div className="App">
-      {/* یہاں سے آپ کی پوری Tezro Super App شروع ہوتی ہے */}
-      <HomeScreen /> 
-    </div>
-  );
-}
-
-export default App;
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  </React.StrictMode>,
+)
