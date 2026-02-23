@@ -1,20 +1,23 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getFirestore } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-import { getAuth, GoogleAuthProvider, RecaptchaVerifier, signInWithPhoneNumber } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import { initializeApp } from "firebase/app";
+import { getFirestore } from "firebase/firestore";
+import { getAuth, GoogleAuthProvider, RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 
+// ورسل (Vercel) سے کیز اٹھانے کے لیے 'import.meta.env' کا استعمال
 const firebaseConfig = {
-  apiKey: "AIzaSyCmMWdn-xQ6Ziq0S6Qzc6efXq7hsaYcftE",
-  authDomain: "tezro-2.firebaseapp.com",
-  projectId: "tezro-2",
-  storageBucket: "tezro-2.firebasestorage.app",
-  messagingSenderId: "954821667016",
-  appId: "1:954821667016:web:809decb67cd0a2bd22ddfd"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID
 };
 
+// فائر بیس کو انیشلائز کریں
 const app = initializeApp(firebaseConfig);
+
 export const db = getFirestore(app);
 export const auth = getAuth(app);
 export const googleProvider = new GoogleAuthProvider();
 
-// فون لاگ ان کے لیے ضروریی  ایکسپورٹس
+// فون لاگ ان کے لیے ایکسپورٹس
 export { RecaptchaVerifier, signInWithPhoneNumber };
