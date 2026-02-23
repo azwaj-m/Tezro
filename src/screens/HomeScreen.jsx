@@ -1,4 +1,3 @@
-cat <<'EOF' > src/screens/HomeScreen.jsx
 import React from "react";
 
 const HomeScreen = () => {
@@ -19,7 +18,8 @@ const HomeScreen = () => {
           <div style={styles.searchBar}>
             <span style={{color: '#00FF88'}}>📍</span>
             <span style={styles.searchText}>Where to?</span>
-            <button style={styles.rideBtn}>Ride Now ></button>
+            {/* یہاں میں نے ">" کو {" "} میں ڈال دیا ہے تاکہ ایرر ختم ہو جائے */}
+            <button style={styles.rideBtn}>{"Ride Now >"}</button>
           </div>
         </div>
       </div>
@@ -72,4 +72,3 @@ const styles = {
 };
 
 export default HomeScreen;
-EOF
