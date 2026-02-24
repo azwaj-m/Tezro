@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTheme } from '../context/ThemeContext';
 import { MapContainer, TileLayer } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 
 const HomeScreen = () => {
+  const theme = useTheme();
   const navigate = useNavigate();
-  const [darkMode, setDarkMode] = useState(true); // آپ اسے ٹوگل کر سکتے ہیں
-  const [searchQuery, setSearchQuery] = useState("");
+  const [search, setSearch] = useState("");
 
   const services = [
     { name: 'Ride', icon: '📍', path: '/ride' },
@@ -16,94 +17,68 @@ const HomeScreen = () => {
     { name: 'Booking', icon: '🏢', path: '/hotels' }
   ];
 
-  // ڈائنامک کلرز
-  const theme = {
-    bg: darkMode ? '#1A0F0A' : '#F8F9FA', // گہرا براؤن بمقابلہ سفید
-    cardBg: darkMode ? 'rgba(45, 25, 15, 0.8)' : 'rgba(255, 255, 255, 0.9)',
-    border: darkMode ? '#D4AF37' : '#A855F7', // گولڈن بمقابلہ جامنی
-    text: darkMode ? '#F3E5AB' : '#2D3436',
-    mapTile: darkMode 
-      ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png" 
-      : "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
-  };
-
   return (
-    <div style={{...styles.container, background: theme.bg}}>
+    <div style={{ ...styles.container, background: theme.bg }}>
       
-      {/* 🌙 Mode Toggler (For Testing) */}
-      <button onClick={() => setDarkMode(!darkMode)} style={styles.modeToggle}>
-        {darkMode ? '☀️ Light Mode' : '🌙 Dark Mode'}
+      {/* 🌙 Mode Switcher */}
+      <button 
+        onClick={() => theme.setDarkMode(!theme.darkMode)} 
+        style={{ ...styles.modeBtn, background: theme.card, color: theme.border, borderColor: theme.border }}
+      >
+        {theme.darkMode ? '☀️ Light' : '🌙 Dark'}
       </button>
 
-      {/* 1. MAP SECTION */}
-      <div style={{...styles.mapFrame, borderColor: theme.border}}>
-        <MapContainer center={[31.4504, 73.1350]} zoom={13} style={styles.leafletMap} zoomControl={false}>
-          <TileLayer url={theme.mapTile} />
-          <div style={styles.mapOverlay}></div>
-          
-          {/* Active Search Bar */}
+      {/* 1. MAP WITH THEME ADAPTATION */}
+      <div style={{ ...styles.mapFrame, borderColor: theme.border, boxShadow: theme.shadow }}>
+        <MapContainer center={[31.4504, 73.1350]} zoom={13} style={{ height: '100%' }} zoomControl={false}>
+          <TileLayer url={theme.darkMode 
+            ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png" 
+            : "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"} 
+          />
           <div style={styles.floatingSearch}>
-             <div style={{...styles.glassSearch, background: theme.cardBg}}>
-                <span style={{color: theme.border}}>📍</span>
-                <input 
-                  type="text" 
-                  placeholder="Where to?" 
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  style={styles.searchInput}
-                />
-                <button style={{...styles.rideNowSmall, background: theme.border, color: darkMode ? '#000' : '#fff'}}>
-                  Go ❯
-                </button>
-             </div>
+            <div style={{ ...styles.glassSearch, background: theme.card, borderColor: theme.border }}>
+              <span style={{ color: theme.border }}>📍</span>
+              <input 
+                style={{ ...styles.input, color: theme.text }} 
+                placeholder="Where to go?" 
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+              <button style={{ ...styles.goBtn, background: theme.border, color: theme.darkMode ? '#000' : '#fff' }}>Go</button>
+            </div>
           </div>
         </MapContainer>
       </div>
 
-      {/* 2. QUICK ACTIONS */}
-      <div style={styles.quickActions}>
-        {['📍 Pickup', '💳 Wallet', '⭐ Promos'].map((act) => (
-          <div key={act} style={{
-            ...styles.actionPill, 
-            borderColor: theme.border, 
-            color: theme.text,
-            boxShadow: `0 4px 10px ${theme.border}33`
-          }}>
-            {act}
-          </div>
-        ))}
-      </div>
-
-      {/* 3. PRIMARY RIDE CARD */}
+      {/* 2. ELECTRIC RIDE HERO (Wave Boundary) */}
       <div style={{
-        ...styles.mainRideHero, 
-        background: darkMode ? 'linear-gradient(135deg, #2D1B10, #3E2723)' : 'linear-gradient(135deg, #F3E5F5, #E1F5FE)',
+        ...styles.rideHero, 
+        background: theme.card,
         borderColor: theme.border,
-        borderWidth: '1px 1px 4px 1px' // اوپر باریک، نیچے موٹی
+        boxShadow: theme.shadow
       }} onClick={() => navigate('/ride')}>
         <div style={styles.heroContent}>
-           <div style={{...styles.carGraphic, filter: `drop-shadow(0 0 10px ${theme.border})`}}>🚗</div>
-           <div>
-              <h2 style={{...styles.heroTitle, color: theme.text}}>Ride Anywhere</h2>
-              <p style={{color: theme.border, fontSize: '12px', fontWeight: 'bold'}}>Fast. Safe. Affordable.</p>
-           </div>
+          <div style={{ ...styles.car, filter: `drop-shadow(0 0 8px ${theme.border})` }}>🚗</div>
+          <div>
+            <h2 style={{ color: theme.text, margin: 0, fontSize: '18px' }}>Ride Anywhere</h2>
+            <p style={{ color: theme.border, fontSize: '11px', fontWeight: 'bold', margin: 0 }}>Fast • Safe • Affordable</p>
+          </div>
         </div>
-        <button style={{...styles.bookNowBtn, background: theme.border, color: darkMode ? '#000' : '#fff'}}>Book Now</button>
+        <button style={{ ...styles.bookBtn, background: theme.border, color: theme.darkMode ? '#000' : '#fff' }}>Book Now</button>
       </div>
 
-      {/* 4. SERVICE GRID */}
-      <div style={styles.serviceGrid}>
+      {/* 3. SERVICE GRID (Electric Shine) */}
+      <div style={styles.grid}>
         {services.map((s, i) => (
           <div key={i} style={{
-            ...styles.glassButton, 
-            background: theme.cardBg,
+            ...styles.serviceCard, 
+            background: theme.card,
             borderColor: theme.border,
-            borderWidth: '1px 1px 4px 1px', // لہر دار اثر کے لیے نیچے سے موٹی بارڈر
-            boxShadow: `0 10px 20px -5px ${theme.border}44`
+            boxShadow: `0 8px 15px -5px ${theme.border}44`
           }} onClick={() => navigate(s.path)}>
-            <div style={styles.iconBox}>{s.icon}</div>
-            <div style={{...styles.label, color: theme.text}}>{s.name}</div>
-            <div style={{...styles.bottomGlow, background: theme.border}}></div>
+            <div style={styles.icon}>{s.icon}</div>
+            <div style={{ ...styles.label, color: theme.text }}>{s.name}</div>
+            <div style={{ ...styles.bottomGlow, background: theme.border }}></div>
           </div>
         ))}
       </div>
@@ -112,27 +87,22 @@ const HomeScreen = () => {
 };
 
 const styles = {
-  container: { minHeight: '100vh', padding: '16px', paddingTop: '60px', transition: 'all 0.4s ease' },
-  modeToggle: { position: 'fixed', top: '10px', right: '10px', zIndex: 2000, padding: '5px 10px', borderRadius: '10px', border: 'none', cursor: 'pointer', fontSize: '12px' },
-  mapFrame: { height: '220px', borderRadius: '24px', overflow: 'hidden', border: '2px solid', marginBottom: '15px', position: 'relative' },
-  leafletMap: { height: '100%', width: '100%' },
-  mapOverlay: { position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.1)', pointerEvents: 'none', zIndex: 400 },
-  floatingSearch: { position: 'absolute', bottom: '15px', width: '100%', zIndex: 500, display: 'flex', justifyContent: 'center' },
-  glassSearch: { width: '90%', backdropFilter: 'blur(10px)', borderRadius: '15px', padding: '8px 15px', display: 'flex', alignItems: 'center', border: '1px solid rgba(255, 255, 255, 0.1)' },
-  searchInput: { background: 'none', border: 'none', color: 'inherit', marginLeft: '10px', outline: 'none', flex: 1, fontSize: '14px' },
-  rideNowSmall: { border: 'none', borderRadius: '10px', padding: '5px 12px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer' },
-  quickActions: { display: 'flex', justifyContent: 'space-between', gap: '8px', marginBottom: '20px' },
-  actionPill: { flex: 1, background: 'rgba(255,255,255,0.05)', borderRadius: '12px', padding: '10px 5px', fontSize: '11px', textAlign: 'center', border: '1px solid', fontWeight: 'bold' },
-  mainRideHero: { borderRadius: '25px', padding: '20px', marginBottom: '20px', borderStyle: 'solid', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer' },
+  container: { padding: '16px', minHeight: '100vh', transition: '0.4s ease', paddingTop: '70px' },
+  modeBtn: { position: 'fixed', top: '15px', right: '15px', zIndex: 1100, padding: '6px 12px', borderRadius: '12px', border: '1px solid', fontSize: '12px', fontWeight: 'bold', cursor: 'pointer' },
+  mapFrame: { height: '230px', borderRadius: '25px', overflow: 'hidden', border: '2px solid', position: 'relative', marginBottom: '20px' },
+  floatingSearch: { position: 'absolute', bottom: '15px', width: '100%', display: 'flex', justifyContent: 'center', zIndex: 1000 },
+  glassSearch: { width: '90%', padding: '10px 15px', borderRadius: '18px', display: 'flex', alignItems: 'center', backdropFilter: 'blur(10px)', border: '1px solid' },
+  input: { background: 'none', border: 'none', marginLeft: '10px', outline: 'none', flex: 1, fontSize: '14px' },
+  goBtn: { border: 'none', borderRadius: '10px', padding: '5px 15px', fontWeight: 'bold', cursor: 'pointer' },
+  rideHero: { borderRadius: '25px', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderStyle: 'solid', borderWidth: '1px 1px 5px 1px', marginBottom: '20px', cursor: 'pointer' },
   heroContent: { display: 'flex', alignItems: 'center', gap: '15px' },
-  carGraphic: { fontSize: '40px' },
-  heroTitle: { fontSize: '18px', fontWeight: '900', margin: 0 },
-  bookNowBtn: { border: 'none', borderRadius: '12px', padding: '10px 18px', fontWeight: '900', fontSize: '12px' },
-  serviceGrid: { display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px' },
-  glassButton: { borderRadius: '20px', padding: '18px 10px', textAlign: 'center', borderStyle: 'solid', position: 'relative', overflow: 'hidden' },
-  iconBox: { fontSize: '28px', marginBottom: '8px' },
-  label: { fontSize: '13px', fontWeight: '900', letterSpacing: '0.5px' },
-  bottomGlow: { position: 'absolute', bottom: 0, left: '15%', right: '15%', height: '3px', filter: 'blur(4px)', opacity: 0.7 }
+  car: { fontSize: '42px' },
+  bookBtn: { border: 'none', borderRadius: '12px', padding: '10px 18px', fontWeight: '900', fontSize: '12px' },
+  grid: { display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px' },
+  serviceCard: { borderRadius: '20px', padding: '15px 5px', textAlign: 'center', borderStyle: 'solid', borderWidth: '1px 1px 4px 1px', position: 'relative', overflow: 'hidden' },
+  icon: { fontSize: '28px', marginBottom: '5px' },
+  label: { fontSize: '12px', fontWeight: '900' },
+  bottomGlow: { position: 'absolute', bottom: 0, left: '20%', right: '20%', height: '3px', filter: 'blur(4px)', opacity: 0.6 }
 };
 
 export default HomeScreen;
