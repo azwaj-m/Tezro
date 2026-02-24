@@ -1,13 +1,12 @@
 import React from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout';
 import HomeScreen from './screens/HomeScreen';
-import FoodHome from './screens/Food/FoodHome'; 
+import FoodHome from './screens/Food/FoodHome'; // F بڑا رکھیں
 import RideHome from './screens/Ride/RideHome';
 import ShopHome from './screens/Shop/ShopHome'; 
 import PayHome from './screens/Pay/PayHome';
-// ایرر فکس: چھوٹے حروف والا پاتھ جو آپ کے اسٹرکچر میں ہے
-import AdminDashboard from './screens/Admin/AdminDashboard'; 
+import AdminDashboard from './screens/Admin/AdminDashboard'; // A بڑا رکھیں
 
 function App() {
   return (
@@ -19,7 +18,6 @@ function App() {
         <Route path="/shop" element={<ShopHome />} />
         <Route path="/pay" element={<PayHome />} />
         <Route path="/admin-control-center" element={<AdminDashboard />} />
-        <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </Layout>
   );
