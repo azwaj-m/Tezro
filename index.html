@@ -4,8 +4,28 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tezro - Super App</title>
+    
+    <link 
+      rel="stylesheet" 
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" 
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" 
+      crossorigin="" 
+    />
+
     <style>
-      body { margin: 0; padding: 0; background-color: #000508; }
+      body { 
+        margin: 0; 
+        padding: 0; 
+        background-color: #000508; 
+        font-family: Arial, sans-serif;
+        overflow-x: hidden; 
+      }
+      /* نقشے کے کنٹینر کو صحیح طرح دکھانے کے لیے */
+      .leaflet-container {
+        width: 100%;
+        height: 100%;
+        background-color: #1a1a1a;
+      }
     </style>
   </head>
   <body>
