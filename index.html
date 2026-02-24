@@ -5,6 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tezro - Super App</title>
     
+    <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+    <script>eruda.init();</script>
+
+    <script>
+      window.onerror = function(message, source, lineno, colno, error) {
+        alert("Tezro Build Error: " + message + "\nLine: " + lineno + "\nSource: " + source);
+        return false;
+      };
+    </script>
+
     <script src="https://accounts.google.com/gsi/client" async defer></script>
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
@@ -21,20 +31,19 @@
         margin: 0; 
         padding: 0; 
         background-color: #000508; 
-        font-family: 'Inter', Arial, sans-serif; /* جدید فانٹ */
+        font-family: 'Inter', Arial, sans-serif;
         overflow-x: hidden; 
         color: white;
       }
 
-      /* نقشے کے کنٹینر کی سیٹنگ */
       .leaflet-container {
         width: 100%;
         height: 100%;
         background-color: #0a151b;
-        border-radius: 20px; /* نقشے کے کونے گول کرنے کے لیے */
+        border-radius: 20px;
       }
 
-      /* اسکرول بار کو خوبصورت بنانا (Optional) */
+      /* اسکرول بار ڈیزائن */
       ::-webkit-scrollbar {
         width: 5px;
       }
