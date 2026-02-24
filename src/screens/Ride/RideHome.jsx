@@ -1,61 +1,53 @@
 import React, { useState } from 'react';
 
 const RideHome = () => {
-  const [selectedRide, setSelectedRide] = useState('car');
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // عارضی اسٹیٹ
+  const [showLoginModal, setShowLoginModal] = useState(false);
+
+  const handleBookRide = () => {
+    if (!isLoggedIn) {
+      setShowLoginModal(true); // اگر لاگ ان نہیں ہے تو پاپ اپ دکھاؤ
+    } else {
+      alert("Ride Booked!");
+    }
+  };
+
+  const autoLogin = () => {
+    // یہاں گوگل آٹو لاگ ان کی لاجک آئے گی
+    alert("Google سے خود بخود لاگ ان کیا جا رہا ہے...");
+    setIsLoggedIn(true);
+    setShowLoginModal(false);
+  };
 
   return (
-    <div style={styles.container}>
-      {/* Back Button */}
-      <button onClick={() => window.history.back()} style={styles.backBtn}>←</button>
+    <div style={{color: 'white', padding: '20px'}}>
+      <h2>Book a Ride</h2>
+      {/* ... باقی ڈیزائن ... */}
+      <button onClick={handleBookRide} style={styles.confirmBtn}>Confirm Ride</button>
 
-      {/* Map Placeholder */}
-      <div style={styles.mapArea}>
-        <div style={styles.mapPin}>📍</div>
-        <p style={{color: '#888'}}>Map is loading...</p>
-      </div>
-
-      {/* Ride Options Sheet */}
-      <div style={styles.rideSheet}>
-        <h3 style={{marginBottom: '20px'}}>Choose a trip</h3>
-        
-        <div 
-          style={{...styles.rideOption, borderColor: selectedRide === 'bike' ? '#00FF88' : '#111'}}
-          onClick={() => setSelectedRide('bike')}
-        >
-          <span>🏍️ Tezro Bike</span>
-          <span>Rs. 150</span>
+      {/* Login Popup Modal */}
+      {showLoginModal && (
+        <div style={styles.modalOverlay}>
+          <div style={styles.modal}>
+            <h3>Login Required</h3>
+            <p>سروس حاصل کرنے کے لیے لاگ ان کریں</p>
+            <button onClick={autoLogin} style={styles.googleBtn}>
+              Continue with Google (Auto)
+            </button>
+            <button onClick={() => setShowLoginModal(false)} style={styles.closeBtn}>Close</button>
+          </div>
         </div>
-
-        <div 
-          style={{...styles.rideOption, borderColor: selectedRide === 'car' ? '#00FF88' : '#111'}}
-          onClick={() => setSelectedRide('car')}
-        >
-          <span>🚗 Tezro Mini</span>
-          <span>Rs. 450</span>
-        </div>
-
-        <div 
-          style={{...styles.rideOption, borderColor: selectedRide === 'ac' ? '#00FF88' : '#111'}}
-          onClick={() => setSelectedRide('ac')}
-        >
-          <span>🚘 Tezro Comfort</span>
-          <span>Rs. 700</span>
-        </div>
-
-        <button style={styles.confirmBtn}>Confirm {selectedRide.toUpperCase()}</button>
-      </div>
+      )}
     </div>
   );
 };
 
 const styles = {
-  container: { background: '#000', height: '100vh', position: 'relative', fontFamily: 'Arial' },
-  backBtn: { position: 'absolute', top: '20px', left: '20px', zIndex: 10, background: 'white', border: 'none', padding: '10px 15px', borderRadius: '50%', fontSize: '20px', cursor: 'pointer' },
-  mapArea: { height: '60%', background: '#1a1a1a', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' },
-  mapPin: { fontSize: '40px', color: '#00FF88' },
-  rideSheet: { height: '40%', background: '#0a151b', borderTopLeftRadius: '30px', borderTopRightRadius: '30px', padding: '20px', color: 'white' },
-  rideOption: { display: 'flex', justifyContent: 'space-between', padding: '15px', background: '#111', borderRadius: '12px', marginBottom: '10px', border: '2px solid transparent', cursor: 'pointer' },
-  confirmBtn: { width: '100%', background: '#00FF88', color: 'black', border: 'none', padding: '15px', borderRadius: '12px', fontSize: '18px', fontWeight: 'bold', marginTop: '10px', cursor: 'pointer' }
+  modalOverlay: { position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.9)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 },
+  modal: { background: '#0a151b', padding: '30px', borderRadius: '20px', textAlign: 'center', border: '1px solid #00FF88', width: '80%' },
+  googleBtn: { background: 'white', color: 'black', border: 'none', padding: '12px 20px', borderRadius: '10px', fontWeight: 'bold', width: '100%', cursor: 'pointer', marginBottom: '10px' },
+  closeBtn: { background: 'transparent', color: '#888', border: 'none', cursor: 'pointer' },
+  confirmBtn: { width: '100%', background: '#00FF88', color: 'black', border: 'none', padding: '15px', borderRadius: '12px', fontSize: '18px', fontWeight: 'bold' }
 };
 
 export default RideHome;
