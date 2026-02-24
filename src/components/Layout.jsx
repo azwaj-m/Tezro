@@ -2,38 +2,63 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
 import Sidebar from './Sidebar';
-import logoImg from '../../assets/logo.png'; // دو بار پیچھے جا کر مین روٹ میں تلاش کرے گا
+import logoImg from '../../assets/logo.png'; 
+
 const Layout = ({ children }) => {
   const theme = useTheme();
   const navigate = useNavigate();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [pressTimer, setPressTimer] = useState(null);
 
-  const activeTheme = theme || { border: '#D4AF37', card: 'rgba(45,25,15,0.9)', text: '#F3E5AB' };
+  // تھیم کی حفاظت
+  const activeTheme = theme || { 
+    bg: '#1A0F0A', 
+    border: '#D4AF37', 
+    card: 'rgba(45,25,15,0.9)', 
+    text: '#F3E5AB' 
+  };
 
-  // لوگو پر لمبا پریس (Long Press) کرنے کا فنکشن
-  const handleStartPress = () => {
+  // 🔐 ایڈمن لانگ پریس لاجک
+  const handleStartPress = (e) => {
+    // موبائل پر ڈیفالٹ مینو کو روکنا
     const timer = setTimeout(() => {
-      const code = prompt("ایڈمن کوڈ درج کریں:");
-      if (code === "1234") { // آپ اپنا مخصوص کوڈ یہاں بدل سکتے ہیں
+      const code = prompt("Tezro Admin Access - مخصوص کوڈ درج کریں:");
+      if (code === "7860") { 
         navigate('/admin-control-center');
-      } else {
-        alert("غلط کوڈ!");
+      } else if (code !== null) {
+        alert("رسائی ممنوع ہے! غلط کوڈ۔");
       }
-    }, 2000); // 2 سیکنڈ تک پریس رکھنے پر
+    }, 2000); 
     setPressTimer(timer);
   };
 
   const handleReleasePress = () => {
-    clearTimeout(pressTimer);
+    if (pressTimer) {
+      clearTimeout(pressTimer);
+      setPressTimer(null);
+    }
   };
 
   return (
-    <div style={{ background: activeTheme.bg, minHeight: '100vh' }}>
-      <header style={{ ...styles.header, background: activeTheme.card, borderBottom: `1px solid ${activeTheme.border}66` }}>
-        <button onClick={() => setIsSidebarOpen(true)} style={{ color: activeTheme.border, ...styles.menuBtn }}>☰</button>
+    <div style={{ background: activeTheme.bg, minHeight: '100vh', transition: '0.4s ease' }}>
+      
+      {/* ⚡ الیکٹرک ہیڈر */}
+      <header style={{ 
+        ...styles.header, 
+        background: activeTheme.card, 
+        borderBottom: `2px solid ${activeTheme.border}44`,
+        boxShadow: `0 4px 15px rgba(0,0,0,0.5)`
+      }}>
         
-        {/* لوگو بٹن مع رجسٹریشن مارک */}
+        {/* سائیڈ بار بٹن */}
+        <button 
+          onClick={() => setIsSidebarOpen(true)} 
+          style={{ color: activeTheme.border, ...styles.menuBtn }}
+        >
+          ☰
+        </button>
+        
+        {/* 🚀 اسمارٹ لوگو بٹن مع رجسٹریشن مارک */}
         <div 
           style={styles.logoWrapper} 
           onClick={() => navigate('/')}
@@ -41,33 +66,67 @@ const Layout = ({ children }) => {
           onMouseUp={handleReleasePress}
           onTouchStart={handleStartPress}
           onTouchEnd={handleReleasePress}
+          onContextMenu={(e) => e.preventDefault()} // لانگ پریس پر مینو بلاک
         >
           <img 
             src={logoImg} 
-            alt="Logo" 
-            style={{ ...styles.logoImg, filter: `drop-shadow(0 0 5px ${activeTheme.border}) sepia(1) saturate(5) hue-rotate(${theme.darkMode ? '0deg' : '250deg'})` }} 
+            alt="TEZRO" 
+            style={{ 
+              ...styles.logoImg, 
+              filter: `drop-shadow(0 0 8px ${activeTheme.border}aa) sepia(1) saturate(5) hue-rotate(${theme.darkMode ? '0deg' : '250deg'})` 
+            }} 
+            onError={(e) => e.target.style.display = 'none'} // اگر تصویر نہ ملے تو کریش نہ ہو
           />
           <span style={{ ...styles.registered, color: activeTheme.border }}>®</span>
         </div>
 
-        <button onClick={() => theme.setDarkMode(!theme.darkMode)} style={styles.themeToggle}>
+        {/* تھیم ٹوگلر */}
+        <button 
+          onClick={() => theme.setDarkMode(!theme.darkMode)} 
+          style={{ ...styles.themeToggle, color: activeTheme.border }}
+        >
           {theme.darkMode ? '☀️' : '🌙'}
         </button>
       </header>
 
+      {/* سائیڈ بار کمپوننٹ */}
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
-      <main>{children}</main>
+
+      {/* مین مواد (Main Content) */}
+      <main style={styles.mainContent}>
+        {children}
+      </main>
+
     </div>
   );
 };
 
 const styles = {
-  header: { height: '70px', position: 'fixed', top: 0, width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 20px', zIndex: 1000, backdropFilter: 'blur(10px)' },
-  logoWrapper: { display: 'flex', alignItems: 'flex-start', cursor: 'pointer', position: 'relative' },
-  logoImg: { height: '40px', width: 'auto', transition: '0.3s' },
-  registered: { fontSize: '10px', fontWeight: 'bold', marginLeft: '2px' },
-  menuBtn: { background: 'none', border: 'none', fontSize: '28px', cursor: 'pointer' },
-  themeToggle: { background: 'none', border: 'none', fontSize: '20px', cursor: 'pointer' }
+  header: { 
+    height: '75px', 
+    position: 'fixed', 
+    top: 0, 
+    width: '100%', 
+    display: 'flex', 
+    justifyContent: 'space-between', 
+    alignItems: 'center', 
+    padding: '0 20px', 
+    zIndex: 1100, 
+    backdropFilter: 'blur(12px)' 
+  },
+  logoWrapper: { 
+    display: 'flex', 
+    alignItems: 'flex-start', 
+    cursor: 'pointer', 
+    position: 'relative',
+    userSelect: 'none',
+    WebkitUserSelect: 'none'
+  },
+  logoImg: { height: '38px', width: 'auto', transition: '0.4s ease' },
+  registered: { fontSize: '9px', fontWeight: 'bold', marginLeft: '1px', marginTop: '-5px' },
+  menuBtn: { background: 'none', border: 'none', fontSize: '30px', cursor: 'pointer', transition: '0.2s active' },
+  themeToggle: { background: 'none', border: 'none', fontSize: '22px', cursor: 'pointer', padding: '10px' },
+  mainContent: { paddingTop: '80px', minHeight: '100vh' }
 };
 
 export default Layout;
