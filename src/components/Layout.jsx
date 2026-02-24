@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
 import Sidebar from './Sidebar';
-import logoImg from '../assets/logo.png'; // لوگو امپورٹ کیا
-
+import logoImg from '../../assets/logo.png'; // دو بار پیچھے جا کر مین روٹ میں تلاش کرے گا
 const Layout = ({ children }) => {
   const theme = useTheme();
   const navigate = useNavigate();
