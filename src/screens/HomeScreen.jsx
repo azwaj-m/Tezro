@@ -1,91 +1,110 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import RideMap from '../components/RideMap'; // آپ کا موجودہ میپ کمپوننٹ
 
 const HomeScreen = () => {
   const navigate = useNavigate();
 
-  const services = [
-    { name: 'Ride Now', icon: '⚡', path: '/ride', desc: 'Fast & Secure' },
-    { name: 'Order Food', icon: '🍕', path: '/food', desc: 'Delicious Meals' },
-    { name: 'Tezro Shop', icon: '🛒', path: '/shop', desc: 'Latest Gadgets' },
-    { name: 'Send Money', icon: '💎', path: '/pay', desc: 'Instant Pay' }
-  ];
-
   return (
-    <div style={{ padding: '20px', paddingBottom: '100px' }}>
-      <div style={styles.hero}>
-        <h1 style={styles.title}>Tezro <span style={styles.neonText}>Services</span></h1>
-        <p style={styles.subtitle}>Future of Super Apps is here.</p>
+    <div style={styles.container}>
+      {/* 2. HERO SECTION (Live Map) */}
+      <section style={styles.heroSection}>
+        <div style={styles.mapContainer}>
+          <RideMap /> {/* لیفلیٹ نقشہ یہاں چلے گا */}
+          <div style={styles.searchOverlay}>
+            <div style={styles.searchBar}>
+              <span style={{marginRight: '10px'}}>🔍</span>
+              <input type="text" placeholder="Where to?" style={styles.searchInput} />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 3. QUICK ACTION ROW */}
+      <div style={styles.quickActionRow}>
+        <div style={styles.actionItem} onClick={() => navigate('/ride')}>
+          <div style={styles.actionIcon}>📍</div>
+          <span style={styles.actionLabel}>Set Pickup</span>
+        </div>
+        <div style={styles.actionItem} onClick={() => navigate('/pay')}>
+          <div style={styles.actionIcon}>💰</div>
+          <span style={styles.actionLabel}>Wallet</span>
+        </div>
+        <div style={styles.actionItem}>
+          <div style={styles.actionIcon}>🎁</div>
+          <span style={styles.actionLabel}>Promos</span>
+        </div>
       </div>
 
-      <div style={styles.grid}>
-        {services.map((s, i) => (
-          <div key={i} style={styles.glassCard} onClick={() => navigate(s.path)}>
-            <div style={styles.glowOverlay}></div>
-            <div style={styles.iconCircle}>{s.icon}</div>
-            <h3 style={styles.cardTitle}>{s.name}</h3>
-            <p style={styles.cardDesc}>{s.desc}</p>
+      {/* 4. PRIMARY RIDE CARD */}
+      <section style={styles.primaryCard} onClick={() => navigate('/ride')}>
+        <div style={styles.cardContent}>
+          <h2 style={{margin: 0, fontSize: '20px'}}>🚗 Ride Anywhere</h2>
+          <p style={{fontSize: '12px', color: '#B0B7C3'}}>Fast. Safe. Affordable.</p>
+          <button style={styles.bookNowBtn}>Book Now</button>
+        </div>
+      </section>
+
+      {/* 5. SERVICE GRID (2 Column) */}
+      <section style={styles.serviceGrid}>
+        <div style={styles.serviceCard} onClick={() => navigate('/food')}>
+          <span style={styles.serviceIcon}>🍔</span>
+          <h3 style={styles.serviceTitle}>Food</h3>
+        </div>
+        <div style={styles.serviceCard} onClick={() => navigate('/shop')}>
+          <span style={styles.serviceIcon}>🛒</span>
+          <h3 style={styles.serviceTitle}>Shop</h3>
+        </div>
+        <div style={styles.serviceCard}>
+          <span style={styles.serviceIcon}>📦</span>
+          <h3 style={styles.serviceTitle}>Parcel</h3>
+        </div>
+        <div style={styles.serviceCard}>
+          <span style={styles.serviceIcon}>🏨</span>
+          <h3 style={styles.serviceTitle}>Booking</h3>
+        </div>
+      </section>
+
+      {/* 7. APP INSTALL BANNER */}
+      <div style={styles.installBanner}>
+        <div style={{display: 'flex', alignItems: 'center', gap: '10px'}}>
+          <span>🚀</span>
+          <div>
+            <div style={{fontSize: '12px', fontWeight: 'bold'}}>Install Tezro App</div>
+            <div style={{fontSize: '10px', color: '#B0B7C3'}}>Faster & Better Experience</div>
           </div>
-        ))}
+        </div>
+        <button style={styles.installBtn}>Install Now</button>
       </div>
     </div>
   );
 };
 
+// الیکٹرک بلیو پرنٹ کے مطابق اسٹائلز
 const styles = {
-  hero: { marginBottom: '40px', marginTop: '20px', textAlign: 'left' },
-  title: { fontSize: '32px', fontWeight: '900', color: '#fff', letterSpacing: '-1px' },
-  neonText: { 
-    color: '#00FF88', 
-    textShadow: '0 0 15px rgba(0, 255, 136, 0.7)',
-    fontStyle: 'italic'
-  },
-  subtitle: { color: '#666', fontSize: '14px', marginTop: '5px' },
-  grid: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' },
-  glassCard: { 
-    background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%)', 
-    border: '1px solid rgba(0, 255, 136, 0.15)', 
-    borderRadius: '28px', 
-    padding: '25px 15px', 
-    textAlign: 'center',
-    cursor: 'pointer',
-    position: 'relative',
-    overflow: 'hidden',
-    boxShadow: '0 15px 35px rgba(0,0,0,0.4)',
-    backdropFilter: 'blur(10px)',
-  },
-  glowOverlay: {
-    position: 'absolute',
-    top: '-50%',
-    left: '-50%',
-    width: '200%',
-    height: '200%',
-    background: 'radial-gradient(circle, rgba(0, 255, 136, 0.05) 0%, transparent 70%)',
-    pointerEvents: 'none'
-  },
-  iconCircle: { 
-    fontSize: '32px', 
-    marginBottom: '15px', 
-    background: 'rgba(0, 255, 136, 0.1)', 
-    width: '65px', 
-    height: '65px', 
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: '22px', 
-    margin: '0 auto',
-    boxShadow: '0 0 20px rgba(0, 255, 136, 0.2)',
-    border: '1px solid rgba(0, 255, 136, 0.3)'
-  },
-  cardTitle: { fontSize: '17px', fontWeight: '800', margin: '10px 0', color: '#fff' },
-  cardDesc: { 
-    fontSize: '9px', 
-    color: '#00FF88', 
-    fontWeight: 'bold', 
-    textTransform: 'uppercase', 
-    letterSpacing: '1px',
-    opacity: 0.8
-  }
+  container: { padding: '16px', paddingTop: '0px' },
+  
+  heroSection: { height: '320px', marginBottom: '24px', borderRadius: '24px', overflow: 'hidden', position: 'relative', boxShadow: '0 0 20px rgba(0, 255, 157, 0.2)' },
+  mapContainer: { height: '100%', width: '100%', position: 'relative' },
+  searchOverlay: { position: 'absolute', top: '20px', width: '100%', display: 'flex', justifyContent: 'center', zIndex: 1000 },
+  searchBar: { width: '85%', background: 'rgba(10, 15, 25, 0.7)', backdropFilter: 'blur(15px)', borderRadius: '30px', padding: '10px 20px', display: 'flex', alignItems: 'center', border: '1px solid rgba(0, 255, 157, 0.3)' },
+  searchInput: { background: 'none', border: 'none', color: 'white', outline: 'none', width: '100%' },
+
+  quickActionRow: { display: 'flex', justifyContent: 'space-around', marginBottom: '24px', gap: '16px' },
+  actionItem: { textAlign: 'center', cursor: 'pointer' },
+  actionIcon: { width: '50px', height: '50px', background: 'rgba(255,255,255,0.05)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px', marginBottom: '8px', border: '1px solid rgba(0, 255, 157, 0.1)' },
+  actionLabel: { fontSize: '12px', color: '#B0B7C3' },
+
+  primaryCard: { width: '100%', height: '140px', background: 'linear-gradient(135deg, #0A0F19 0%, #162030 100%)', borderRadius: '22px', border: '1px solid rgba(0, 255, 157, 0.2)', padding: '20px', marginBottom: '24px', position: 'relative', overflow: 'hidden', cursor: 'pointer' },
+  bookNowBtn: { marginTop: '15px', padding: '10px 25px', background: 'linear-gradient(to right, #00FF9D, #00C3FF)', border: 'none', borderRadius: '14px', fontWeight: 'bold', color: '#0A0F19', boxShadow: '0 5px 15px rgba(0, 255, 157, 0.4)' },
+
+  serviceGrid: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '24px' },
+  serviceCard: { height: '130px', background: 'rgba(255,255,255,0.05)', borderRadius: '20px', padding: '18px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', border: '1px solid rgba(255,255,255,0.05)', transition: '0.3s', cursor: 'pointer' },
+  serviceIcon: { fontSize: '32px', marginBottom: '10px' },
+  serviceTitle: { fontSize: '16px', fontWeight: '500' },
+
+  installBanner: { position: 'fixed', bottom: '80px', left: '16px', right: '16px', height: '70px', background: 'rgba(10, 15, 25, 0.8)', backdropFilter: 'blur(15px)', borderRadius: '18px', border: '1px solid rgba(0, 255, 157, 0.3)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px', zIndex: 900 },
+  installBtn: { background: '#00FF9D', color: '#0A0F19', border: 'none', padding: '8px 15px', borderRadius: '12px', fontWeight: 'bold', fontSize: '12px' }
 };
 
 export default HomeScreen;
