@@ -6,10 +6,12 @@ const AdminDashboard = () => {
   const theme = useTheme();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('Overview');
+  
+  // 📧 ای میل شو/ہائیڈ کرنے کی اسٹیٹ
+  const [showEmail, setShowEmail] = useState(true);
 
   const activeTheme = theme || { bg: '#1A0F0A', border: '#D4AF37', card: 'rgba(45,25,15,0.9)', text: '#F3E5AB' };
 
-  // ایڈمن کے اختیارات کی لسٹ
   const menuItems = [
     { id: 'Overview', icon: '📊', label: 'Overview' },
     { id: 'Users', icon: '👥', label: 'User Mgmt' },
@@ -31,7 +33,7 @@ const AdminDashboard = () => {
         </div>
       </div>
 
-      {/* 2. NAVIGATION TABS (Horizontal Scrollable) */}
+      {/* 2. NAVIGATION TABS */}
       <div style={styles.tabContainer}>
         {menuItems.map((item) => (
           <div 
@@ -53,7 +55,8 @@ const AdminDashboard = () => {
       <div style={{ ...styles.contentArea, background: activeTheme.card, borderColor: activeTheme.border }}>
         {activeTab === 'Overview' && <OverviewStats theme={activeTheme} />}
         {activeTab === 'Users' && <UserManagement theme={activeTheme} />}
-        {activeTab === 'Vendors' && <VendorControl theme={activeTheme} />}
+        {/* یہاں ہم نے شو ای میل کی اسٹیٹ پاس کر دی ہے */}
+        {activeTab === 'Vendors' && <VendorControl theme={activeTheme} showEmail={showEmail} setShowEmail={setShowEmail} />}
         {activeTab === 'Rides' && <RideControl theme={activeTheme} />}
         {activeTab === 'Finance' && <FinanceReport theme={activeTheme} />}
       </div>
@@ -61,7 +64,7 @@ const AdminDashboard = () => {
   );
 };
 
-// --- چھوٹے کمپوننٹس (صفائی کے لیے) ---
+// --- چھوٹے کمپوننٹس ---
 
 const OverviewStats = ({ theme }) => (
   <div style={styles.grid}>
@@ -95,12 +98,32 @@ const UserManagement = ({ theme }) => (
   </div>
 );
 
-const VendorControl = ({ theme }) => (
+const VendorControl = ({ theme, showEmail, setShowEmail }) => (
   <div>
     <h4 style={{ color: theme.border }}>Vendor & CMS Control</h4>
-    <p style={{ color: theme.text, fontSize: '12px' }}>📍 Geo-Lock: Active (Devices locked to shop coordinates)</p>
+    <p style={{ color: theme.text, fontSize: '12px' }}>📍 Geo-Lock: Active</p>
     <button style={styles.actionBtnWide}>Edit Home Banner</button>
     <button style={styles.actionBtnWide}>Set Commission Rate</button>
+    
+    {/* ✉️ ای میل کنٹرول سیکشن */}
+    <div style={{ ...styles.emailToggleCard, border: `1px dashed ${theme.border}55` }}>
+      <h5 style={{ color: theme.border, margin: '0 0 10px 0' }}>Support Email Settings</h5>
+      <div style={styles.listRow}>
+        <div style={{ flex: 1 }}>
+          <span style={{ color: theme.text, display: 'block', fontSize: '13px' }}>Tezrosuper@tezro.com</span>
+          <small style={{ color: theme.text + '88', fontSize: '10px' }}>Visible to users in help section</small>
+        </div>
+        <button 
+          onClick={() => setShowEmail(!showEmail)}
+          style={{ 
+            ...styles.toggleBtn, 
+            background: showEmail ? '#2ecc71' : '#e74c3c' 
+          }}
+        >
+          {showEmail ? 'ON (Shown)' : 'OFF (Hidden)'}
+        </button>
+      </div>
+    </div>
   </div>
 );
 
@@ -144,7 +167,10 @@ const styles = {
   listRow: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: '1px solid #333' },
   miniBtnAction: { background: 'rgba(255,255,255,0.05)', border: '1px solid #444', color: 'white', padding: '3px 8px', borderRadius: '5px', fontSize: '11px' },
   actionBtnWide: { width: '100%', padding: '12px', background: 'rgba(255,255,255,0.05)', border: '1px solid #555', color: '#D4AF37', borderRadius: '10px', marginBottom: '10px', textAlign: 'left' },
-  input: { background: '#000', border: '1px solid #444', color: '#D4AF37', padding: '5px', borderRadius: '5px', width: '80px', textAlign: 'center' }
+  input: { background: '#000', border: '1px solid #444', color: '#D4AF37', padding: '5px', borderRadius: '5px', width: '80px', textAlign: 'center' },
+  // نئے اسٹائلز
+  emailToggleCard: { marginTop: '20px', padding: '15px', borderRadius: '12px', background: 'rgba(0,0,0,0.2)' },
+  toggleBtn: { border: 'none', color: '#fff', padding: '6px 12px', borderRadius: '8px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer', minWidth: '85px' }
 };
 
 export default AdminDashboard;
