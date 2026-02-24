@@ -1,87 +1,56 @@
-import React, { useState } from 'react';
+import React from 'react';
 
-const Sidebar = ({ isOpen, onClose, user, setUser }) => {
-  const [isEditing, setIsEditing] = useState(false);
-  const [tempName, setTempName] = useState(user.name);
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setUser({ ...user, photo: reader.result });
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const saveProfile = () => {
-    setUser({ ...user, name: tempName });
-    setIsEditing(false);
-    alert("پروفائل اپ ڈیٹ کر دی گئی ہے!");
-  };
-
-  if (!isOpen) return null;
+const Sidebar = ({ isOpen, onClose }) => {
+  const menuSections = [
+    { title: 'ACCOUNT', items: ['Profile', 'Settings', 'Wallet'] },
+    { title: 'ACTIVITY', items: ['My Rides', 'Orders', 'Parcel Tracking', 'Booking History'] },
+    { title: 'SUPPORT', items: ['Help Center', 'Safety'] },
+    { title: 'EXTRAS', items: ['Promotions', 'Notifications'] }
+  ];
 
   return (
-    <div style={styles.overlay} onClick={onClose}>
-      <div style={styles.sidebar} onClick={(e) => e.stopPropagation()}>
-        
-        {/* Profile Section */}
-        <div style={styles.profileSection}>
-          <div style={styles.imageWrapper}>
-            <img src={user.photo} alt="Profile" style={styles.profileImg} />
-            <label style={styles.editIcon}>
-              📸
-              <input type="file" onChange={handleImageChange} style={{display: 'none'}} />
-            </label>
-          </div>
-
-          {isEditing ? (
-            <div style={{marginTop: '15px'}}>
-              <input 
-                style={styles.input} 
-                value={tempName} 
-                onChange={(e) => setTempName(e.target.value)} 
-              />
-              <button onClick={saveProfile} style={styles.saveBtn}>Save</button>
-            </div>
-          ) : (
-            <div style={{marginTop: '15px'}}>
-              <h3 style={{margin: 0}}>{user.name}</h3>
-              <p style={styles.email}>{user.email}</p>
-              <button onClick={() => setIsEditing(true)} style={styles.editBtn}>Edit Profile</button>
-            </div>
-          )}
+    <>
+      {isOpen && <div style={styles.overlay} onClick={onClose}></div>}
+      <div style={{...styles.sidebar, left: isOpen ? '0' : '-300px'}}>
+        <div style={styles.profileHeader}>
+          <div style={styles.avatar}>👤</div>
+          <h2 style={styles.name}>Tezro User</h2>
+          <div style={styles.wallet}>Balance: <span style={{color: '#00FF9D'}}>Rs. 0.00</span></div>
+          <div style={styles.tierBadge}>Gold Member</div>
         </div>
 
-        <hr style={{borderColor: '#222', margin: '20px 0'}} />
-
-        {/* Menu Items */}
-        <nav style={styles.nav}>
-          <div style={styles.menuItem}>💳 Wallet: Rs. {user.balance}</div>
-          <div style={styles.menuItem}>📦 My Orders</div>
-          <div style={styles.menuItem}>🛡️ Privacy Policy</div>
-          <div style={{...styles.menuItem, color: '#ff4444', marginTop: 'auto'}}>Logout</div>
-        </nav>
+        <div style={styles.menuScroll}>
+          {menuSections.map((section, idx) => (
+            <div key={idx} style={styles.section}>
+              <p style={styles.sectionTitle}>{section.title}</p>
+              {section.items.map(item => (
+                <div key={item} style={styles.menuItem}>{item}</div>
+              ))}
+            </div>
+          ))}
+          <div style={{...styles.menuItem, color: '#FF4444', marginTop: '20px'}}>Logout</div>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
 const styles = {
-  overlay: { position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.8)', zIndex: 1000 },
-  sidebar: { width: '300px', height: '100%', background: '#0a151b', padding: '30px', display: 'flex', flexDirection: 'column' },
-  profileSection: { textAlign: 'center', marginTop: '20px' },
-  imageWrapper: { position: 'relative', display: 'inline-block' },
-  profileImg: { width: '90px', height: '90px', borderRadius: '50%', objectFit: 'cover', border: '3px solid #00FF88' },
-  editIcon: { position: 'absolute', bottom: 0, right: 0, background: '#00FF88', borderRadius: '50%', padding: '5px', cursor: 'pointer', fontSize: '12px' },
-  input: { background: '#111', border: '1px solid #00FF88', color: 'white', padding: '8px', borderRadius: '5px', width: '80%', textAlign: 'center' },
-  saveBtn: { background: '#00FF88', border: 'none', padding: '5px 15px', borderRadius: '5px', marginTop: '10px', fontWeight: 'bold' },
-  editBtn: { background: 'transparent', border: 'none', color: '#00FF88', fontSize: '12px', cursor: 'pointer', marginTop: '5px' },
-  email: { color: '#888', fontSize: '14px', margin: '5px 0' },
-  nav: { display: 'flex', flexDirection: 'column', gap: '20px', marginTop: '20px' },
-  menuItem: { fontSize: '18px', cursor: 'pointer', color: 'white' }
+  overlay: { position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.7)', zIndex: 1001 },
+  sidebar: { 
+    position: 'fixed', top: 0, width: '280px', height: '100%', 
+    background: '#0A0F19', zIndex: 1002, transition: '350ms ease-in-out', 
+    padding: '30px 20px', borderRight: '1px solid #00FF9D', overflowY: 'auto' 
+  },
+  profileHeader: { textAlign: 'center', marginBottom: '30px', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '20px' },
+  avatar: { width: '70px', height: '70px', background: '#162030', borderRadius: '50%', margin: '0 auto 10px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '30px', border: '2px solid #00FF9D' },
+  name: { fontSize: '20px', fontWeight: 'SemiBold', margin: '5px 0' },
+  wallet: { fontSize: '14px', marginBottom: '8px' },
+  tierBadge: { fontSize: '10px', background: '#00FF9D', color: '#0A0F19', padding: '2px 8px', borderRadius: '10px', display: 'inline-block', fontWeight: 'bold' },
+  menuScroll: { textAlign: 'left' },
+  section: { marginBottom: '20px' },
+  sectionTitle: { fontSize: '12px', color: '#B0B7C3', marginBottom: '10px', letterSpacing: '1px' },
+  menuItem: { padding: '12px 0', fontSize: '15px', borderBottom: '1px solid rgba(255,255,255,0.02)', cursor: 'pointer', transition: '0.2s' }
 };
 
 export default Sidebar;
