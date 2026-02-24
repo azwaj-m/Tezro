@@ -1,74 +1,153 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import RideMap from '../components/RideMap';
 
 const HomeScreen = () => {
   const navigate = useNavigate();
 
-  const services = [
-    { name: 'FOOD', icon: '🍔', path: '/food', color: '#FFD700' },
-    { name: 'SHOP', icon: '🛒', path: '/shop', color: '#00C3FF' },
-    { name: 'PARCEL', icon: '📦', path: '/parcel', color: '#FF4D4D' },
-    { name: 'HOTELS', icon: '🏨', path: '/hotels', color: '#A855F7' }
-  ];
-
   return (
     <div style={styles.container}>
-      {/* 2️⃣ HERO SECTION (Live Map) */}
-      <section style={styles.heroSection}>
-        <div style={styles.mapContainer}>
-          <RideMap /> 
-          <div style={styles.searchOverlay}>
-            <div style={styles.searchBar}>
-              <span style={{fontSize: '18px'}}>🔍</span>
-              <input type="text" placeholder="Search for a destination..." style={styles.searchInput} />
-            </div>
+      {/* --- TOP HEADER AREA (Logo & Notifications) --- */}
+      <div style={styles.header}>
+        <div style={styles.menuIcon}>☰</div>
+        <div style={styles.logoContainer}>
+          <img src="/assets/logo.png" alt="TEZRO" style={styles.logoImg} />
+        </div>
+        <div style={styles.notifIcon}>🔔<span style={styles.notifBadge}>1</span></div>
+      </div>
+
+      {/* --- HERO SECTION: MAP LAYER --- */}
+      <section style={styles.mapHero}>
+        <div style={styles.mapBlur}>
+           {/* یہاں نقشہ (Map) بیک گراؤنڈ میں چلے گا */}
+           <div style={styles.mapPlaceholder}></div>
+        </div>
+        
+        {/* Floating Search in Map */}
+        <div style={styles.searchContainer}>
+          <div style={styles.searchBox}>
+             <span style={styles.iconGreen}>📍</span>
+             <span style={styles.searchText}>Where to?</span>
           </div>
+          <button style={styles.rideNowBtn} onClick={() => navigate('/ride')}>
+            Ride Now ❯
+          </button>
         </div>
       </section>
 
-      {/* 4️⃣ PRIMARY RIDE CARD (Electric Look) */}
-      <section style={styles.primaryCard} onClick={() => navigate('/ride')}>
-        <div style={styles.cardContent}>
-          <h2 style={styles.primaryTitle}>TEZRO RIDE</h2>
-          <p style={styles.primaryDesc}>Fastest pickup in 3 minutes</p>
-          <button style={styles.bookNowBtn}>BOOK NOW ⚡</button>
+      {/* --- QUICK ACTIONS ROW --- */}
+      <div style={styles.quickRow}>
+        <div style={styles.glassAction}><span style={styles.iconGreen}>📍</span> Set Pickup</div>
+        <div style={styles.glassAction}><span style={styles.iconGreen}>💳</span> Wallet</div>
+        <div style={styles.glassAction}><span style={styles.iconGold}>⭐</span> Promotions</div>
+      </div>
+
+      {/* --- PRIMARY RIDE HERO CARD --- */}
+      <section style={styles.rideHeroCard} onClick={() => navigate('/ride')}>
+        <div style={styles.carGraphic}>🚗</div>
+        <div style={styles.cardInfo}>
+          <h2 style={styles.cardTitle}>Ride Anywhere</h2>
+          <p style={styles.cardSub}>Fast. Safe. Affordable.</p>
+          <button style={styles.bookBtn}>Book Now ❯</button>
         </div>
-        <div style={styles.cardIconLarge}>🚗</div>
       </section>
 
-      {/* 5️⃣ SERVICE GRID (Bold & Beautiful) */}
-      <section style={styles.serviceGrid}>
-        {services.map((s, i) => (
-          <div key={i} style={styles.serviceCard} onClick={() => navigate(s.path)}>
-            <div style={styles.serviceIcon}>{s.icon}</div>
-            <h3 style={styles.serviceName}>{s.name}</h3>
-          </div>
-        ))}
-      </section>
+      {/* --- SERVICE GRID (2x3 Layout) --- */}
+      <div style={styles.serviceGrid}>
+        <div style={styles.gridCard} onClick={() => navigate('/ride')}>
+          <div style={styles.gridIcon}>📍</div>
+          <div style={styles.gridLabel}>Ride</div>
+        </div>
+        <div style={{...styles.gridCard, borderColor: '#FFA500'}}>
+          <div style={styles.gridIcon}>🍔</div>
+          <div style={styles.gridLabel}>Food</div>
+        </div>
+        <div style={{...styles.gridCard, borderColor: '#00C3FF'}}>
+          <div style={styles.gridIcon}>🛒</div>
+          <div style={styles.gridLabel}>Shop</div>
+        </div>
+        <div style={{...styles.gridCard, borderColor: '#00FF88'}}>
+          <div style={styles.gridIcon}>📦</div>
+          <div style={styles.gridLabel}>Parcel</div>
+        </div>
+        <div style={{...styles.gridCard, borderColor: '#A855F7', gridColumn: 'span 1'}}>
+          <div style={styles.gridIcon}>🏢</div>
+          <div style={styles.gridLabel}>Booking</div>
+        </div>
+      </div>
     </div>
   );
 };
 
 const styles = {
-  container: { padding: '16px', background: '#05080A', minHeight: '100vh' },
+  container: {
+    background: '#02060a url("https://www.transparenttextures.com/patterns/stardust.png")',
+    minHeight: '100vh',
+    padding: '15px',
+    paddingTop: '60px',
+    color: '#fff',
+    fontFamily: "'Inter', sans-serif"
+  },
+  header: {
+    display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+    position: 'fixed', top: 0, left: 0, right: 0, height: '60px',
+    padding: '0 20px', zIndex: 1000, background: 'rgba(2, 6, 10, 0.8)'
+  },
+  logoImg: { height: '25px', filter: 'drop-shadow(0 0 5px #00FF88)' },
+  notifBadge: { position: 'absolute', top: '-5px', right: '-5px', background: 'red', borderRadius: '50%', padding: '2px 5px', fontSize: '10px' },
   
-  heroSection: { height: '280px', marginBottom: '24px', borderRadius: '28px', overflow: 'hidden', border: '1px solid rgba(0, 255, 157, 0.3)', boxShadow: '0 0 25px rgba(0, 255, 157, 0.15)' },
-  mapContainer: { height: '100%', width: '100%', position: 'relative' },
-  searchOverlay: { position: 'absolute', bottom: '20px', width: '100%', display: 'flex', justifyContent: 'center', zIndex: 10 },
-  searchBar: { width: '85%', background: 'rgba(10, 15, 25, 0.85)', backdropFilter: 'blur(20px)', borderRadius: '16px', padding: '12px 15px', display: 'flex', alignItems: 'center', border: '1px solid rgba(255,255,255,0.1)' },
-  searchInput: { background: 'none', border: 'none', color: 'white', outline: 'none', marginLeft: '10px', fontSize: '14px', width: '100%' },
+  mapHero: {
+    height: '240px', borderRadius: '25px', overflow: 'hidden',
+    position: 'relative', border: '1px solid rgba(0, 255, 136, 0.3)',
+    boxShadow: '0 0 20px rgba(0, 255, 136, 0.2)', marginBottom: '15px'
+  },
+  mapPlaceholder: { width: '100%', height: '100%', background: 'linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url("https://images.unsplash.com/photo-1524661135-423995f22d0b?q=80&w=1000") center/cover' },
+  
+  searchContainer: {
+    position: 'absolute', bottom: '15px', left: '10px', right: '10px',
+    display: 'flex', gap: '10px', alignItems: 'center'
+  },
+  searchBox: {
+    flex: 1, background: 'rgba(10, 20, 30, 0.8)', backdropFilter: 'blur(10px)',
+    borderRadius: '20px', padding: '10px 15px', border: '1px solid rgba(255,255,255,0.1)',
+    display: 'flex', alignItems: 'center', gap: '10px'
+  },
+  rideNowBtn: {
+    background: '#00FF88', color: '#000', border: 'none', borderRadius: '20px',
+    padding: '10px 15px', fontWeight: '900', fontSize: '12px'
+  },
 
-  primaryCard: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', background: 'linear-gradient(135deg, #0D1117 0%, #161B22 100%)', borderRadius: '24px', border: '1px solid #00FF9D', padding: '24px', marginBottom: '24px', cursor: 'pointer', boxShadow: '0 10px 40px rgba(0, 255, 157, 0.1)' },
-  primaryTitle: { margin: 0, fontSize: '24px', fontWeight: '900', letterSpacing: '1px', color: '#fff' },
-  primaryDesc: { fontSize: '13px', color: '#00FF9D', fontWeight: 'bold', margin: '5px 0' },
-  bookNowBtn: { marginTop: '15px', padding: '10px 20px', background: '#00FF9D', border: 'none', borderRadius: '12px', fontWeight: '900', color: '#05080A', fontSize: '12px', cursor: 'pointer' },
-  cardIconLarge: { fontSize: '60px', opacity: 0.8 },
+  quickRow: { display: 'flex', justifyContent: 'space-between', gap: '10px', marginBottom: '20px' },
+  glassAction: {
+    flex: 1, background: 'rgba(255,255,255,0.05)', backdropFilter: 'blur(10px)',
+    borderRadius: '15px', padding: '10px', fontSize: '11px', textAlign: 'center',
+    border: '1px solid rgba(0, 255, 136, 0.2)', fontWeight: 'bold'
+  },
 
-  serviceGrid: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' },
-  serviceCard: { height: '120px', background: '#0D1117', borderRadius: '22px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', border: '1px solid rgba(255,255,255,0.05)', transition: '0.3s', cursor: 'pointer' },
-  serviceIcon: { fontSize: '32px', marginBottom: '8px' },
-  serviceName: { fontSize: '15px', fontWeight: '900', color: '#FFFFFF', letterSpacing: '1px' },
+  rideHeroCard: {
+    background: 'rgba(0, 255, 136, 0.05)', borderRadius: '25px',
+    border: '2px solid rgba(0, 255, 136, 0.3)', padding: '20px',
+    display: 'flex', alignItems: 'center', gap: '20px', marginBottom: '20px',
+    boxShadow: 'inset 0 0 15px rgba(0, 255, 136, 0.1)'
+  },
+  carGraphic: { fontSize: '60px', textShadow: '0 0 20px #00FF88' },
+  cardTitle: { fontSize: '20px', fontWeight: '900', margin: 0 },
+  cardSub: { fontSize: '12px', color: '#888', margin: '5px 0' },
+  bookBtn: {
+    background: '#00FF88', color: '#000', border: 'none', padding: '8px 15px',
+    borderRadius: '15px', fontWeight: 'bold', marginTop: '10px'
+  },
+
+  serviceGrid: { display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '10px' },
+  gridCard: {
+    background: 'rgba(255,255,255,0.03)', backdropFilter: 'blur(10px)',
+    borderRadius: '15px', padding: '20px 10px', textAlign: 'center',
+    border: '1px solid rgba(0, 255, 136, 0.3)', transition: '0.3s'
+  },
+  gridIcon: { fontSize: '28px', marginBottom: '8px' },
+  gridLabel: { fontSize: '13px', fontWeight: 'bold' },
+
+  iconGreen: { color: '#00FF88' },
+  iconGold: { color: '#FFA500' }
 };
 
 export default HomeScreen;
