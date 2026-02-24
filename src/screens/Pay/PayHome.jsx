@@ -1,16 +1,37 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const PayHome = () => {
-  // لاجک: یہ بیلنس والیٹ میں شو ہوگا
-  const [walletBalance, setWalletBalance] = useState(2500.00);
-  const [topUpAmount, setTopUpAmount] = useState('');
+  const [balance, setBalance] = useState(2500.00); // یوزر کا موجودہ بیلنس
+  const [amount, setAmount] = useState('');
+  const [showReceipt, setShowReceipt] = useState(false);
+  const [transactionId, setTransactionId] = useState('');
 
-  const handleTopUp = () => {
-    if(topUpAmount > 0) {
-      alert(`رقم آپ کے فراہم کردہ اکاؤنٹ میں بھیجی جا رہی ہے...\nوالٹ میں ${topUpAmount} روپے کا اضافہ کر دیا گیا ہے۔`);
-      setWalletBalance(walletBalance + parseFloat(topUpAmount));
-      setTopUpAmount('');
+  // بیلنس ختم ہونے کا نوٹیفکیشن
+  useEffect(() => {
+    if (balance <= 100) {
+      alert("نوٹیفکیشن: آپ کا بیلنس ختم ہونے والا ہے! براہ کرم مزید بیلنس اپ لوڈ کریں۔");
     }
+  }, [balance]);
+
+  const handlePayment = () => {
+    if (amount < 100) {
+      alert("کم از کم 100 روپے اپ لوڈ کیے جا سکتے ہیں۔");
+      return;
+    }
+
+    // آٹومیٹک سسٹم لاجک (بغیر ایڈمن اپروول)
+    const newId = 'TZ-' + Math.floor(Math.random() * 1000000);
+    setTransactionId(newId);
+    setBalance(prev => prev + parseFloat(amount));
+    setShowReceipt(true);
+    
+    // یہاں وہ لاجک آئے گی جو رقم آپ کے اکاؤنٹ میں بھیجے گی
+    console.log(`${amount} روپے ایڈمن اکاؤنٹ میں منتقل کر دیے گئے۔`);
+  };
+
+  const downloadReceipt = () => {
+    alert("رسید (JPG/PDF) آپ کی گیلری میں محفوظ کی جا رہی ہے...");
+    // یہاں ہم html2canvas یا ایسی لائبریری استعمال کریں گے جو رسید کی تصویر بنائے گی
   };
 
   return (
@@ -22,35 +43,38 @@ const PayHome = () => {
 
       {/* Wallet Card */}
       <div style={styles.balanceCard}>
-        <p style={{margin: 0, opacity: 0.8}}>Available Balance</p>
-        <h1 style={{fontSize: '36px', margin: '10px 0'}}>Rs. {walletBalance.toLocaleString()}</h1>
-        <div style={styles.chip}>Tezro Pay</div>
+        <p>Current Balance</p>
+        <h1>Rs. {balance.toFixed(2)}</h1>
+        <p style={{fontSize: '12px'}}>User ID: TZ-9988</p>
       </div>
 
-      {/* Top Up Section */}
-      <div style={styles.actionSection}>
-        <h3>Add Money</h3>
-        <p style={{fontSize: '12px', color: '#888'}}>رقم براہ راست ایڈمن اکاؤنٹ میں منتقل ہوگی</p>
-        
-        <input 
-          type="number" 
-          placeholder="Enter Amount" 
-          value={topUpAmount}
-          onChange={(e) => setTopUpAmount(e.target.value)}
-          style={styles.input} 
-        />
-        
-        <button onClick={handleTopUp} style={styles.payBtn}>Top Up Now</button>
-      </div>
-
-      {/* Transactions History */}
-      <div style={{marginTop: '30px'}}>
-        <h4>Recent Transactions</h4>
-        <div style={styles.transaction}>
-          <span>Ride Payment</span>
-          <span style={{color: '#ff4444'}}>- Rs. 450</span>
+      {!showReceipt ? (
+        <div style={styles.inputArea}>
+          <h3>Quick Top-up</h3>
+          <input 
+            type="number" 
+            placeholder="Enter Amount" 
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            style={styles.input}
+          />
+          <button onClick={handlePayment} style={styles.payBtn}>Upload Balance</button>
         </div>
-      </div>
+      ) : (
+        /* رسید (Receipt Slip) کا ڈیزائن */
+        <div id="receipt" style={styles.receiptBox}>
+          <h2 style={{color: '#00FF88'}}>Tezro Official Receipt</h2>
+          <hr style={{borderColor: '#222'}} />
+          <p><strong>Transaction ID:</strong> {transactionId}</p>
+          <p><strong>Amount Added:</strong> Rs. {amount}</p>
+          <p><strong>New Balance:</strong> Rs. {balance}</p>
+          <p><strong>Status:</strong> Success (Auto-Approved)</p>
+          <p style={{fontSize: '10px', marginTop: '10px'}}>رقم براہ راست Tezro کے آفیشل اکاؤنٹ میں جمع ہو گئی ہے۔</p>
+          
+          <button onClick={downloadReceipt} style={styles.downloadBtn}>Download Slip (JPG/PDF)</button>
+          <button onClick={() => setShowReceipt(false)} style={styles.closeBtn}>Done</button>
+        </div>
+      )}
     </div>
   );
 };
@@ -59,12 +83,13 @@ const styles = {
   container: { background: '#000508', minHeight: '100vh', color: 'white', padding: '20px', fontFamily: 'Arial' },
   header: { display: 'flex', alignItems: 'center', gap: '15px', marginBottom: '30px' },
   backBtn: { background: 'none', border: 'none', color: '#00FF88', fontSize: '24px' },
-  balanceCard: { background: 'linear-gradient(135deg, #00FF88 0%, #008855 100%)', padding: '30px', borderRadius: '25px', color: 'black', fontWeight: 'bold' },
-  chip: { background: 'rgba(0,0,0,0.1)', display: 'inline-block', padding: '5px 12px', borderRadius: '10px', fontSize: '12px' },
-  actionSection: { marginTop: '40px', background: '#0a151b', padding: '20px', borderRadius: '20px' },
-  input: { width: '100%', background: '#111', border: '1px solid #222', padding: '15px', borderRadius: '10px', color: 'white', marginBottom: '15px', boxSizing: 'border-box' },
-  payBtn: { width: '100%', background: '#00FF88', border: 'none', padding: '15px', borderRadius: '10px', fontWeight: 'bold', cursor: 'pointer' },
-  transaction: { display: 'flex', justifyContent: 'space-between', padding: '15px', background: '#0a151b', borderRadius: '12px', marginBottom: '10px' }
+  balanceCard: { background: 'linear-gradient(135deg, #00FF88 0%, #005533 100%)', padding: '25px', borderRadius: '20px', color: 'black', fontWeight: 'bold' },
+  inputArea: { marginTop: '30px', background: '#0a151b', padding: '20px', borderRadius: '15px' },
+  input: { width: '100%', padding: '15px', background: '#111', border: '1px solid #222', borderRadius: '10px', color: 'white', marginBottom: '15px', boxSizing: 'border-box' },
+  payBtn: { width: '100%', padding: '15px', background: '#00FF88', border: 'none', borderRadius: '10px', fontWeight: 'bold', cursor: 'pointer' },
+  receiptBox: { marginTop: '20px', background: '#111', padding: '25px', borderRadius: '20px', border: '2px solid #00FF88', textAlign: 'center' },
+  downloadBtn: { width: '100%', background: 'white', color: 'black', border: 'none', padding: '10px', borderRadius: '8px', marginTop: '15px', fontWeight: 'bold', cursor: 'pointer' },
+  closeBtn: { width: '100%', background: 'transparent', color: '#888', border: '1px solid #333', padding: '10px', borderRadius: '8px', marginTop: '10px', cursor: 'pointer' }
 };
 
 export default PayHome;
