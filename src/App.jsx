@@ -3,7 +3,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 
 // آپ کے فولڈر اسٹرکچر کے مطابق پاتھ (Case-Sensitive)
 import HomeScreen from './screens/HomeScreen';
-import FoodHome from './screens/FoodH/FoodHome'; // فولڈر کا نام FoodH ہے
+import FoodHome from './screens/Food/FoodHome'; // فولڈر کا نام FoodH ہے
 import RideHome from './screens/Ride/RideHome';
 import ShopHome from './screens/Shop/ShopHome'; // اسے .jsx ہونا ضروری ہے
 import PayHome from './screens/Pay/PayHome';
