@@ -7,7 +7,7 @@ import FoodHome from './screens/Food/FoodHome'; // فولڈر کا نام FoodH 
 import RideHome from './screens/Ride/RideHome';
 import ShopHome from './screens/Shop/ShopHome'; // اسے .jsx ہونا ضروری ہے
 import PayHome from './screens/Pay/PayHome';
-import AdminDashboard from './screens/admin/adminDashboard'; // چھوٹے حروف والا پاتھ
+import AdminDashboard from './screens/Admin/AdminDashboard'; // چھوٹے حروف والا پاتھ
 
 // فارمولا نمبر 2: ری ایکٹ لیول پر ایرر پکڑنے کے لیے
 window.onerror = function(message, source, lineno) {
