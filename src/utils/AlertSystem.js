@@ -1,41 +1,76 @@
-// Path: src/utils/AlertSystem.js
-
 export const AlertSystem = {
-  // 1. الرٹ بھیجنے کا مین فنکشن
+  // 1. راستہ بھٹکنے کا الرٹ (Deviation Alert)
   sendDeviationAlert: async (rideData, currentCoords) => {
     const { driverName, riderName, emergencyContacts, plateNo } = rideData;
 
-    console.log(`🚨 الرٹ: رائیڈ راستہ بھٹک چکی ہے!`);
+    console.log(`🚨 سیکیورٹی الرٹ: رائیڈ راستہ بھٹک چکی ہے!`);
 
-    // الف: ڈرائیور کو وارننگ بھیجنا
+    // الف: ڈرائیور کو وارننگ (In-App Notification)
     AlertSystem.notifyDriver(driverName);
 
-    // ب: سواری (Rider) کو الرٹ کرنا
+    // ب: سواری کو مطلع کرنا
     AlertSystem.notifyRider(riderName);
 
-    // ج: ایمرجنسی نمبرز پر ایس ایم ایس بھیجنا
+    // ج: تمام ایمرجنسی نمبرز کو ایس ایم ایس بھیجنا
     emergencyContacts.forEach(contact => {
-      AlertSystem.sendSMS(contact, `Tezro Alert: ${riderName} کی رائیڈ (${plateNo}) راستہ بھٹک گئی ہے۔ لوکیشن چیک کریں۔`);
+      const msg = `TEZRO ALERT: ${riderName} کی رائیڈ (${plateNo}) مقررہ راستے سے 10% دور نکل گئی ہے۔ براہ کرم رابطہ کریں یا لوکیشن ٹریک کریں۔`;
+      AlertSystem.sendSMS(contact, msg);
     });
 
-    // د: ایڈمن پینل کو اطلاع دینا
-    AlertSystem.notifyAdmin(rideData, currentCoords);
+    // د: ایڈمن پینل کو لائیو ایمرجنسی ڈیٹا بھیجنا
+    AlertSystem.notifyAdmin(rideData, currentCoords, "Route Deviation");
   },
 
-  // ڈرائیور کے لیے ایپ نوٹیفکیشن
+  // 2. براہ راست ایمرجنسی (Manual SOS Trigger)
+  // یہ تب چلے گا جب سواری خود SOS بٹن دبائے
+  triggerEmergency: (rideData) => {
+    console.log("🆘 SOS Manual Triggered!");
+    
+    // موبائل فون میں وائبریشن پیدا کرنا (صرف موبائل ایپس کے لیے)
+    if (navigator.vibrate) navigator.vibrate([500, 200, 500]);
+
+    // تمام متعلقہ افراد کو فوری ایس ایم ایس
+    rideData.emergencyContacts.forEach(phone => {
+      const msg = `🚨 URGENT SOS: ${rideData.riderName} نے Tezro ایپ پر ایمرجنسی بٹن دبایا ہے۔ فوری مدد کی ضرورت ہو سکتی ہے!`;
+      AlertSystem.sendSMS(phone, msg);
+    });
+
+    // ایڈمن کو ریڈ الرٹ بھیجنا
+    AlertSystem.notifyAdmin(rideData, null, "MANUAL SOS");
+
+    alert("سیکیورٹی الرٹ: آپ کے تمام ایمرجنسی نمبرز اور ایڈمن کو اطلاع دے دی گئی ہے!");
+  },
+
+  // --- معاون فنکشنز (Helper Functions) ---
+
   notifyDriver: (name) => {
-    alert(`⚠️ ${name}! آپ مقررہ راستے سے دور جا رہے ہیں۔ براہ کرم اصل راستے پر واپس آئیں یا وجہ بتائیں۔`);
+    // یہاں ہم آواز (Audio) بھی چلا سکتے ہیں
+    console.warn(`Driver ${name} warned about route deviation.`);
+    // اصل ایپ میں یہاں ایک بولنے والا الرٹ (Voice Alert) بھی ہو سکتا ہے
   },
 
-  // ایس ایم ایس سروس (فرضی)
+  notifyRider: (name) => {
+    // سواری کو اطمینان دلانا کہ سسٹم مانیٹر کر رہا ہے
+    console.log(`Rider ${name} notified of security check.`);
+  },
+
   sendSMS: (number, message) => {
-    // یہاں اصل ایس ایم ایس گیٹ وے (جیسے Twilio) کا کوڈ آئے گا
-    console.log(`Sending SMS to ${number}: ${message}`);
+    // یہاں اصل ایس ایم ایس سروس (Twilio/Infobip) سے کنکشن ہوگا
+    console.log(`[SMS Gateway] To: ${number} | Content: ${message}`);
   },
 
-  // ایڈمن کو لائیو الرٹ
-  notifyAdmin: (rideData, coords) => {
-    // یہ ڈیٹا ایڈمن کے ڈیش بورڈ پر سرخ روشنی (Flash) جلا دے گا
-    console.log("Admin Notified: Emergency in Ride ID:", rideData.id);
+  notifyAdmin: (rideData, coords, alertType) => {
+    // یہ ڈیٹا آپ کے ڈیٹا بیس میں جائے گا تاکہ ایڈمن اسکرین پر فلیش ہو
+    const payload = {
+      rideId: rideData.id,
+      type: alertType,
+      time: new Date().toLocaleTimeString(),
+      location: coords || "GPS Tracking Active",
+      driver: rideData.driverName,
+      rider: rideData.riderName
+    };
+    
+    console.log("📡 Admin Dashboard Notified:", payload);
+    // یہاں fetch() یا axios() کے ذریعے بیک اینڈ پر ڈیٹا جائے گا
   }
 };
