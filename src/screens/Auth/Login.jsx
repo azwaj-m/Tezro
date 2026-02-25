@@ -1,69 +1,131 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
+import { auth, db } from '../../firebase';
+import { 
+  GoogleAuthProvider, 
+  signInWithPopup, 
+  RecaptchaVerifier, 
+  signInWithPhoneNumber 
+} from "firebase/auth";
+import { doc, setDoc, getDoc } from "firebase/firestore";
+import { useNavigate } from 'react-router-dom';
 
-export default function Login({ onLoginSuccess }) {
-  const [isSignup, setIsSignup] = useState(false);
-  const [role, setRole] = useState("customer"); // customer, vendor, rider
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+const Login = () => {
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [otp, setOtp] = useState('');
+  const [isOtpSent, setIsOtpSent] = useState(false);
+  const [confirmationResult, setConfirmationResult] = useState(null);
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // یہاں ہم فرض کر رہے ہیں کہ لاگ ان کامیاب رہا
-    // اصلی ایپ میں یہاں Firebase یا Node.js کا لنک آئے گا
-    onLoginSuccess(role); 
-    alert(`${role} کے طور پر لاگ ان کامیاب!`);
+  // 1. گوگل لاگ ان
+  const handleGoogleLogin = async () => {
+    const provider = new GoogleAuthProvider();
+    try {
+      const result = await signInWithPopup(auth, provider);
+      await createUserProfile(result.user);
+      navigate('/'); // ہوم پیج پر بھیج دیں
+    } catch (error) {
+      alert("Google Login Error: " + error.message);
+    }
+  };
+
+  // 2. فون نمبر لاگ ان (OTP)
+  const setupRecaptcha = () => {
+    if (!window.recaptchaVerifier) {
+      window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
+        'size': 'invisible'
+      });
+    }
+  };
+
+  const handleSendOtp = async () => {
+    setupRecaptcha();
+    const appVerifier = window.recaptchaVerifier;
+    try {
+      const confirmation = await signInWithPhoneNumber(auth, phoneNumber, appVerifier);
+      setConfirmationResult(confirmation);
+      setIsOtpSent(true);
+      alert("OTP بھیج دیا گیا ہے!");
+    } catch (error) {
+      alert("SMS Error: " + error.message);
+    }
+  };
+
+  const handleVerifyOtp = async () => {
+    try {
+      const result = await confirmationResult.confirm(otp);
+      await createUserProfile(result.user);
+      navigate('/');
+    } catch (error) {
+      alert("غلط کوڈ! دوبارہ کوشش کریں۔");
+    }
+  };
+
+  // یوزر کا پروفائل فائر بیس میں بنانا (بغیر اضافی ریکوائرمنٹس کے)
+  const createUserProfile = async (user) => {
+    const userRef = doc(db, "users", user.uid);
+    const docSnap = await getDoc(userRef);
+
+    if (!docSnap.exists()) {
+      await setDoc(userRef, {
+        uid: user.uid,
+        email: user.email || "",
+        phone: user.phoneNumber || "",
+        balance: 0,
+        isVerified: false, // یہ ڈیل کے وقت ٹرو ہوگا
+        createdAt: new Date()
+      });
+    }
   };
 
   return (
     <div style={styles.container}>
-      <div style={styles.card}>
-        <h2 style={{ color: "#39FF14", textAlign: "center" }}>
-          {isSignup ? "اکاؤنٹ بنائیں" : "ٹیزرو میں خوش آمدید"}
-        </h2>
-        
-        <form onSubmit={handleSubmit}>
-          {isSignup && (
-            <input type="text" placeholder="پورا نام" style={styles.input} required />
-          )}
-          
+      <h2 style={{ color: '#D4AF37' }}>Tezro Super App</h2>
+      <p style={{ color: '#888' }}>لاگ ان کریں اور سروسز سے فائدہ اٹھائیں</p>
+
+      {/* گوگل بٹن */}
+      <button onClick={handleGoogleLogin} style={styles.googleBtn}>
+        <img src="https://img.icons8.com/color/16/000000/google-logo.png" alt="G" />
+        Continue with Google
+      </button>
+
+      <div style={styles.divider}>یا موبائل نمبر استعمال کریں</div>
+
+      {/* فون نمبر ان پٹ */}
+      {!isOtpSent ? (
+        <>
           <input 
-            type="email" placeholder="ای میل" style={styles.input} 
-            value={email} onChange={(e) => setEmail(e.target.value)} required 
+            type="text" 
+            placeholder="+923001234567" 
+            value={phoneNumber}
+            onChange={(e) => setPhoneNumber(e.target.value)}
+            style={styles.input}
           />
-          
+          <button onClick={handleSendOtp} style={styles.actionBtn}>OTP کوڈ بھیجیں</button>
+        </>
+      ) : (
+        <>
           <input 
-            type="password" placeholder="پاسورڈ" style={styles.input} 
-            value={password} onChange={(e) => setPassword(e.target.value)} required 
+            type="text" 
+            placeholder="6 ہندسوں کا کوڈ لکھیں" 
+            value={otp}
+            onChange={(e) => setOtp(e.target.value)}
+            style={styles.input}
           />
+          <button onClick={handleVerifyOtp} style={styles.actionBtn}>ویریفائی کریں</button>
+        </>
+      )}
 
-          <label style={{ display: "block", marginBottom: "10px", fontSize: "14px" }}>اپنی پہچان منتخب کریں:</label>
-          <select 
-            style={styles.input} 
-            value={role} onChange={(e) => setRole(e.target.value)}
-          >
-            <option value="customer">گاہک (Customer)</option>
-            <option value="vendor">مینیجر / دکاندار (Vendor)</option>
-            <option value="rider">رائیڈر (Rider)</option>
-          </select>
-
-          <button type="submit" style={styles.btn}>
-            {isSignup ? "سائن اپ کریں" : "لاگ ان کریں"}
-          </button>
-        </form>
-
-        <p style={{ textAlign: "center", marginTop: "15px", cursor: "pointer", fontSize: "14px" }} 
-           onClick={() => setIsSignup(!isSignup)}>
-          {isSignup ? "پہلے سے اکاؤنٹ ہے؟ لاگ ان کریں" : "نیا اکاؤنٹ بنانا چاہتے ہیں؟ یہاں کلک کریں"}
-        </p>
-      </div>
+      <div id="recaptcha-container"></div>
     </div>
   );
-}
-
-const styles = {
-  container: { backgroundColor: "#000", height: "100vh", display: "flex", alignItems: "center", justifyContent: "center", padding: "20px" },
-  card: { background: "#111", padding: "30px", borderRadius: "20px", width: "100%", maxWidth: "400px", border: "1px solid #222" },
-  input: { width: "100%", padding: "12px", marginBottom: "15px", borderRadius: "10px", border: "1px solid #333", background: "#000", color: "#fff" },
-  btn: { width: "100%", padding: "15px", borderRadius: "10px", border: "none", background: "#39FF14", color: "#000", fontWeight: "bold", fontSize: "16px", cursor: "pointer" }
 };
 
+const styles = {
+  container: { height: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: '#000', padding: '20px', textAlign: 'center' },
+  googleBtn: { width: '100%', maxWidth: '300px', padding: '12px', borderRadius: '10px', border: '1px solid #444', background: '#fff', color: '#000', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', cursor: 'pointer', marginBottom: '20px' },
+  divider: { color: '#666', fontSize: '12px', margin: '20px 0' },
+  input: { width: '100%', maxWidth: '300px', padding: '15px', borderRadius: '10px', background: '#111', border: '1px solid #333', color: '#fff', marginBottom: '15px', textAlign: 'center' },
+  actionBtn: { width: '100%', maxWidth: '300px', padding: '15px', borderRadius: '10px', background: '#D4AF37', border: 'none', fontWeight: 'bold', cursor: 'pointer' }
+};
+
+export default Login;
