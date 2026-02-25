@@ -2,18 +2,15 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MapContainer, TileLayer } from 'react-leaflet';
 import { useTheme } from '../context/ThemeContext'; 
-import QuickAuthPopup from '../components/Auth/QuickAuthPopup'; // پاپ اپ امپورٹ کیا
+import QuickAuthPopup from '../components/Auth/QuickAuthPopup'; // پاپ اپ امپورٹ کریں
 import 'leaflet/dist/leaflet.css';
 
 const HomeScreen = () => {
   const navigate = useNavigate();
   const theme = useTheme(); 
   const [searchQuery, setSearchQuery] = useState("");
-  
-  // سیکیورٹی سٹیٹ
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // عارضی طور پر فالس
-  const [showAuthPopup, setShowAuthPopup] = useState(false);
-  const [pendingPath, setPendingPath] = useState(null);
+  const [showAuth, setShowAuth] = useState(false);
+  const [selectedService, setSelectedService] = useState(null);
 
   const activeTheme = theme || {
     bg: '#1A0F0A',
@@ -24,45 +21,27 @@ const HomeScreen = () => {
   };
 
   const services = [
-    { name: 'Ride', icon: '📍', path: '/ride' },
-    { name: 'Food', icon: '🍔', path: '/food' },
-    { name: 'Shop', icon: '🛒', path: '/shop' },
-    { name: 'Parcel', icon: '📦', path: '/parcel' },
-    { name: 'Booking', icon: '🏢', path: '/hotels' }
+    { name: 'Ride', icon: '📍', path: '/ride', type: 'RIDER' },
+    { name: 'Food', icon: '🍔', path: '/food', type: 'BUYER' },
+    { name: 'Shop', icon: '🛒', path: '/shop', type: 'BUYER' },
+    { name: 'Parcel', icon: '📦', path: '/parcel', type: 'BUYER' },
+    { name: 'Hotels', icon: '🏨', path: '/hotels', type: 'HOTEL' }
   ];
 
-  // سروس پر کلک کرنے کا محفوظ طریقہ
-  const handleProtectedAction = (path) => {
-    if (!isLoggedIn) {
-      setPendingPath(path);
-      setShowAuthPopup(true); // اگر لاگ ان نہیں تو پاپ اپ دکھائیں
-    } else {
-      navigate(path);
-    }
-  };
-
-  const handleAuthComplete = (userData) => {
-    console.log("User Registered & Secured:", userData);
-    setIsLoggedIn(true);
-    setShowAuthPopup(false);
-    if (pendingPath) navigate(pendingPath);
+  // سروس سلیکٹ کرنے پر صرف نیویگیٹ کرے گا (آزادی)
+  const handleServiceClick = (service) => {
+    setSelectedService(service);
+    navigate(service.path);
   };
 
   return (
     <div style={{ ...styles.container, background: activeTheme.bg }}>
       
-      {/* 0. TOP LOGIN BAR (نئی ایڈیشن) */}
-      <div style={styles.topBar}>
-         <h2 style={{ color: activeTheme.border, margin: 0, fontSize: '20px' }}>TEZRO</h2>
-         {!isLoggedIn && (
-           <button 
-             onClick={() => setShowAuthPopup(true)}
-             style={{ ...styles.loginBtn, borderColor: activeTheme.border, color: activeTheme.text }}
-           >
-             Login / Register
-           </button>
-         )}
-      </div>
+      {/* --- HEADER --- */}
+      <header style={{ ...styles.header, background: activeTheme.bg, borderBottom: `1px solid ${activeTheme.border}44` }}>
+        <div style={{ color: activeTheme.border, fontWeight: 'bold', fontSize: '20px' }}>TEZRO</div>
+        <button style={{ ...styles.installBtn, background: activeTheme.border }}>📲 Install App</button>
+      </header>
 
       {/* 1. MAP SECTION */}
       <div style={{ ...styles.mapFrame, borderColor: activeTheme.border }}>
@@ -71,81 +50,57 @@ const HomeScreen = () => {
             ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png" 
             : "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"} 
           />
-          <div style={styles.mapOverlay}></div>
           <div style={styles.floatingSearch}>
-             <form 
-               style={{ ...styles.glassSearch, background: activeTheme.card, borderColor: activeTheme.border }}
-               onSubmit={(e) => { e.preventDefault(); handleProtectedAction(`/ride?to=${searchQuery}`); }}
-             >
-                <span style={{ color: activeTheme.border }}>📍</span>
+             <div style={{ ...styles.glassSearch, background: activeTheme.card, borderColor: activeTheme.border }}>
                 <input 
                   type="text" 
                   placeholder="Where to?" 
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
                   style={{ ...styles.searchInput, color: activeTheme.text }}
                 />
-                <button type="submit" style={{ ...styles.rideNowSmall, background: activeTheme.border, color: '#000' }}>
-                  Go ❯
-                </button>
-             </form>
+                <button style={{ ...styles.rideNowSmall, background: activeTheme.border }}>Go ❯</button>
+             </div>
           </div>
         </MapContainer>
       </div>
 
-      {/* 2. QUICK ACTIONS */}
-      <div style={styles.quickActions}>
-        {[
-          {id: 'Pickup', icon: '📍', path: '/ride'},
-          {id: 'Wallet', icon: '💳', path: '/pay'},
-          {id: 'Promos', icon: '⭐', path: '/promos'}
-        ].map((act) => (
-          <div 
-            key={act.id} 
-            onClick={() => handleProtectedAction(act.path)}
-            style={{ ...styles.actionPill, borderColor: activeTheme.border, color: activeTheme.text, background: activeTheme.card }}
-          >
-            {act.icon} {act.id}
-          </div>
-        ))}
-      </div>
-
-      {/* 3. PRIMARY RIDE CARD */}
-      <div 
-        style={{ ...styles.mainRideHero, background: activeTheme.card, borderColor: activeTheme.border }} 
-        onClick={() => handleProtectedAction('/ride')}
-      >
+      {/* 2. PRIMARY RIDE CARD */}
+      <div style={{ ...styles.mainRideHero, background: activeTheme.card, borderColor: activeTheme.border }} onClick={() => navigate('/ride')}>
         <div style={styles.heroContent}>
-           <div style={{ ...styles.carGraphic, filter: `drop-shadow(0 0 10px ${activeTheme.border})` }}>🚗</div>
+           <div style={styles.carGraphic}>🚗</div>
            <div>
               <h2 style={{ ...styles.heroTitle, color: activeTheme.text }}>Ride Anywhere</h2>
-              <p style={{ color: activeTheme.border, fontSize: '11px' }}>Secure & Verified Rides</p>
+              <p style={{ color: activeTheme.border, fontSize: '11px' }}>Safe & Fast</p>
            </div>
         </div>
-        <button style={{ ...styles.bookNowBtn, background: activeTheme.border, color: '#000' }}>Book Now</button>
+        <button style={{ ...styles.bookNowBtn, background: activeTheme.border }}>Book Now</button>
       </div>
 
-      {/* 4. SERVICE GRID */}
+      {/* 3. SERVICE GRID (5 Buttons Corrected) */}
       <div style={styles.serviceGrid}>
         {services.map((s, i) => (
           <div 
             key={i} 
             style={{ ...styles.glassButton, background: activeTheme.card, borderColor: activeTheme.border }} 
-            onClick={() => handleProtectedAction(s.path)}
+            onClick={() => handleServiceClick(s)}
           >
             <div style={styles.iconBox}>{s.icon}</div>
             <div style={{ ...styles.label, color: activeTheme.text }}>{s.name}</div>
-            <div style={{ ...styles.bottomGlow, background: activeTheme.border }}></div>
           </div>
         ))}
       </div>
 
-      {/* 5. REGISTRATION POPUP */}
-      {showAuthPopup && (
+      {/* --- FOOTER --- */}
+      <footer style={{ ...styles.footer, background: activeTheme.bg, borderTop: `1px solid ${activeTheme.border}44` }}>
+        {['🏠 Home', '🔍 Search', '📦 Orders', '👤 Profile'].map((tab, i) => (
+          <div key={i} style={{ color: activeTheme.text, fontSize: '12px', cursor: 'pointer' }}>{tab}</div>
+        ))}
+      </footer>
+
+      {/* رجسٹریشن پاپ اپ (صرف تب آئے گا جب سسٹم میں کنفرمیشن کال ہوگی) */}
+      {showAuth && (
         <QuickAuthPopup 
-          serviceType="GENERAL" 
-          onConfirm={handleAuthComplete} 
-          onClose={() => setShowAuthPopup(false)} 
+          type={selectedService?.type} 
+          onConfirm={() => { setShowAuth(false); alert("Confirmed!"); }}
         />
       )}
     </div>
@@ -153,28 +108,25 @@ const HomeScreen = () => {
 };
 
 const styles = {
-  container: { minHeight: '100vh', padding: '16px', paddingTop: '20px' },
-  topBar: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' },
-  loginBtn: { background: 'none', border: '1px solid', padding: '8px 15px', borderRadius: '20px', fontSize: '12px', fontWeight: 'bold' },
-  mapFrame: { height: '200px', borderRadius: '28px', overflow: 'hidden', border: '2px solid', marginBottom: '15px', position: 'relative' },
+  container: { minHeight: '100vh', padding: '16px', paddingTop: '80px', paddingBottom: '80px' },
+  header: { position: 'fixed', top: 0, left: 0, right: 0, height: '60px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 20px', zIndex: 1000 },
+  installBtn: { border: 'none', padding: '8px 15px', borderRadius: '20px', fontWeight: 'bold', fontSize: '12px', cursor: 'pointer' },
+  mapFrame: { height: '180px', borderRadius: '22px', overflow: 'hidden', border: '1px solid', marginBottom: '15px', position: 'relative' },
   leafletMap: { height: '100%', width: '100%' },
-  mapOverlay: { position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.1)', pointerEvents: 'none', zIndex: 400 },
-  floatingSearch: { position: 'absolute', bottom: '15px', width: '100%', zIndex: 500, display: 'flex', justifyContent: 'center' },
-  glassSearch: { width: '90%', backdropFilter: 'blur(10px)', borderRadius: '15px', padding: '8px 15px', display: 'flex', alignItems: 'center', border: '1px solid' },
+  floatingSearch: { position: 'absolute', bottom: '10px', width: '100%', zIndex: 500, display: 'flex', justifyContent: 'center' },
+  glassSearch: { width: '90%', backdropFilter: 'blur(10px)', borderRadius: '12px', padding: '5px 12px', display: 'flex', alignItems: 'center', border: '1px solid' },
   searchInput: { background: 'none', border: 'none', marginLeft: '10px', outline: 'none', flex: 1, fontSize: '14px' },
-  rideNowSmall: { border: 'none', borderRadius: '10px', padding: '5px 12px', fontSize: '11px', fontWeight: 'bold' },
-  quickActions: { display: 'flex', justifyContent: 'space-between', gap: '8px', marginBottom: '20px' },
-  actionPill: { flex: 1, borderRadius: '12px', padding: '10px 5px', fontSize: '11px', textAlign: 'center', border: '1px solid', cursor: 'pointer' },
-  mainRideHero: { borderRadius: '25px', padding: '20px', marginBottom: '20px', borderStyle: 'solid', borderWidth: '1px 1px 5px 1px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer' },
-  heroContent: { display: 'flex', alignItems: 'center', gap: '15px' },
-  carGraphic: { fontSize: '42px' },
-  heroTitle: { fontSize: '18px', fontWeight: 'bold', margin: 0 },
-  bookNowBtn: { border: 'none', borderRadius: '12px', padding: '10px 18px', fontWeight: 'bold' },
-  serviceGrid: { display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px' },
-  glassButton: { borderRadius: '22px', padding: '18px 10px', textAlign: 'center', borderStyle: 'solid', borderWidth: '1px 1px 4px 1px', position: 'relative' },
-  iconBox: { fontSize: '28px', marginBottom: '8px' },
-  label: { fontSize: '13px', fontWeight: 'bold' },
-  bottomGlow: { position: 'absolute', bottom: 0, left: '20%', right: '20%', height: '2px', filter: 'blur(3px)' }
+  rideNowSmall: { border: 'none', borderRadius: '8px', padding: '4px 10px', fontWeight: 'bold', cursor: 'pointer' },
+  mainRideHero: { borderRadius: '20px', padding: '15px', marginBottom: '15px', borderStyle: 'solid', borderWidth: '1px 1px 4px 1px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' },
+  heroContent: { display: 'flex', alignItems: 'center', gap: '12px' },
+  carGraphic: { fontSize: '35px' },
+  heroTitle: { fontSize: '16px', fontWeight: 'bold', margin: 0 },
+  bookNowBtn: { border: 'none', borderRadius: '10px', padding: '8px 15px', fontWeight: 'bold', fontSize: '11px' },
+  serviceGrid: { display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '8px' }, // 5 بٹنز ایک لائن میں
+  glassButton: { borderRadius: '15px', padding: '12px 5px', textAlign: 'center', borderStyle: 'solid', borderWidth: '1px 1px 3px 1px' },
+  iconBox: { fontSize: '22px', marginBottom: '5px' },
+  label: { fontSize: '10px', fontWeight: 'bold' },
+  footer: { position: 'fixed', bottom: 0, left: 0, right: 0, height: '65px', display: 'flex', justifyContent: 'space-around', alignItems: 'center', zIndex: 1000 }
 };
 
 export default HomeScreen;
