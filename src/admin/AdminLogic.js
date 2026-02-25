@@ -1,6 +1,4 @@
-// 1. پاتھ درست کیا گیا: 'firebase-config.js' کو 'firebase' سے بدلا گیا
-import { auth, db } from '../firebase'; 
-
+import { auth, db } from '/src/firebase'; // مکمل پاتھ استعمال کریں
 // 2. CDN لنکس کو npm پیکیجز سے بدل دیا گیا (تاکہ Vercel پر ایرر نہ آئے)
 import { 
     signInWithEmailAndPassword, 
