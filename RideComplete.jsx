@@ -1,16 +1,5 @@
-// درست پاتھ: ہم پہلے سے src کے اندر ہیں، اس لیے براہ راست '../firebase' استعمال کریں گے
-// اگر یہ فائل src/utils یا کسی اور فولڈر میں ہے تو پاتھ کو اس کے مطابق سیٹ کریں
-import { db } from '../../firebase'; 
-
-// فائر بیس لائبریری کو npm سے امپورٹ کریں، CDN سے نہیں
-import { 
-    doc, 
-    getDoc, 
-    updateDoc, 
-    increment, 
-    collection, 
-    addDoc, 
-    serverTimestamp 
+import { db } from './src/firebase'; // اگر یہ باہر ہے تو پاتھ چیک کریں
+import { doc, getDoc, updateDoc, increment, collection, addDoc, serverTimestamp } from "firebase/firestore";
 } from "firebase/firestore";
 
 /**
