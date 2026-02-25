@@ -1,5 +1,12 @@
-import { db } from './src/firebase'; // اگر یہ باہر ہے تو پاتھ چیک کریں
-import { doc, getDoc, updateDoc, increment, collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { db } from '../firebase-config'; // پاتھ کو اپنی فائل کی لوکیشن کے مطابق چیک کریں
+import { 
+    doc, 
+    getDoc, 
+    updateDoc, 
+    increment, 
+    collection, 
+    addDoc, 
+    serverTimestamp 
 } from "firebase/firestore";
 
 /**
@@ -7,6 +14,8 @@ import { doc, getDoc, updateDoc, increment, collection, addDoc, serverTimestamp 
  */
 export async function processRideCommission(driverId, rideFare) {
     try {
+        if (!driverId || !rideFare) throw new Error("Driver ID or Fare missing");
+
         console.log("Tezro: پروسیسنگ شروع ہو رہی ہے...");
 
         // 1. ایڈمن کی سیٹنگز سے کمیشن حاصل کریں
