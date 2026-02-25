@@ -1,6 +1,8 @@
-// پاتھ درست کیا گیا: روٹ سے src فولڈر کے اندر جانا
-import { db } from './src/firebase-config.js'; 
+// درست پاتھ: ہم پہلے سے src کے اندر ہیں، اس لیے براہ راست '../firebase' استعمال کریں گے
+// اگر یہ فائل src/utils یا کسی اور فولڈر میں ہے تو پاتھ کو اس کے مطابق سیٹ کریں
+import { db } from '../../firebase'; 
 
+// فائر بیس لائبریری کو npm سے امپورٹ کریں، CDN سے نہیں
 import { 
     doc, 
     getDoc, 
@@ -9,7 +11,7 @@ import {
     collection, 
     addDoc, 
     serverTimestamp 
-} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+} from "firebase/firestore";
 
 /**
  * Tezro رائیڈ مکمل ہونے پر کمیشن کاٹنے اور والٹ اپ ڈیٹ کرنے کا فنکشن
