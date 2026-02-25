@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import QuickAuthPopup from '../components/Auth/QuickAuthPopup';
+import UniversalAuthPopup from '../components/Auth/UniversalAuthPopup'; // 👈 نام تبدیل کر دیا گیا
 
 const ServiceHome = ({ serviceType }) => {
   const [cart, setCart] = useState([]);
@@ -7,8 +7,9 @@ const ServiceHome = ({ serviceType }) => {
 
   // جب صارف 'Confirm' یا 'Book Now' دبائے گا
   const handleFinalConfirm = () => {
-    if (cart.length > 0 || serviceType === 'RIDE') {
-      setShowAuth(true); // سیکیورٹی پاپ اپ دکھائیں
+    // رائیڈ کے لیے باسکٹ کی ضرورت نہیں، باقی سروسز کے لیے باسکٹ چیک کریں گے
+    if (serviceType === 'RIDE' || cart.length > 0) {
+      setShowAuth(true); // سمارٹ پاپ اپ دکھائیں
     } else {
       alert("براہ کرم پہلے کچھ سلیکٹ کریں!");
     }
@@ -16,30 +17,39 @@ const ServiceHome = ({ serviceType }) => {
 
   return (
     <div style={styles.page}>
-      <h2 style={{ color: '#D4AF37' }}>{serviceType} Marketplace</h2>
+      <h2 style={{ color: '#D4AF37', textTransform: 'capitalize' }}>{serviceType} Marketplace</h2>
       
-      {/* آئٹمز کی لسٹ (مثال) */}
-      <div style={styles.itemCard} onClick={() => setCart([...cart, 'Item 1'])}>
-        <span>🛍️ Sample Product / Room</span>
+      {/* آئٹمز کی لسٹ (مثال کے طور پر) */}
+      <div 
+        style={styles.itemCard} 
+        onClick={() => setCart([...cart, `${serviceType} Item ${cart.length + 1}`])}
+      >
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <span style={{ color: '#F3E5AB', fontWeight: 'bold' }}>🛍️ Sample {serviceType}</span>
+          <span style={{ color: '#D4AF37', fontSize: '12px' }}>Safe & Verified Service</span>
+        </div>
         <button style={styles.addBtn}>Add to Basket</button>
       </div>
 
-      {/* کنفرمیشن بٹن جو ہیڈر یا فوٹر میں ہو سکتا ہے */}
+      {/* کنفرمیشن بار */}
       <div style={styles.checkoutBar}>
-        <div style={{color: '#fff'}}>Items: {cart.length}</div>
+        <div style={{ color: '#000', fontWeight: 'bold' }}>
+          {serviceType === 'RIDE' ? 'Ready to Go?' : `Items: ${cart.length}`}
+        </div>
         <button style={styles.confirmBtn} onClick={handleFinalConfirm}>
-          Confirm Selection ❯
+          {serviceType === 'RIDE' ? 'Book Ride Now ❯' : 'Confirm Order ❯'}
         </button>
       </div>
 
-      {/* آپ کا مخصوص سیکیورٹی لاگ ان پاپ اپ */}
+      {/* مرج شدہ یونیورسل سیکیورٹی پاپ اپ */}
       {showAuth && (
-        <QuickAuthPopup 
+        <UniversalAuthPopup 
           serviceType={serviceType} 
-          onConfirm={(userData) => {
-            console.log("Verified User Data:", userData);
+          orderData={{ total: cart.length * 100 }} // یہاں آپ اپنی قیمت کا لاجک لگا سکتے ہیں
+          onConfirm={(secureData) => {
+            console.log("Verified User Data:", secureData);
             setShowAuth(false);
-            alert("آرڈر کنفرم ہو گیا اور سیکیورٹی ڈیٹا محفوظ کر لیا گیا!");
+            alert(`${serviceType} کنفرم ہو گیا! سیکیورٹی ڈیٹا محفوظ ہے۔`);
           }}
           onClose={() => setShowAuth(false)}
         />
@@ -49,11 +59,43 @@ const ServiceHome = ({ serviceType }) => {
 };
 
 const styles = {
-  page: { padding: '20px', background: '#1A0F0A', minHeight: '100vh', paddingTop: '80px' },
-  itemCard: { background: '#2D190F', padding: '15px', borderRadius: '15px', display: 'flex', justifyContent: 'space-between', marginBottom: '10px', border: '1px solid #D4AF3733' },
-  addBtn: { background: '#D4AF37', border: 'none', borderRadius: '5px', padding: '5px 10px', cursor: 'pointer' },
-  checkoutBar: { position: 'fixed', bottom: '80px', left: '20px', right: '20px', background: '#D4AF37', padding: '15px', borderRadius: '15px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', boxShadow: '0 10px 20px rgba(0,0,0,0.5)' },
-  confirmBtn: { background: '#000', color: '#D4AF37', border: 'none', padding: '10px 20px', borderRadius: '10px', fontWeight: 'bold', cursor: 'pointer' }
+  page: { padding: '20px', background: '#1A0F0A', minHeight: '100vh', paddingTop: '80px', paddingBottom: '160px' },
+  itemCard: { 
+    background: '#2D190F', 
+    padding: '18px', 
+    borderRadius: '18px', 
+    display: 'flex', 
+    justifyContent: 'space-between', 
+    alignItems: 'center',
+    marginBottom: '12px', 
+    border: '1px solid #D4AF3733',
+    cursor: 'pointer'
+  },
+  addBtn: { background: '#D4AF37', border: 'none', borderRadius: '8px', padding: '8px 15px', cursor: 'pointer', fontWeight: 'bold' },
+  checkoutBar: { 
+    position: 'fixed', 
+    bottom: '90px', 
+    left: '20px', 
+    right: '20px', 
+    background: '#D4AF37', 
+    padding: '18px', 
+    borderRadius: '20px', 
+    display: 'flex', 
+    justifyContent: 'space-between', 
+    alignItems: 'center', 
+    boxShadow: '0 10px 30px rgba(0,0,0,0.6)',
+    zIndex: 900 
+  },
+  confirmBtn: { 
+    background: '#000', 
+    color: '#D4AF37', 
+    border: 'none', 
+    padding: '12px 22px', 
+    borderRadius: '12px', 
+    fontWeight: 'bold', 
+    cursor: 'pointer',
+    fontSize: '14px'
+  }
 };
 
 export default ServiceHome;
