@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MapContainer, TileLayer } from 'react-leaflet';
 import { useTheme } from '../context/ThemeContext'; 
-import QuickAuthPopup from '../components/Auth/QuickAuthPopup'; // پاپ اپ امپورٹ کریں
+// ✅ پرانے QuickAuthPopup کی جگہ نیا UniversalAuthPopup امپورٹ کریں
+import UniversalAuthPopup from '../components/Auth/UniversalAuthPopup'; 
 import 'leaflet/dist/leaflet.css';
 
 const HomeScreen = () => {
   const navigate = useNavigate();
   const theme = useTheme(); 
-  const [searchQuery, setSearchQuery] = useState("");
   const [showAuth, setShowAuth] = useState(false);
   const [selectedService, setSelectedService] = useState(null);
 
@@ -21,10 +21,10 @@ const HomeScreen = () => {
   };
 
   const services = [
-    { name: 'Ride', icon: '📍', path: '/ride', type: 'RIDER' },
-    { name: 'Food', icon: '🍔', path: '/food', type: 'BUYER' },
-    { name: 'Shop', icon: '🛒', path: '/shop', type: 'BUYER' },
-    { name: 'Parcel', icon: '📦', path: '/parcel', type: 'BUYER' },
+    { name: 'Ride', icon: '📍', path: '/ride', type: 'RIDE' },
+    { name: 'Food', icon: '🍔', path: '/food', type: 'FOOD' },
+    { name: 'Shop', icon: '🛒', path: '/shop', type: 'SHOP' },
+    { name: 'Parcel', icon: '📦', path: '/parcel', type: 'PARCEL' },
     { name: 'Hotels', icon: '🏨', path: '/hotels', type: 'HOTEL' }
   ];
 
@@ -37,10 +37,10 @@ const HomeScreen = () => {
   return (
     <div style={{ ...styles.container, background: activeTheme.bg }}>
       
-      {/* --- HEADER --- */}
+      {/* --- FIXED HEADER --- */}
       <header style={{ ...styles.header, background: activeTheme.bg, borderBottom: `1px solid ${activeTheme.border}44` }}>
-        <div style={{ color: activeTheme.border, fontWeight: 'bold', fontSize: '20px' }}>TEZRO</div>
-        <button style={{ ...styles.installBtn, background: activeTheme.border }}>📲 Install App</button>
+        <div style={{ color: activeTheme.border, fontWeight: 'bold', fontSize: '20px', letterSpacing: '1px' }}>TEZRO</div>
+        <button style={{ ...styles.installBtn, background: activeTheme.border, color: '#000' }}>📲 Install App</button>
       </header>
 
       {/* 1. MAP SECTION */}
@@ -57,7 +57,7 @@ const HomeScreen = () => {
                   placeholder="Where to?" 
                   style={{ ...styles.searchInput, color: activeTheme.text }}
                 />
-                <button style={{ ...styles.rideNowSmall, background: activeTheme.border }}>Go ❯</button>
+                <button style={{ ...styles.rideNowSmall, background: activeTheme.border, color: '#000' }}>Go ❯</button>
              </div>
           </div>
         </MapContainer>
@@ -69,10 +69,10 @@ const HomeScreen = () => {
            <div style={styles.carGraphic}>🚗</div>
            <div>
               <h2 style={{ ...styles.heroTitle, color: activeTheme.text }}>Ride Anywhere</h2>
-              <p style={{ color: activeTheme.border, fontSize: '11px' }}>Safe & Fast</p>
+              <p style={{ color: activeTheme.border, fontSize: '11px', margin: 0 }}>Safe, Fast & Secure</p>
            </div>
         </div>
-        <button style={{ ...styles.bookNowBtn, background: activeTheme.border }}>Book Now</button>
+        <button style={{ ...styles.bookNowBtn, background: activeTheme.border, color: '#000' }}>Book Now</button>
       </div>
 
       {/* 3. SERVICE GRID (5 Buttons Corrected) */}
@@ -89,18 +89,33 @@ const HomeScreen = () => {
         ))}
       </div>
 
-      {/* --- FOOTER --- */}
+      {/* --- FIXED FOOTER --- */}
       <footer style={{ ...styles.footer, background: activeTheme.bg, borderTop: `1px solid ${activeTheme.border}44` }}>
-        {['🏠 Home', '🔍 Search', '📦 Orders', '👤 Profile'].map((tab, i) => (
-          <div key={i} style={{ color: activeTheme.text, fontSize: '12px', cursor: 'pointer' }}>{tab}</div>
+        {[
+          {n: 'Home', i: '🏠', p: '/'},
+          {n: 'Search', i: '🔍', p: '/search'},
+          {n: 'Orders', i: '📦', p: '/orders'},
+          {n: 'Profile', i: '👤', p: '/business-portal'}
+        ].map((tab, i) => (
+          <div key={i} onClick={() => navigate(tab.p)} style={{ ...styles.navItem, color: activeTheme.text }}>
+            <span style={{fontSize: '18px'}}>{tab.i}</span>
+            <span>{tab.n}</span>
+          </div>
         ))}
       </footer>
 
-      {/* رجسٹریشن پاپ اپ (صرف تب آئے گا جب سسٹم میں کنفرمیشن کال ہوگی) */}
+      {/* --- UNIVERSAL AUTH POPUP --- */}
+      {/* یہ پاپ اپ تب کھلے گا جب کسی سروس پیج پر 'Confirm' دبایا جائے گا */}
       {showAuth && (
-        <QuickAuthPopup 
-          type={selectedService?.type} 
-          onConfirm={() => { setShowAuth(false); alert("Confirmed!"); }}
+        <UniversalAuthPopup 
+          serviceType={selectedService?.type} 
+          orderData={{ total: 0 }} // یہاں آپ آرڈر کی رقم پاس کر سکتے ہیں
+          onConfirm={(secureData) => { 
+            console.log("Confirmed Data:", secureData);
+            setShowAuth(false); 
+            alert("بکنگ کامیاب رہی!"); 
+          }}
+          onClose={() => setShowAuth(false)}
         />
       )}
     </div>
@@ -108,25 +123,26 @@ const HomeScreen = () => {
 };
 
 const styles = {
-  container: { minHeight: '100vh', padding: '16px', paddingTop: '80px', paddingBottom: '80px' },
-  header: { position: 'fixed', top: 0, left: 0, right: 0, height: '60px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 20px', zIndex: 1000 },
-  installBtn: { border: 'none', padding: '8px 15px', borderRadius: '20px', fontWeight: 'bold', fontSize: '12px', cursor: 'pointer' },
+  container: { minHeight: '100vh', padding: '16px', paddingTop: '80px', paddingBottom: '90px' },
+  header: { position: 'fixed', top: 0, left: 0, right: 0, height: '65px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 20px', zIndex: 1000 },
+  installBtn: { border: 'none', padding: '8px 15px', borderRadius: '20px', fontWeight: 'bold', fontSize: '11px', cursor: 'pointer', boxShadow: '0 4px 10px rgba(0,0,0,0.3)' },
   mapFrame: { height: '180px', borderRadius: '22px', overflow: 'hidden', border: '1px solid', marginBottom: '15px', position: 'relative' },
   leafletMap: { height: '100%', width: '100%' },
   floatingSearch: { position: 'absolute', bottom: '10px', width: '100%', zIndex: 500, display: 'flex', justifyContent: 'center' },
   glassSearch: { width: '90%', backdropFilter: 'blur(10px)', borderRadius: '12px', padding: '5px 12px', display: 'flex', alignItems: 'center', border: '1px solid' },
   searchInput: { background: 'none', border: 'none', marginLeft: '10px', outline: 'none', flex: 1, fontSize: '14px' },
-  rideNowSmall: { border: 'none', borderRadius: '8px', padding: '4px 10px', fontWeight: 'bold', cursor: 'pointer' },
-  mainRideHero: { borderRadius: '20px', padding: '15px', marginBottom: '15px', borderStyle: 'solid', borderWidth: '1px 1px 4px 1px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' },
-  heroContent: { display: 'flex', alignItems: 'center', gap: '12px' },
-  carGraphic: { fontSize: '35px' },
-  heroTitle: { fontSize: '16px', fontWeight: 'bold', margin: 0 },
-  bookNowBtn: { border: 'none', borderRadius: '10px', padding: '8px 15px', fontWeight: 'bold', fontSize: '11px' },
-  serviceGrid: { display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '8px' }, // 5 بٹنز ایک لائن میں
-  glassButton: { borderRadius: '15px', padding: '12px 5px', textAlign: 'center', borderStyle: 'solid', borderWidth: '1px 1px 3px 1px' },
-  iconBox: { fontSize: '22px', marginBottom: '5px' },
-  label: { fontSize: '10px', fontWeight: 'bold' },
-  footer: { position: 'fixed', bottom: 0, left: 0, right: 0, height: '65px', display: 'flex', justifyContent: 'space-around', alignItems: 'center', zIndex: 1000 }
+  rideNowSmall: { border: 'none', borderRadius: '8px', padding: '5px 12px', fontWeight: 'bold', cursor: 'pointer' },
+  mainRideHero: { borderRadius: '22px', padding: '18px', marginBottom: '18px', borderStyle: 'solid', borderWidth: '1px 1px 4px 1px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer' },
+  heroContent: { display: 'flex', alignItems: 'center', gap: '15px' },
+  carGraphic: { fontSize: '40px' },
+  heroTitle: { fontSize: '17px', fontWeight: 'bold', margin: 0 },
+  bookNowBtn: { border: 'none', borderRadius: '12px', padding: '10px 20px', fontWeight: 'bold', fontSize: '12px', cursor: 'pointer' },
+  serviceGrid: { display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '8px' },
+  glassButton: { borderRadius: '18px', padding: '15px 5px', textAlign: 'center', borderStyle: 'solid', borderWidth: '1px 1px 3px 1px', cursor: 'pointer' },
+  iconBox: { fontSize: '24px', marginBottom: '5px' },
+  label: { fontSize: '11px', fontWeight: 'bold' },
+  footer: { position: 'fixed', bottom: 0, left: 0, right: 0, height: '70px', display: 'flex', justifyContent: 'space-around', alignItems: 'center', zIndex: 1000 },
+  navItem: { display: 'flex', flexDirection: 'column', alignItems: 'center', fontSize: '10px', gap: '4px', cursor: 'pointer' }
 };
 
 export default HomeScreen;
