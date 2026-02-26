@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { auth } from './firebase-config'; // 👈 یہاں ہم نے نام درست کر دیا (پہلے صرف firebase تھا)
+import { auth } from './firebase-config'; 
 import { onAuthStateChanged } from 'firebase/auth';
 import { ThemeProvider } from './context/ThemeContext'; 
 import Layout from './components/Layout';
