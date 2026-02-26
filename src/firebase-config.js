@@ -8,10 +8,14 @@ const firebaseConfig = {
   projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
   storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
   messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID, // 👈 یہاں کومہ ہونا لازمی ہے!
-  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID 
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 };
 
+// فائر بیس کو انیشلائز کریں
 const app = initializeApp(firebaseConfig);
+
+// ایکسپورٹ کریں تاکہ دوسری فائلیں استعمال کر سکیں
 export const auth = getAuth(app);
 export const db = getFirestore(app);
+export default app;
