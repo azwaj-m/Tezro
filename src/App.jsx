@@ -1,78 +1,153 @@
-import React, { useState, useEffect } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
-import { auth } from './firebase-config'; 
-import { onAuthStateChanged } from 'firebase/auth';
-import { ThemeProvider } from './context/ThemeContext'; 
+import React, { Suspense, lazy } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { useAuth } from './context/AuthContext'; 
+import { useTheme } from './context/ThemeContext'; 
 import Layout from './components/Layout';
 
-// اسکرینز کی امپورٹ
-import Login from './screens/Auth/Login'; 
-import HomeScreen from './screens/HomeScreen';
-import ServiceHome from './screens/ServiceHome'; 
-import BusinessPortal from './screens/Profile/BusinessPortal';
-import AdminDashboard from './screens/Admin/AdminDashboard';
-import PayHome from './screens/Pay/PayHome';
-import VendorPortal from './screens/Vendor/VendorPortal';
+// 🚀 اسکرینز کی اسمارٹ لوڈنگ (Lazy Loading)
+const Login = lazy(() => import('./screens/Auth/Login'));
+const HomeScreen = lazy(() => import('./screens/HomeScreen'));
+const PayHome = lazy(() => import('./screens/Pay/PayHome'));
+const ServiceHome = lazy(() => import('./screens/ServiceHome'));
+const AdminDashboard = lazy(() => import('./screens/Admin/AdminDashboard'));
+const RiderPanel = lazy(() => import('./screens/Rider/RiderPanel'));
+const OrderHistory = lazy(() => import('./components/OrderHistory'));
 
-function App() {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+// 🔄 Tezro متحرک لوڈنگ اسکرین
+const LoadingScreen = () => {
+  const { darkMode } = useTheme();
+  return (
+    <div style={{
+      ...styles.loaderContainer, 
+      background: darkMode ? '#000' : '#f8f8f8',
+      color: darkMode ? '#00FF88' : '#007b4d'
+    }}>
+      <div style={{
+        ...styles.spinner, 
+        borderTopColor: darkMode ? '#00FF88' : '#007b4d'
+      }} />
+      <div style={styles.loaderText}>OPENING TEZRO WINDOW...</div>
+      <style>{`@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`}</style>
+    </div>
+  );
+};
 
-  useEffect(() => {
-    // اگر فائر بیس کنفگ میں مسئلہ ہو گا تو یہاں پتہ چل جائے گا
-    if (!auth) {
-      console.error("Firebase Auth is not initialized properly!");
-      return;
-    }
+// 🛡️ سیکیورٹی گارڈ (GuardedRoute)
+const GuardedRoute = ({ children, allowedRole = null }) => {
+  const { user, role } = useAuth();
+  
+  if (!user) return <Navigate to="/login" replace />;
+  if (allowedRole && role !== allowedRole) return <Navigate to="/" replace />;
+  
+  return children;
+};
 
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-      setLoading(false);
-    });
-    return () => unsubscribe();
-  }, []);
+const App = () => {
+  const { user, loading, bypassLogin } = useAuth();
+  const { darkMode } = useTheme();
 
-  if (loading) return <div style={styles.loader}>Tezro Loading...</div>;
+  // فائر بیس ڈیٹا کا انتظار
+  if (loading) return <LoadingScreen />;
 
   return (
-    <ThemeProvider> 
-      {!user ? (
-        <Routes>
-          <Route path="*" element={<Login />} />
-        </Routes>
-      ) : (
-        <Layout>
+    <Router>
+      <Suspense fallback={<LoadingScreen />}>
+        {/* مین کنٹینر جو تھیم کے مطابق رنگ بدلتا ہے */}
+        <div style={{ 
+          minHeight: '100vh', 
+          background: darkMode ? '#000' : '#f5f5f5',
+          color: darkMode ? '#fff' : '#000',
+          transition: 'background 0.3s ease'
+        }}>
           <Routes>
-            <Route path="/" element={<HomeScreen />} />
-            <Route path="/ride" element={<ServiceHome serviceType="RIDE" />} />
-            <Route path="/food" element={<ServiceHome serviceType="FOOD" />} />
-            <Route path="/shop" element={<ServiceHome serviceType="SHOP" />} />
-            <Route path="/parcel" element={<ServiceHome serviceType="PARCEL" />} />
-            <Route path="/hotels" element={<ServiceHome serviceType="HOTEL" />} />
-            <Route path="/halls" element={<ServiceHome serviceType="FUNCTION_HALL" />} />
-            <Route path="/pay" element={<PayHome />} />
-            <Route path="/business-portal" element={<BusinessPortal />} />
-            <Route path="/vendor-dashboard" element={<VendorPortal />} />
-            <Route path="/admin-control-center" element={<AdminDashboard />} />
-            <Route path="*" element={<Navigate to="/" />} />
-          </Routes>
-        </Layout>
-      )}
-    </ThemeProvider>
-  );
-}
+            {/* 🔓 پبلک روٹ: لاگ ان */}
+            <Route path="/login" element={
+              !user ? (
+                <div style={{ position: 'relative' }}>
+                  <Login />
+                  <button onClick={bypassLogin} style={styles.backdoorBtn}>
+                    [ Open Backdoor ]
+                  </button>
+                </div>
+              ) : <Navigate to="/" />
+            } />
 
+            {/* 🔒 پروٹیکٹڈ روٹس (Layout کے اندر) */}
+            <Route path="/*" element={
+              <GuardedRoute>
+                <Layout>
+                  <Routes>
+                    {/* کسٹمر سکرینز */}
+                    <Route path="/" element={<HomeScreen />} />
+                    <Route path="/pay" element={<PayHome />} />
+                    <Route path="/service/:type" element={<ServiceHome />} />
+                    <Route path="/history" element={<OrderHistory userId={user?.uid} />} />
+
+                    {/* 👮 ایڈمن اونلی روٹ */}
+                    <Route path="/admin" element={
+                      <GuardedRoute allowedRole="admin">
+                        <AdminDashboard />
+                      </GuardedRoute>
+                    } />
+
+                    {/* 🏍️ رائڈر اونلی روٹ */}
+                    <Route path="/rider" element={
+                      <GuardedRoute allowedRole="rider">
+                        <RiderPanel />
+                      </GuardedRoute>
+                    } />
+
+                    {/* ڈیفالٹ ری ڈائریکٹ */}
+                    <Route path="*" element={<Navigate to="/" replace />} />
+                  </Routes>
+                </Layout>
+              </GuardedRoute>
+            } />
+          </Routes>
+        </div>
+      </Suspense>
+    </Router>
+  );
+};
+
+// 💅 ڈیزائن اور اسٹائلز
 const styles = {
-  loader: { 
+  loaderContainer: { 
     height: '100vh', 
-    background: '#000508', // آپ کی انڈیکس فائل والا رنگ
-    color: '#00FF88', // تھیم والا رنگ
     display: 'flex', 
+    flexDirection: 'column', 
     justifyContent: 'center', 
-    alignItems: 'center', 
-    fontSize: '20px',
+    alignItems: 'center' 
+  },
+  spinner: { 
+    width: '40px', 
+    height: '40px', 
+    border: '3px solid rgba(0,0,0,0.1)', 
+    borderTop: '3px solid #00FF88', 
+    borderRadius: '50%', 
+    animation: 'spin 1s linear infinite' 
+  },
+  loaderText: { 
+    marginTop: '15px', 
+    letterSpacing: '2px', 
+    fontSize: '11px', 
     fontWeight: 'bold',
-    letterSpacing: '2px'
+    textTransform: 'uppercase'
+  },
+  backdoorBtn: { 
+    position: 'fixed', 
+    bottom: '20px', 
+    right: '20px', 
+    background: 'rgba(0, 255, 136, 0.05)', 
+    color: '#00FF88', 
+    border: '1px solid rgba(0, 255, 136, 0.2)', 
+    padding: '8px 15px', 
+    borderRadius: '8px', 
+    fontSize: '10px', 
+    cursor: 'pointer', 
+    zIndex: 1000, 
+    textTransform: 'uppercase', 
+    letterSpacing: '1px' 
   }
 };
 
