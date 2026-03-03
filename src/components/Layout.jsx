@@ -1,132 +1,135 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
-import Sidebar from './Sidebar';
-import logoImg from '../../assets/logo.png'; 
+import { useAuth } from '../context/AuthContext';
+import SuperSearchBar from './SuperSearchBar'; // سرچ بار امپورٹ کریں
 
 const Layout = ({ children }) => {
-  const theme = useTheme();
+  const [isSidebarOpen, setSidebarOpen] = useState(false);
+  const [openPartner, setOpenPartner] = useState(false);
+  const [adminClicks, setAdminClicks] = useState(0);
+  
+  const { user, logout, verifyAdminKeys } = useAuth();
+  const { theme, darkMode, setDarkMode } = useTheme();
   const navigate = useNavigate();
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [pressTimer, setPressTimer] = useState(null);
+  const location = useLocation();
 
-  // تھیم کی حفاظت
-  const activeTheme = theme || { 
-    bg: '#1A0F0A', 
-    border: '#D4AF37', 
-    card: 'rgba(45,25,15,0.9)', 
-    text: '#F3E5AB' 
-  };
-
-  // 🔐 ایڈمن لانگ پریس لاجک
-  const handleStartPress = (e) => {
-    // موبائل پر ڈیفالٹ مینو کو روکنا
-    const timer = setTimeout(() => {
-      const code = prompt("Tezro Admin Access - مخصوص کوڈ درج کریں:");
-      if (code === "7860") { 
-        navigate('/admin-control-center');
-      } else if (code !== null) {
-        alert("رسائی ممنوع ہے! غلط کوڈ۔");
+  // 🕵️ خفیہ ایڈمن لاجک (بیک اینڈ سے تصدیق کے ساتھ)
+  const handleSecretClick = async () => {
+    const newCount = adminClicks + 1;
+    setAdminClicks(newCount);
+    if (newCount === 15) {
+      setAdminClicks(0);
+      const secretKey = prompt("🔒 ENTER ADMIN ACCESS KEY:");
+      if (secretKey) {
+        const isAuthorized = await verifyAdminKeys(secretKey);
+        if (isAuthorized) navigate('/admin');
+        else alert("ACCESS DENIED!");
       }
-    }, 2000); 
-    setPressTimer(timer);
-  };
-
-  const handleReleasePress = () => {
-    if (pressTimer) {
-      clearTimeout(pressTimer);
-      setPressTimer(null);
     }
   };
 
+  const menuItems = [
+    { id: 'home', label: 'Home', icon: '🏠', path: '/' },
+    { id: 'wallet', label: 'Payments & Wallet', icon: '💳', path: '/pay' },
+    { id: 'history', label: 'Orders / Rides', icon: '🕒', path: '/history' },
+    { id: 'settings', label: 'Settings', icon: '⚙️', path: '/settings' },
+  ];
+
   return (
-    <div style={{ background: activeTheme.bg, minHeight: '100vh', transition: '0.4s ease' }}>
+    <div style={{ background: theme.bg, color: theme.text, minHeight: '100vh', transition: '0.3s' }}>
       
-      {/* ⚡ الیکٹرک ہیڈر */}
-      <header style={{ 
-        ...styles.header, 
-        background: activeTheme.card, 
-        borderBottom: `2px solid ${activeTheme.border}44`,
-        boxShadow: `0 4px 15px rgba(0,0,0,0.5)`
+      {/* ☰ 💎 Premium Sidebar */}
+      <div style={{
+        position: 'fixed', top: 0, left: isSidebarOpen ? 0 : '-320px',
+        width: '320px', height: '100%', background: theme.card,
+        zIndex: 2000, transition: '0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+        padding: '25px', boxShadow: isSidebarOpen ? '10px 0 50px rgba(0,0,0,0.5)' : 'none',
+        display: 'flex', flexDirection: 'column', borderRight: `1px solid ${theme.border}`
       }}>
-        
-        {/* سائیڈ بار بٹن */}
-        <button 
-          onClick={() => setIsSidebarOpen(true)} 
-          style={{ color: activeTheme.border, ...styles.menuBtn }}
-        >
-          ☰
-        </button>
-        
-        {/* 🚀 اسمارٹ لوگو بٹن مع رجسٹریشن مارک */}
-        <div 
-          style={styles.logoWrapper} 
-          onClick={() => navigate('/')}
-          onMouseDown={handleStartPress}
-          onMouseUp={handleReleasePress}
-          onTouchStart={handleStartPress}
-          onTouchEnd={handleReleasePress}
-          onContextMenu={(e) => e.preventDefault()} // لانگ پریس پر مینو بلاک
-        >
-          <img 
-            src={logoImg} 
-            alt="TEZRO" 
-            style={{ 
-              ...styles.logoImg, 
-              filter: `drop-shadow(0 0 8px ${activeTheme.border}aa) sepia(1) saturate(5) hue-rotate(${theme.darkMode ? '0deg' : '250deg'})` 
-            }} 
-            onError={(e) => e.target.style.display = 'none'} // اگر تصویر نہ ملے تو کریش نہ ہو
-          />
-          <span style={{ ...styles.registered, color: activeTheme.border }}>®</span>
+        {/* Profile Section */}
+        <div style={{ marginBottom: '30px', textAlign: 'center' }}>
+          <img src={user?.photoURL || "https://via.placeholder.com/80"} 
+               style={{ width: '70px', height: '70px', borderRadius: '50%', border: `2px solid ${theme.accent}` }} alt="u" />
+          <h4 style={{ margin: '10px 0 0 0' }}>{user?.displayName || "Tezro User"}</h4>
+          <small style={{ color: theme.accent, fontSize: '10px' }}>PRO MEMBER</small>
         </div>
 
-        {/* تھیم ٹوگلر */}
-        <button 
-          onClick={() => theme.setDarkMode(!theme.darkMode)} 
-          style={{ ...styles.themeToggle, color: activeTheme.border }}
-        >
-          {theme.darkMode ? '☀️' : '🌙'}
-        </button>
-      </header>
+        {/* Menu Items */}
+        <div style={{ flex: 1 }}>
+          {menuItems.map(item => (
+            <div key={item.id} onClick={() => { navigate(item.path); setSidebarOpen(false); }}
+              style={{
+                padding: '15px', borderRadius: '12px', display: 'flex', alignItems: 'center', gap: '15px',
+                cursor: 'pointer', marginBottom: '8px', background: location.pathname === item.path ? 'rgba(0,255,136,0.1)' : 'transparent'
+              }}
+            >
+              <span>{item.icon}</span>
+              <span style={{ fontWeight: '500' }}>{item.label}</span>
+            </div>
+          ))}
+        </div>
 
-      {/* سائیڈ بار کمپوننٹ */}
-      <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+        {/* Dark Mode & Logout */}
+        <div style={{ borderTop: `1px solid ${theme.border}`, paddingTop: '15px' }}>
+          <button onClick={setDarkMode} style={{ width: '100%', padding: '12px', borderRadius: '10px', background: 'rgba(128,128,128,0.1)', color: theme.text, border: 'none', marginBottom: '10px' }}>
+            {darkMode ? '☀️ Light Mode' : '🌙 Dark Mode'}
+          </button>
+          <button onClick={logout} style={{ width: '100%', padding: '12px', borderRadius: '10px', border: '1px solid #ff4444', color: '#ff4444', background: 'none' }}>
+            Sign Out
+          </button>
+        </div>
+      </div>
 
-      {/* مین مواد (Main Content) */}
-      <main style={styles.mainContent}>
-        {children}
-      </main>
+      {/* 🌫️ Backdrop */}
+      {isSidebarOpen && <div onClick={() => setSidebarOpen(false)} style={styles.backdrop} />}
 
+      {/* 📱 Main Layout Engine */}
+      <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+        
+        {/* 🟢 Professional Header */}
+        <header style={{ ...styles.header, background: theme.card, borderBottom: `1px solid ${theme.border}` }}>
+          <button onClick={() => setSidebarOpen(true)} style={{ background: 'none', border: 'none', fontSize: '24px', color: theme.text }}>☰</button>
+          
+          <div style={{ position: 'relative' }}>
+            <span onClick={handleSecretClick} style={styles.secretBtn}>®</span>
+            <div onClick={() => navigate('/')} style={{ fontWeight: '900', color: theme.accent, fontSize: '20px', letterSpacing: '2px', cursor: 'pointer' }}>
+              TEZRO
+            </div>
+          </div>
+
+          <div onClick={() => navigate('/profile')} style={styles.profileCircle}>
+            <img src={user?.photoURL || "https://via.placeholder.com/40"} style={{ width: '100%' }} alt="p" />
+          </div>
+        </header>
+
+        {/* 🔍 Universal Search Bar Integration */}
+        {/* یہ ہوم پیج پر خود بخود سرچ بار دکھائے گا */}
+        {location.pathname === '/' && <SuperSearchBar onSearch={(type, val) => console.log(type, val)} />}
+
+        {/* Page Content */}
+        <main style={{ flex: 1, overflowY: 'auto', padding: '10px' }}>
+          {children}
+        </main>
+
+        {/* 🧭 Sticky Bottom Navigation */}
+        <footer style={{ ...styles.footer, background: theme.card, borderTop: `1px solid ${theme.border}` }}>
+          <div onClick={() => navigate('/')} style={{ color: location.pathname === '/' ? theme.accent : theme.text, fontSize: '22px' }}>🏠</div>
+          <div onClick={() => navigate('/pay')} style={{ opacity: location.pathname === '/pay' ? 1 : 0.4, color: theme.text, fontSize: '22px' }}>💳</div>
+          <div onClick={() => navigate('/notifications')} style={{ opacity: 0.4, color: theme.text, fontSize: '22px' }}>🔔</div>
+          <div onClick={() => setSidebarOpen(true)} style={{ opacity: 0.4, color: theme.text, fontSize: '22px' }}>👤</div>
+        </footer>
+      </div>
     </div>
   );
 };
 
 const styles = {
-  header: { 
-    height: '75px', 
-    position: 'fixed', 
-    top: 0, 
-    width: '100%', 
-    display: 'flex', 
-    justifyContent: 'space-between', 
-    alignItems: 'center', 
-    padding: '0 20px', 
-    zIndex: 1100, 
-    backdropFilter: 'blur(12px)' 
-  },
-  logoWrapper: { 
-    display: 'flex', 
-    alignItems: 'flex-start', 
-    cursor: 'pointer', 
-    position: 'relative',
-    userSelect: 'none',
-    WebkitUserSelect: 'none'
-  },
-  logoImg: { height: '38px', width: 'auto', transition: '0.4s ease' },
-  registered: { fontSize: '9px', fontWeight: 'bold', marginLeft: '1px', marginTop: '-5px' },
-  menuBtn: { background: 'none', border: 'none', fontSize: '30px', cursor: 'pointer', transition: '0.2s active' },
-  themeToggle: { background: 'none', border: 'none', fontSize: '22px', cursor: 'pointer', padding: '10px' },
-  mainContent: { paddingTop: '80px', minHeight: '100vh' }
+  header: { padding: '12px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'sticky', top: 0, zIndex: 1000 },
+  secretBtn: { position: 'absolute', top: '-8px', right: '-12px', fontSize: '8px', color: 'rgba(128,128,128,0.2)', cursor: 'default', userSelect: 'none' },
+  profileCircle: { width: '35px', height: '35px', borderRadius: '50%', border: '1px solid #00FF88', overflow: 'hidden', cursor: 'pointer' },
+  footer: { padding: '15px', display: 'flex', justifyContent: 'space-around', position: 'sticky', bottom: 0 },
+  backdrop: { position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)', zIndex: 1500 }
 };
 
 export default Layout;
