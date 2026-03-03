@@ -1,189 +1,54 @@
-:root {
-  /* Tezro Master Palette - Cyber-Luxury Theme */
-  --tezro-gold: #D4AF37;
-  --tezro-gold-glow: rgba(212, 175, 55, 0.4);
-  --neon-green: #39FF14;
-  --bg-deep: #050505;
-  --card-dark: #121212;
-  --glass: rgba(255, 255, 255, 0.03);
-  --border-subtle: rgba(212, 175, 55, 0.2);
-  --ivory-text: #F3E5AB;
+/* --- Checkout & Cart Specifics (New Additions) --- */
+.cart-drawer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, #000 80%, var(--card-dark));
+    border-top: 1px solid var(--border-subtle);
+    border-radius: 40px 40px 0 0;
+    padding: 30px;
+    z-index: 1200;
+    box-shadow: 0 -20px 50px rgba(0,0,0,0.8);
+    transform: translateY(100%);
+    transition: 0.5s cubic-bezier(0.32, 0.72, 0, 1);
 }
 
-/* --- Base Typography & Reset --- */
-body {
-  background: var(--bg-deep);
-  color: var(--ivory-text);
-  margin: 0;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
+.cart-drawer.active { transform: translateY(0); }
+
+.price-tag {
+    font-family: 'Mono', monospace;
+    color: var(--tezro-gold);
+    font-weight: 900;
+    letter-spacing: -1px;
 }
 
-/* --- Universal Glass Header --- */
-.app-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 18px 25px;
-  background: rgba(0, 0, 0, 0.85);
-  backdrop-filter: blur(15px);
-  border-bottom: 1px solid var(--border-subtle);
-  position: sticky;
-  top: 0;
-  z-index: 1000;
+/* --- Category Isolation Badges --- */
+.type-badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 9px;
+    font-weight: 900;
+    text-transform: uppercase;
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255,255,255,0.1);
 }
 
-.app-logo {
-  height: 38px;
-  filter: drop-shadow(0 0 8px var(--tezro-gold-glow));
-  transition: transform 0.3s ease;
+.type-food { background: rgba(255, 69, 0, 0.15); color: #FF4500; }
+.type-lifestyle { background: rgba(57, 255, 20, 0.1); color: var(--neon-green); }
+.type-hotel { background: rgba(212, 175, 55, 0.15); color: var(--tezro-gold); }
+
+/* --- Payment Animation --- */
+.processing-shimmer {
+    background: linear-gradient(90deg, transparent, var(--tezro-gold-glow), transparent);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
 }
 
-.app-logo:hover { transform: scale(1.05); }
-
-.install-badge {
-  background: linear-gradient(135deg, var(--tezro-gold), #F3E5AB);
-  color: black;
-  border: none;
-  padding: 6px 16px;
-  border-radius: 30px;
-  font-weight: 800;
-  font-size: 11px;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
-}
-
-/* --- Unified Registration & Input System --- */
-.reg-input {
-  width: 100%;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(212, 175, 55, 0.1);
-  padding: 18px 25px;
-  border-radius: 18px;
-  color: white;
-  font-size: 14px;
-  outline: none;
-  transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.reg-input:focus {
-  border-color: var(--tezro-gold);
-  background: rgba(212, 175, 55, 0.05);
-  box-shadow: 0 0 20px rgba(212, 175, 55, 0.15);
-}
-
-/* --- Map & Tracking Visuals --- */
-.map-frame {
-  height: 280px;
-  margin: 20px;
-  border-radius: 35px;
-  border: 1.5px solid var(--border-subtle);
-  overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-}
-
-.leaflet-marker-icon {
-  transition: all 1.2s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.tezro-car-pulse {
-  box-shadow: 0 0 20px var(--tezro-gold-glow);
-  border-radius: 50%;
-  animation: car-glow 2.5s infinite ease-in-out;
-}
-
-@keyframes car-glow {
-  0%, 100% { transform: scale(1); filter: brightness(1); opacity: 0.8; }
-  50% { transform: scale(1.15); filter: brightness(1.3); opacity: 1; }
-}
-
-/* --- Service Cards Grid --- */
-.services-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 18px;
-  padding: 20px;
-}
-
-.s-card {
-  background: var(--card-dark);
-  padding: 25px;
-  border-radius: 28px;
-  text-align: center;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  position: relative;
-  overflow: hidden;
-  transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.s-card::after {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: linear-gradient(180deg, transparent, rgba(212, 175, 55, 0.05));
-  opacity: 0;
-  pointer-events: none;
-}
-
-.s-card:hover {
-  transform: translateY(-8px);
-  border-color: var(--tezro-gold);
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
-}
-
-.s-card:hover::after { opacity: 1; }
-
-.s-icon { 
-  font-size: 42px; 
-  margin-bottom: 12px; 
-  display: block;
-}
-
-.full-width { grid-column: span 2; }
-
-/* --- Sidebar System (The Vault Door) --- */
-.sidebar {
-  position: fixed;
-  left: -320px;
-  top: 0;
-  width: 280px;
-  height: 100%;
-  background: linear-gradient(to bottom, #000, #111);
-  border-right: 1px solid var(--border-subtle);
-  transition: 0.5s cubic-bezier(0.77, 0, 0.175, 1);
-  z-index: 1100;
-  padding-top: 40px;
-  box-shadow: 20px 0 50px rgba(0,0,0,0.9);
-}
-
-.sidebar.active { left: 0; }
-
-.sidebar-item {
-  padding: 15px 30px;
-  color: #888;
-  font-weight: 500;
-  border-left: 3px solid transparent;
-  transition: 0.3s;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-.sidebar-item:hover {
-  color: var(--tezro-gold);
-  background: rgba(212, 175, 55, 0.05);
-  border-left-color: var(--tezro-gold);
-}
-
-/* --- Animation Utilities --- */
-.animate-fadeIn {
-  animation: fadeIn 0.5s ease-out forwards;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+@keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
 }
