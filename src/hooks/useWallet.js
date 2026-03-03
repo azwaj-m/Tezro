@@ -1,27 +1,59 @@
 import { useState, useEffect } from 'react';
-import { db } from '../firebase-config';
-import { doc, onSnapshot } from 'firebase/firestore';
+import { db, auth } from '../firebase-config';
+import { doc, onSnapshot, runTransaction, serverTimestamp } from 'firebase/firestore';
+import { SecurityEngine } from '../../Tezro_Vault/SecurityEngine';
 
-export const useWallet = (userId, role) => {
-  const [balance, setBalance] = useState(0);
-  const [loading, setLoading] = useState(true);
+export const useWallet = () => {
+    const [balance, setBalance] = useState(0);
+    const [transactions, setTransactions] = useState([]);
+    const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    if (!userId) return;
+    useEffect(() => {
+        const user = auth.currentUser;
+        if (!user) return;
 
-    // رول کے حساب سے صحیح کلیکشن کا انتخاب
-    const collectionName = role === 'admin' ? 'system_stats' : 'users';
-    const docId = role === 'admin' ? 'finances' : userId;
+        // ریئل ٹائم لسنر (Live Listener)
+        const unsubscribe = onSnapshot(doc(db, "wallets", user.uid), (doc) => {
+            if (doc.exists()) {
+                const data = doc.data();
+                setBalance(data.balance);
+                setTransactions(data.history || []);
+            }
+            setLoading(false);
+        });
 
-    const unsubscribe = onSnapshot(doc(db, collectionName, docId), (doc) => {
-      if (doc.exists()) {
-        setBalance(doc.data().balance || doc.data().totalEarnings || 0);
-      }
-      setLoading(false);
-    });
+        return () => unsubscribe();
+    }, []);
 
-    return () => unsubscribe();
-  }, [userId, role]);
+    const sendMoney = async (receiverId, amount, note = "") => {
+        const senderId = auth.currentUser.uid;
+        if (amount <= 0) throw new Error("Invalid Amount");
 
-  return { balance, loading };
+        try {
+            await runTransaction(db, async (transaction) => {
+                const senderRef = doc(db, "wallets", senderId);
+                const receiverRef = doc(db, "wallets", receiverId);
+                
+                const senderSnap = await transaction.get(senderRef);
+                if (senderSnap.data().balance < amount) throw "Insufficient Balance";
+
+                // سیکیورٹی انجن کے ذریعے ٹرانزیکشن کو لاک کرنا
+                const auditLog = SecurityEngine.generateAuditTrail(senderId, "TRANSFER", amount);
+
+                transaction.update(senderRef, { 
+                    balance: senderSnap.data().balance - amount,
+                    history: [auditLog, ...senderSnap.data().history].slice(0, 20)
+                });
+                
+                transaction.update(receiverRef, { 
+                    balance: (await transaction.get(receiverRef)).data().balance + amount 
+                });
+            });
+            return { success: true };
+        } catch (e) {
+            return { success: false, error: e };
+        }
+    };
+
+    return { balance, transactions, loading, sendMoney };
 };
