@@ -1,43 +1,152 @@
 :root {
-  --neon: #39FF14;
-  --bg: #050505;
-  --card-bg: #121212;
+  /* Tezro Master Palette */
+  --tezro-gold: #D4AF37;
+  --tezro-gold-glow: rgba(212, 175, 55, 0.4);
+  --neon-green: #39FF14;
+  --bg-deep: #050505;
+  --card-dark: #121212;
+  --glass: rgba(255, 255, 255, 0.03);
+  --border-subtle: rgba(212, 175, 55, 0.2);
 }
 
-body { background: var(--bg); color: white; margin: 0; font-family: 'Inter', sans-serif; }
+body {
+  background: var(--bg-deep);
+  color: #F3E5AB; /* Ivory text for better contrast with gold */
+  margin: 0;
+  font-family: 'Inter', -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
 
+/* --- Header & Navigation --- */
 .app-header {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 15px 20px; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px);
-  position: sticky; top: 0; z-index: 100;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 25px;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(15px);
+  border-bottom: 1px solid var(--border-subtle);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
 
-.app-logo { height: 40px; filter: drop-shadow(0 0 5px var(--neon)); cursor: pointer; }
+.app-logo {
+  height: 38px;
+  filter: drop-shadow(0 0 8px var(--tezro-gold-glow));
+  transition: transform 0.3s ease;
+}
+
+.app-logo:hover { transform: scale(1.05); }
 
 .install-badge {
-  background: var(--neon); color: black; border: none; padding: 5px 12px;
-  border-radius: 20px; font-weight: bold; font-size: 12px;
+  background: linear-gradient(135deg, var(--tezro-gold), #F3E5AB);
+  color: black;
+  border: none;
+  padding: 6px 16px;
+  border-radius: 30px;
+  font-weight: 800;
+  font-size: 11px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
 }
 
+/* --- Maps & Tracking (The Core) --- */
 .map-frame {
-  height: 250px; margin: 15px; border-radius: 25px;
-  border: 1px solid rgba(57, 255, 20, 0.3); box-shadow: 0 0 20px rgba(57, 255, 20, 0.1);
+  height: 280px;
+  margin: 20px;
+  border-radius: 35px;
+  border: 1.5px solid var(--border-subtle);
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
 
-.services-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 15px; }
+.leaflet-marker-icon {
+  transition: all 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tezro-car-pulse {
+  box-shadow: 0 0 20px var(--tezro-gold-glow);
+  border-radius: 50%;
+  animation: car-glow 2.5s infinite ease-in-out;
+}
+
+@keyframes car-glow {
+  0%, 100% { transform: scale(1); filter: brightness(1); }
+  50% { transform: scale(1.15); filter: brightness(1.3); }
+}
+
+/* --- Service Cards (The Grid) --- */
+.services-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  padding: 20px;
+}
 
 .s-card {
-  background: var(--card-bg); padding: 20px; border-radius: 20px;
-  text-align: center; border: 1px solid #222; transition: 0.3s;
+  background: var(--card-dark);
+  padding: 25px;
+  border-radius: 28px;
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  position: relative;
+  overflow: hidden;
+  transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-.s-card:hover { border-color: var(--neon); box-shadow: 0 0 15px rgba(57, 255, 20, 0.2); }
+.s-card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(180deg, transparent, rgba(212, 175, 55, 0.05));
+  opacity: 0;
+}
 
-.s-icon { font-size: 35px; margin-bottom: 8px; }
+.s-card:hover {
+  transform: translateY(-8px);
+  border-color: var(--tezro-gold);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+}
+
+.s-card:hover::after { opacity: 1; }
+
+.s-icon { 
+  font-size: 42px; 
+  margin-bottom: 12px; 
+  display: block;
+}
+
 .full-width { grid-column: span 2; }
 
+/* --- Sidebar (The Vault Menu) --- */
 .sidebar {
-  position: fixed; left: -280px; top: 0; width: 260px; height: 100%;
-  background: #000; border-right: 1px solid var(--neon); transition: 0.4s; z-index: 1000;
+  position: fixed;
+  left: -300px;
+  top: 0;
+  width: 280px;
+  height: 100%;
+  background: linear-gradient(to bottom, #000, #111);
+  border-right: 1px solid var(--border-subtle);
+  transition: 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+  z-index: 1100;
+  padding-top: 40px;
+  box-shadow: 20px 0 50px rgba(0,0,0,0.9);
 }
+
 .sidebar.active { left: 0; }
+
+.sidebar-item {
+  padding: 15px 30px;
+  color: #888;
+  font-weight: 500;
+  border-left: 3px solid transparent;
+  transition: 0.3s;
+}
+
+.sidebar-item:hover {
+  color: var(--tezro-gold);
+  background: rgba(212, 175, 55, 0.05);
+  border-left-color: var(--tezro-gold);
+}
