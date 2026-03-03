@@ -1,99 +1,99 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useWallet } from '../hooks/useWallet';
 import { useTheme } from '../context/ThemeContext';
-import { useNavigate } from 'react-router-dom';
+import { SecurityEngine } from '../../Tezro_Vault/SecurityEngine';
 
-const Sidebar = ({ isOpen, onClose }) => {
-  const theme = useTheme();
-  const navigate = useNavigate();
-  const activeTheme = theme || { bg: '#1A0F0A', border: '#D4AF37', text: '#F3E5AB' };
+const Sidebar = ({ isOpen, toggleSidebar, user }) => {
+    const { balance } = useWallet();
+    const [showBizOptions, setShowBizOptions] = useState(false);
 
-  // پرانے آپشنز اور نئے بزنس لنکس کا مجموعہ
-  const menuItems = [
-    { label: 'Profile', path: '/profile' },
-    { label: 'My Rides', path: '/rides' },
-    { label: 'Wallet', path: '/wallet' },
-    { label: 'Tezro Business 💼', path: '/business-portal', isSpecial: true },
-    { label: 'Partner with Us', path: '/business-portal', isSpecial: true },
-    { label: 'Settings', path: '/settings' },
-    { label: 'Support', path: '/support' },
-  ];
+    // بزنس رجسٹریشن کے اختیارات
+    const bizRoles = [
+        { id: 'vendor', label: 'Shopkeeper / Vendor', icon: '🏪' },
+        { id: 'rider', label: 'Delivery Boy', icon: '🛵' },
+        { id: 'driver', label: 'Tezro Captain', icon: '🚗' }
+    ];
 
-  const handleNav = (path) => {
-    navigate(path);
-    onClose();
-  };
+    const handleRoleSelection = (role) => {
+        alert(`Opening Registration for: ${role.toUpperCase()}\nSecurity Fee: PKR 5000 (Refundable)`);
+        // یہاں رجسٹریشن فارم کا پاپ اپ لاجک آئے گا
+    };
 
-  return (
-    <>
-      {/* بیک گراؤنڈ پر کلک کرنے سے بند ہو جائے گا */}
-      {isOpen && <div onClick={onClose} style={styles.overlay}></div>}
-      
-      <div style={{ 
-        ...styles.sidebar, 
-        left: isOpen ? 0 : '-300px', 
-        background: activeTheme.bg, 
-        borderRight: `3px solid ${activeTheme.border}`,
-      }}>
-        {/* پروفائل سیکشن */}
-        <div style={{ ...styles.profile, borderBottom: `1px solid ${activeTheme.border}33` }}>
-          <div style={{ ...styles.avatar, border: `2px solid ${activeTheme.border}`, color: activeTheme.border }}>👤</div>
-          <h3 style={{ color: activeTheme.text, marginTop: '10px' }}>User Name</h3>
-          <p style={{ color: activeTheme.border, fontSize: '12px' }}>Premium Gold Member</p>
-        </div>
-        
-        {/* مینو لسٹ */}
-        <div style={styles.menuList}>
-          {menuItems.map((item, index) => (
-            <div 
-              key={index} 
-              style={{ 
-                ...styles.menuItem, 
-                color: item.isSpecial ? activeTheme.border : activeTheme.text, 
-                borderBottom: `1px solid ${activeTheme.border}11`,
-                background: item.isSpecial ? `${activeTheme.border}08` : 'transparent'
-              }} 
-              onClick={() => handleNav(item.path)}
-            >
-              {item.label}
-              {item.isSpecial && <span style={styles.newBadge}>PRO</span>}
-            </div>
-          ))}
-        </div>
-        
-        {/* کلوز بٹن */}
-        <button onClick={onClose} style={{...styles.closeBtn, color: activeTheme.border}}>
-          ✕ Close
-        </button>
+    return (
+        <>
+            {/* Backdrop Overlay */}
+            <div className={`fixed inset-0 bg-black/60 backdrop-blur-sm z-[1050] transition-opacity ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} onClick={toggleSidebar}></div>
 
-        {/* سیکیورٹی فوٹر */}
-        <div style={{...styles.securityFooter, color: activeTheme.border + '88'}}>
-          🛡️ Zero-Knowledge Security Active
-        </div>
-      </div>
-    </>
-  );
-};
+            <aside className={`sidebar ${isOpen ? 'active' : ''}`}>
+                
+                {/* 1. User Profile Header */}
+                <div className="p-8 border-b border-[#D4AF37]/20 bg-gradient-to-b from-[#D4AF37]/10 to-transparent">
+                    <div className="w-20 h-20 rounded-2xl border-2 border-[#D4AF37] p-1 mb-4 shadow-[0_0_15px_rgba(212,175,55,0.3)]">
+                        <img src={user?.photoURL || 'https://via.placeholder.com/80'} className="w-full h-full rounded-xl object-cover" alt="Profile" />
+                    </div>
+                    <h3 className="text-xl font-black text-white">{user?.displayName || 'Tezro Member'}</h3>
+                    <span className="text-[10px] bg-[#D4AF37] text-black px-3 py-1 rounded-full font-black uppercase tracking-widest mt-2 inline-block">
+                        Elite Gold Member
+                    </span>
+                </div>
 
-const styles = {
-  overlay: { position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.8)', zIndex: 2000 },
-  sidebar: { position: 'fixed', top: 0, width: '280px', height: '100%', zIndex: 2001, transition: '0.4s cubic-bezier(0.4, 0, 0.2, 1)', padding: '40px 20px', display: 'flex', flexDirection: 'column' },
-  profile: { textAlign: 'center', marginBottom: '30px', paddingBottom: '20px' },
-  avatar: { width: '70px', height: '70px', borderRadius: '50%', margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '30px' },
-  menuList: { display: 'flex', flexDirection: 'column', gap: '5px', overflowY: 'auto' },
-  menuItem: { 
-    padding: '15px 12px', 
-    fontSize: '15px', 
-    fontWeight: 'bold', 
-    cursor: 'pointer', 
-    transition: '0.2s', 
-    display: 'flex', 
-    justifyContent: 'space-between', 
-    alignItems: 'center',
-    borderRadius: '8px'
-  },
-  newBadge: { fontSize: '10px', background: '#D4AF37', color: '#000', padding: '2px 6px', borderRadius: '4px' },
-  closeBtn: { marginTop: 'auto', padding: '20px', background: 'none', border: 'none', fontWeight: 'bold', cursor: 'pointer', width: '100%', textAlign: 'center' },
-  securityFooter: { textAlign: 'center', fontSize: '10px', marginTop: '10px', letterSpacing: '1px' }
+                {/* 2. The Vault (Wallet Section) */}
+                <div className="mx-6 my-6 p-4 rounded-2xl bg-white/5 border border-[#D4AF37]/30 shadow-[inset_0_0_20px_rgba(212,175,55,0.1)]">
+                    <div className="flex justify-between items-center mb-1">
+                        <span className="text-[9px] uppercase tracking-widest text-gray-400">Tezro Vault Balance</span>
+                        <span className="text-[#39FF14] text-[10px]">● SECURE</span>
+                    </div>
+                    <h2 className="text-2xl font-black text-[#F3E5AB]">Rs. {balance?.toLocaleString()}</h2>
+                </div>
+
+                <nav className="flex flex-col gap-1 px-4 overflow-y-auto max-h-[50vh]">
+                    <div className="sidebar-item"><span>🚗</span> Ride History</div>
+                    <div className="sidebar-item"><span>🥡</span> Food Orders</div>
+                    <div className="sidebar-item"><span>💳</span> Transactions</div>
+                    
+                    {/* 3. Business Portal Logic */}
+                    <div className="mt-4 pt-4 border-t border-white/5">
+                        {!user?.isVendor ? (
+                            <div className="px-4">
+                                <button 
+                                    onClick={() => setShowBizOptions(!showBizOptions)}
+                                    className="w-full py-3 bg-gradient-to-r from-[#D4AF37] to-[#B8860B] text-black font-black rounded-xl text-xs uppercase tracking-tighter"
+                                >
+                                    {showBizOptions ? "Close Selection" : "Join Tezro Business"}
+                                </button>
+                                
+                                {showBizOptions && (
+                                    <div className="mt-3 space-y-2 animate-fadeIn">
+                                        {bizRoles.map(role => (
+                                            <div 
+                                                key={role.id} 
+                                                onClick={() => handleRoleSelection(role.id)}
+                                                className="p-3 bg-white/5 rounded-xl border border-white/10 hover:border-[#D4AF37] cursor-pointer text-xs flex items-center gap-3 transition-all"
+                                            >
+                                                <span>{role.icon}</span> {role.label}
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        ) : (
+                            <div className="sidebar-item text-[#D4AF37] font-bold"><span>🏢</span> Business Dashboard</div>
+                        )}
+                    </div>
+
+                    {/* 4. Security & SOS */}
+                    <div className="mt-auto pt-6 px-4 space-y-4 pb-8">
+                        <div className="sidebar-item text-gray-400 text-sm"><span>🛡️</span> Security & Audit Logs</div>
+                        
+                        <button className="w-full py-4 bg-red-600/20 border border-red-600/40 text-red-500 rounded-2xl font-black text-sm shadow-[0_0_20px_rgba(220,38,38,0.2)] animate-pulse">
+                            EMERGENCY SOS
+                        </button>
+                    </div>
+                </nav>
+
+            </aside>
+        </>
+    );
 };
 
 export default Sidebar;
