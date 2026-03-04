@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, useContext } from 'react';
 
 export const AuthContext = createContext();
 
@@ -28,9 +28,24 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('tezro_user');
   };
 
+  // 🕵️ ایڈمن کی تصدیق کا فنکشن (Layout کی ضرورت کے مطابق)
+  const verifyAdminKeys = async (key) => {
+    // یہاں آپ اپنا اصل ایڈمن کی لاجک ڈال سکتے ہیں
+    return key === "ADMIN786"; 
+  };
+
   return (
-    <AuthContext.Provider value={{ user, setUser, loginWithGoogle, logout }}>
+    <AuthContext.Provider value={{ user, setUser, loginWithGoogle, logout, verifyAdminKeys }}>
       {children}
     </AuthContext.Provider>
   );
+};
+
+// 🚀 یہ وہ ہک ہے جس کی وجہ سے بلڈ فیل ہو رہی تھی
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
 };
