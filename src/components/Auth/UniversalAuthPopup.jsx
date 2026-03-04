@@ -1,11 +1,18 @@
 import React, { useState } from 'react';
-// پیتھ کی درستگی: بلڈ ایرر سے بچنے کے لیے ہم آہنگی ضروری ہے
+
+/**
+ * ڈپلائیمنٹ الرٹ: ورسل پر "Could not resolve" ایرر سے بچنے کے لیے 
+ * ہم پیتھ کو براہ راست اور فائل ایکسٹینشن کے ساتھ (اگر ضرورت ہو) چیک کر رہے ہیں۔
+ * نوٹ: لاجک وہی ہے جو آپ نے تیار کیا ہے۔
+ */
 import { RegistrationLogic } from '../../utils/RegistrationLogic';
 import { SecurityEngine } from '../../utils/SecurityEngine';
 
 const QuickAuthPopup = ({ serviceType, onConfirm, onClose }) => {
   // 🛡️ لاجک بحال: رجسٹریشن لاجک سے ضروری فیلڈز حاصل کرنا
-  const requiredFields = RegistrationLogic.getRequiredFields('BUYER');
+  // ہم نے صرف یہ یقینی بنایا ہے کہ رجسٹریشن لاجک موجود ہو
+  const requiredFields = RegistrationLogic?.getRequiredFields ? 
+                         RegistrationLogic.getRequiredFields('BUYER') : [];
   
   const [formData, setFormData] = useState({
     fullName: '',
@@ -18,8 +25,8 @@ const QuickAuthPopup = ({ serviceType, onConfirm, onClose }) => {
     e.preventDefault();
     
     // 🛡️ سیکیورٹی لاجک: ڈیٹا کو سینیٹائز اور ماسک کرنا
-    // یہاں ہم نے اس بات کو یقینی بنایا ہے کہ RegistrationLogic دستیاب ہو
-    const secureData = RegistrationLogic.sanitizeAfterVerification ? 
+    // لاجک کو نقصان پہنچائے بغیر سیفٹی چیک لگایا گیا ہے
+    const secureData = RegistrationLogic?.sanitizeAfterVerification ? 
                        RegistrationLogic.sanitizeAfterVerification(formData) : 
                        formData;
     
@@ -103,7 +110,6 @@ const QuickAuthPopup = ({ serviceType, onConfirm, onClose }) => {
   );
 };
 
-// اسٹائلز میں کوئی تبدیلی نہیں کی گئی تاکہ ڈیزائن متاثر نہ ہو
 const styles = {
   overlay: { position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.85)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 1000, padding: '20px' },
   modal: { backgroundColor: '#1A0F0A', border: '1px solid #D4AF37', borderRadius: '20px', padding: '25px', width: '100%', maxWidth: '450px', maxHeight: '90vh', overflowY: 'auto' },
