@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
-import { useAuth } from '../context/AuthContext';
-import SuperSearchBar from './SuperSearchBar'; // سرچ بار امپورٹ کریں
+import { useAuth } from '../context/AuthContext'; // ✅ اب یہ ایرر نہیں دے گا
+import SuperSearchBar from './SuperSearchBar';
 
 const Layout = ({ children }) => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
-  const [openPartner, setOpenPartner] = useState(false);
   const [adminClicks, setAdminClicks] = useState(0);
   
   const { user, logout, verifyAdminKeys } = useAuth();
@@ -14,7 +13,6 @@ const Layout = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // 🕵️ خفیہ ایڈمن لاجک (بیک اینڈ سے تصدیق کے ساتھ)
   const handleSecretClick = async () => {
     const newCount = adminClicks + 1;
     setAdminClicks(newCount);
@@ -39,7 +37,7 @@ const Layout = ({ children }) => {
   return (
     <div style={{ background: theme.bg, color: theme.text, minHeight: '100vh', transition: '0.3s' }}>
       
-      {/* ☰ 💎 Premium Sidebar */}
+      {/* ☰ Sidebar */}
       <div style={{
         position: 'fixed', top: 0, left: isSidebarOpen ? 0 : '-320px',
         width: '320px', height: '100%', background: theme.card,
@@ -47,15 +45,13 @@ const Layout = ({ children }) => {
         padding: '25px', boxShadow: isSidebarOpen ? '10px 0 50px rgba(0,0,0,0.5)' : 'none',
         display: 'flex', flexDirection: 'column', borderRight: `1px solid ${theme.border}`
       }}>
-        {/* Profile Section */}
         <div style={{ marginBottom: '30px', textAlign: 'center' }}>
-          <img src={user?.photoURL || "https://via.placeholder.com/80"} 
+          <img src={user?.photo || "https://via.placeholder.com/80"} 
                style={{ width: '70px', height: '70px', borderRadius: '50%', border: `2px solid ${theme.accent}` }} alt="u" />
-          <h4 style={{ margin: '10px 0 0 0' }}>{user?.displayName || "Tezro User"}</h4>
+          <h4 style={{ margin: '10px 0 0 0' }}>{user?.name || "Tezro User"}</h4>
           <small style={{ color: theme.accent, fontSize: '10px' }}>PRO MEMBER</small>
         </div>
 
-        {/* Menu Items */}
         <div style={{ flex: 1 }}>
           {menuItems.map(item => (
             <div key={item.id} onClick={() => { navigate(item.path); setSidebarOpen(false); }}
@@ -70,7 +66,6 @@ const Layout = ({ children }) => {
           ))}
         </div>
 
-        {/* Dark Mode & Logout */}
         <div style={{ borderTop: `1px solid ${theme.border}`, paddingTop: '15px' }}>
           <button onClick={setDarkMode} style={{ width: '100%', padding: '12px', borderRadius: '10px', background: 'rgba(128,128,128,0.1)', color: theme.text, border: 'none', marginBottom: '10px' }}>
             {darkMode ? '☀️ Light Mode' : '🌙 Dark Mode'}
@@ -81,13 +76,9 @@ const Layout = ({ children }) => {
         </div>
       </div>
 
-      {/* 🌫️ Backdrop */}
       {isSidebarOpen && <div onClick={() => setSidebarOpen(false)} style={styles.backdrop} />}
 
-      {/* 📱 Main Layout Engine */}
       <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
-        
-        {/* 🟢 Professional Header */}
         <header style={{ ...styles.header, background: theme.card, borderBottom: `1px solid ${theme.border}` }}>
           <button onClick={() => setSidebarOpen(true)} style={{ background: 'none', border: 'none', fontSize: '24px', color: theme.text }}>☰</button>
           
@@ -99,20 +90,16 @@ const Layout = ({ children }) => {
           </div>
 
           <div onClick={() => navigate('/profile')} style={styles.profileCircle}>
-            <img src={user?.photoURL || "https://via.placeholder.com/40"} style={{ width: '100%' }} alt="p" />
+            <img src={user?.photo || "https://via.placeholder.com/40"} style={{ width: '100%' }} alt="p" />
           </div>
         </header>
 
-        {/* 🔍 Universal Search Bar Integration */}
-        {/* یہ ہوم پیج پر خود بخود سرچ بار دکھائے گا */}
         {location.pathname === '/' && <SuperSearchBar onSearch={(type, val) => console.log(type, val)} />}
 
-        {/* Page Content */}
         <main style={{ flex: 1, overflowY: 'auto', padding: '10px' }}>
           {children}
         </main>
 
-        {/* 🧭 Sticky Bottom Navigation */}
         <footer style={{ ...styles.footer, background: theme.card, borderTop: `1px solid ${theme.border}` }}>
           <div onClick={() => navigate('/')} style={{ color: location.pathname === '/' ? theme.accent : theme.text, fontSize: '22px' }}>🏠</div>
           <div onClick={() => navigate('/pay')} style={{ opacity: location.pathname === '/pay' ? 1 : 0.4, color: theme.text, fontSize: '22px' }}>💳</div>
@@ -124,6 +111,7 @@ const Layout = ({ children }) => {
   );
 };
 
+// Styles (وہی رہیں گے جو آپ نے دیے تھے)
 const styles = {
   header: { padding: '12px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'sticky', top: 0, zIndex: 1000 },
   secretBtn: { position: 'absolute', top: '-8px', right: '-12px', fontSize: '8px', color: 'rgba(128,128,128,0.2)', cursor: 'default', userSelect: 'none' },
