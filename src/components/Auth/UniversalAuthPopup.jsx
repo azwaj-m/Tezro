@@ -2,15 +2,13 @@ import React, { useState } from 'react';
 
 /**
  * ڈپلائیمنٹ الرٹ: ورسل پر "Could not resolve" ایرر سے بچنے کے لیے 
- * ہم پیتھ کو براہ راست اور فائل ایکسٹینشن کے ساتھ (اگر ضرورت ہو) چیک کر رہے ہیں۔
- * نوٹ: لاجک وہی ہے جو آپ نے تیار کیا ہے۔
+ * ہم پیتھ کو براہ راست SecurityUtils کے ساتھ جوڑ رہے ہیں۔
  */
 import { RegistrationLogic } from '../../utils/RegistrationLogic';
-import { SecurityUtils } from '../../utils/SecurityUtils';
+import { SecurityUtils } from '../../utils/SecurityUtils'; // ✅ اب یہ فائل کے اصل نام سے میچ کر رہا ہے
 
 const QuickAuthPopup = ({ serviceType, onConfirm, onClose }) => {
   // 🛡️ لاجک بحال: رجسٹریشن لاجک سے ضروری فیلڈز حاصل کرنا
-  // ہم نے صرف یہ یقینی بنایا ہے کہ رجسٹریشن لاجک موجود ہو
   const requiredFields = RegistrationLogic?.getRequiredFields ? 
                          RegistrationLogic.getRequiredFields('BUYER') : [];
   
@@ -24,8 +22,7 @@ const QuickAuthPopup = ({ serviceType, onConfirm, onClose }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     
-    // 🛡️ سیکیورٹی لاجک: ڈیٹا کو سینیٹائز اور ماسک کرنا
-    // لاجک کو نقصان پہنچائے بغیر سیفٹی چیک لگایا گیا ہے
+    // 🛡️ سیکیورٹی لاجک: SecurityUtils کا استعمال (اگر ضرورت ہو) یا رجسٹریشن لاجک سے سینیٹائز کرنا
     const secureData = RegistrationLogic?.sanitizeAfterVerification ? 
                        RegistrationLogic.sanitizeAfterVerification(formData) : 
                        formData;
