@@ -1,33 +1,27 @@
 import React, { useState } from 'react';
-
-/**
- * ڈپلائیمنٹ الرٹ: ورسل پر "Could not resolve" ایرر سے بچنے کے لیے 
- * ہم پیتھ کو براہ راست SecurityUtils کے ساتھ جوڑ رہے ہیں۔
- */
-import RegistrationLogic from '../../utils/RegistrationLogic'; // بریکٹ ہٹا دیے گئے ہیں
+// 🛡️ درست پیتھ اور ڈیفالٹ امپورٹ
+import RegistrationLogic from '../../utils/RegistrationLogic'; 
 import { SecurityUtils } from '../../utils/SecurityUtils';
 
-const QuickAuthPopup = ({ serviceType, onConfirm, onClose }) => {
-  // 🛡️ لاجک بحال: رجسٹریشن لاجک سے ضروری فیلڈز حاصل کرنا
+const UniversalAuthPopup = ({ serviceType, onConfirm, onClose }) => {
+  
+  // رجسٹریشن لاجک کا استعمال
   const requiredFields = RegistrationLogic?.getRequiredFields ? 
                          RegistrationLogic.getRequiredFields('BUYER') : [];
   
   const [formData, setFormData] = useState({
     fullName: '',
     phone: '',
-    emergencyContacts: ['', ''], // کم از کم ایک، زیادہ سے زیادہ پانچ
+    emergencyContacts: ['', ''],
     address: ''
   });
 
   const handleSubmit = (e) => {
     e.preventDefault();
     
-    // 🛡️ سیکیورٹی لاجک: SecurityUtils کا استعمال (اگر ضرورت ہو) یا رجسٹریشن لاجک سے سینیٹائز کرنا
-    const secureData = RegistrationLogic?.sanitizeAfterVerification ? 
-                       RegistrationLogic.sanitizeAfterVerification(formData) : 
-                       formData;
+    // 🛡️ لاجک کا تحفظ: ڈیٹا سینیٹائز کرنا
+    const secureData = RegistrationLogic.sanitizeAfterVerification(formData);
     
-    // فیس رجسٹریشن اور لوکیشن کا ڈیٹا شامل کر کے کنفرم کرنا
     onConfirm({
       ...secureData,
       rawPhone: formData.phone,
@@ -99,7 +93,7 @@ const QuickAuthPopup = ({ serviceType, onConfirm, onClose }) => {
           />
 
           <button type="submit" style={styles.confirmBtn}>
-            رسمی کارروائی مکمل کریں اور آگے بڑھیں
+            رجسٹریشن مکمل کریں اور آگے بڑھیں
           </button>
         </form>
       </div>
@@ -121,4 +115,4 @@ const styles = {
   section: { marginBottom: '15px' }
 };
 
-export default QuickAuthPopup;
+export default UniversalAuthPopup;
