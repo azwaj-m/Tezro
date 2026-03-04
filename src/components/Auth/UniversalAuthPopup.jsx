@@ -4,8 +4,8 @@ import React, { useState } from 'react';
  * ڈپلائیمنٹ الرٹ: ورسل پر "Could not resolve" ایرر سے بچنے کے لیے 
  * ہم پیتھ کو براہ راست SecurityUtils کے ساتھ جوڑ رہے ہیں۔
  */
-import { RegistrationLogic } from '../../utils/RegistrationLogic';
-import { SecurityUtils } from '../../utils/SecurityUtils'; // ✅ اب یہ فائل کے اصل نام سے میچ کر رہا ہے
+import RegistrationLogic from '../../utils/RegistrationLogic'; // بریکٹ ہٹا دیے گئے ہیں
+import { SecurityUtils } from '../../utils/SecurityUtils';
 
 const QuickAuthPopup = ({ serviceType, onConfirm, onClose }) => {
   // 🛡️ لاجک بحال: رجسٹریشن لاجک سے ضروری فیلڈز حاصل کرنا
