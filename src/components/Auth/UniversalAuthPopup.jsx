@@ -6,7 +6,7 @@ import React, { useState } from 'react';
  * نوٹ: لاجک وہی ہے جو آپ نے تیار کیا ہے۔
  */
 import { RegistrationLogic } from '../../utils/RegistrationLogic';
-import { SecurityEngine } from '../../utils/SecurityEngine';
+import { SecurityUtils } from '../../utils/SecurityUtils';
 
 const QuickAuthPopup = ({ serviceType, onConfirm, onClose }) => {
   // 🛡️ لاجک بحال: رجسٹریشن لاجک سے ضروری فیلڈز حاصل کرنا
