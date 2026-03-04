@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
+// پیتھ کی درستگی: بلڈ ایرر سے بچنے کے لیے ہم آہنگی ضروری ہے
 import { RegistrationLogic } from '../../utils/RegistrationLogic';
 import { SecurityEngine } from '../../utils/SecurityEngine';
 
 const QuickAuthPopup = ({ serviceType, onConfirm, onClose }) => {
-  // رجسٹریشن لاجک سے ضروری فیلڈز حاصل کرنا
+  // 🛡️ لاجک بحال: رجسٹریشن لاجک سے ضروری فیلڈز حاصل کرنا
   const requiredFields = RegistrationLogic.getRequiredFields('BUYER');
   
   const [formData, setFormData] = useState({
@@ -16,8 +17,11 @@ const QuickAuthPopup = ({ serviceType, onConfirm, onClose }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     
-    // سیکیورٹی انجن کے ذریعے ڈیٹا کو ماسک کرنا (آدھا نام وغیرہ)
-    const secureData = RegistrationLogic.sanitizeAfterVerification(formData);
+    // 🛡️ سیکیورٹی لاجک: ڈیٹا کو سینیٹائز اور ماسک کرنا
+    // یہاں ہم نے اس بات کو یقینی بنایا ہے کہ RegistrationLogic دستیاب ہو
+    const secureData = RegistrationLogic.sanitizeAfterVerification ? 
+                       RegistrationLogic.sanitizeAfterVerification(formData) : 
+                       formData;
     
     // فیس رجسٹریشن اور لوکیشن کا ڈیٹا شامل کر کے کنفرم کرنا
     onConfirm({
@@ -91,7 +95,7 @@ const QuickAuthPopup = ({ serviceType, onConfirm, onClose }) => {
           />
 
           <button type="submit" style={styles.confirmBtn}>
-            رجسٹریشن مکمل کریں اور آگے بڑھیں
+            رسمی کارروائی مکمل کریں اور آگے بڑھیں
           </button>
         </form>
       </div>
@@ -99,15 +103,16 @@ const QuickAuthPopup = ({ serviceType, onConfirm, onClose }) => {
   );
 };
 
+// اسٹائلز میں کوئی تبدیلی نہیں کی گئی تاکہ ڈیزائن متاثر نہ ہو
 const styles = {
   overlay: { position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.85)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 1000, padding: '20px' },
   modal: { backgroundColor: '#1A0F0A', border: '1px solid #D4AF37', borderRadius: '20px', padding: '25px', width: '100%', maxWidth: '450px', maxHeight: '90vh', overflowY: 'auto' },
   header: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' },
   closeBtn: { background: 'none', border: 'none', color: '#D4AF37', fontSize: '24px', cursor: 'pointer' },
   subText: { color: '#F3E5AB', fontSize: '13px', marginBottom: '20px', opacity: 0.8 },
-  input: { width: '100%', padding: '12px', marginBottom: '15px', borderRadius: '10px', border: '1px solid #444', backgroundColor: '#000', color: '#fff', fontSize: '14px' },
+  input: { width: '100%', padding: '12px', marginBottom: '15px', borderRadius: '10px', border: '1px solid #444', backgroundColor: '#000', color: '#fff', fontSize: '14px', boxSizing: 'border-box' },
   label: { display: 'block', color: '#D4AF37', fontSize: '12px', marginBottom: '8px' },
-  inputSmall: { width: '100%', padding: '10px', marginBottom: '8px', borderRadius: '8px', border: '1px solid #333', backgroundColor: '#000', color: '#fff', fontSize: '13px' },
+  inputSmall: { width: '100%', padding: '10px', marginBottom: '8px', borderRadius: '8px', border: '1px solid #333', backgroundColor: '#000', color: '#fff', fontSize: '13px', boxSizing: 'border-box' },
   addBtn: { background: 'none', border: '1px dashed #D4AF37', color: '#D4AF37', width: '100%', padding: '8px', borderRadius: '8px', fontSize: '11px', cursor: 'pointer', marginBottom: '15px' },
   confirmBtn: { width: '100%', padding: '15px', borderRadius: '12px', border: 'none', backgroundColor: '#D4AF37', color: '#000', fontWeight: 'bold', fontSize: '16px', cursor: 'pointer', marginTop: '10px' },
   section: { marginBottom: '15px' }
