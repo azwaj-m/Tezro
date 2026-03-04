@@ -1,5 +1,6 @@
 /**
  * TEZRO MASTER REGISTRATION LOGIC
+ * پیتھ: src/utils/RegistrationLogic.js
  * پروٹیکشن لیول: ہائی (GDPR & Vault Standards)
  */
 
@@ -8,21 +9,33 @@ const RegistrationLogic = {
   // 1. ڈائنامک کنفیگریشن (کون سی فیلڈ کس کے لیے ہے)
   getRequiredFields: (role) => {
     const common = {
-      businessName: { label: "بزنس کا نام", type: "text", required: true },
-      cnic: { label: "شناختی کارڈ نمبر", type: "number", min: 13, required: true },
+      fullName: { label: "مکمل نام", type: "text", required: true },
+      phone: { label: "فون نمبر", type: "tel", required: true },
+      address: { label: "پتہ", type: "text", required: true }
     };
 
     const roles = {
-      driver: { ...common, vehicleNo: "text", vehicleType: "select" },
-      hotel: { ...common, totalRooms: "number", license: "text" },
-      vendor: { ...common, storeCategory: "text", ntn: "text" },
-      logistic: { ...common, vehicleType: "select", insurance: "text" }
+      driver: { ...common, vehicleNo: "text", cnic: "number" },
+      vendor: { ...common, businessName: "text", ntn: "text" },
+      BUYER: { ...common, emergencyContacts: "array" } // پاپ اپ کے لیے
     };
 
     return roles[role] || common;
   },
 
-  // 2. سیکیورٹی فلٹر (حساس ڈیٹا کو ماسک کرنا)
+  // 2. ڈیٹا سینیٹائزیشن (پاپ اپ فائل کے لیے لازمی)
+  sanitizeAfterVerification: (data) => {
+    if (!data) return {};
+    return {
+      ...data,
+      fullName: data.fullName?.trim().toUpperCase(),
+      isVerified: true,
+      vaultStatus: "PENDING",
+      processedAt: new Date().toISOString()
+    };
+  },
+
+  // 3. سیکیورٹی فلٹر (پبلک ویو کے لیے)
   sanitizeForPublic: (data) => {
     if (!data || !data.businessName) return {};
     return {
@@ -34,11 +47,10 @@ const RegistrationLogic = {
     };
   },
 
-  // 3. ڈیٹا ویلیڈیشن (Registration Guard)
+  // 4. ڈیٹا ویلیڈیشن (CNIC Guard)
   validateCNIC: (cnic) => {
-    return /^[0-9]{13}$/.test(cnic); // صرف 13 ہندسے
+    return /^[0-9]{13}$/.test(cnic); 
   }
 };
 
-// 🚀 یہ لائن ایرر ختم کرنے کے لیے اہم ہے
 export default RegistrationLogic;
