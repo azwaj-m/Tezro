@@ -3,7 +3,7 @@
  * پروٹیکشن لیول: ہائی (GDPR & Vault Standards)
  */
 
-export const RegistrationLogic = {
+const RegistrationLogic = {
   
   // 1. ڈائنامک کنفیگریشن (کون سی فیلڈ کس کے لیے ہے)
   getRequiredFields: (role) => {
@@ -23,13 +23,12 @@ export const RegistrationLogic = {
   },
 
   // 2. سیکیورٹی فلٹر (حساس ڈیٹا کو ماسک کرنا)
-  // یہ فنکشن پبلک ویو کے لیے ڈیٹا کو فلٹر کرتا ہے
   sanitizeForPublic: (data) => {
+    if (!data || !data.businessName) return {};
     return {
       bizName: data.businessName,
       category: data.role,
       isVerified: true,
-      // نام کو ماسک کرنا (Privacy Shield)
       displayName: data.businessName.split(' ')[0] + "...",
       joinedAt: Date.now()
     };
@@ -40,3 +39,6 @@ export const RegistrationLogic = {
     return /^[0-9]{13}$/.test(cnic); // صرف 13 ہندسے
   }
 };
+
+// 🚀 یہ لائن ایرر ختم کرنے کے لیے اہم ہے
+export default RegistrationLogic;
