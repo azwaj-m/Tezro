@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
-// 🛡️ درست پیتھ اور ڈیفالٹ امپورٹ
+
+/**
+ * 🛡️ مستند امپورٹ: 
+ * ہم RegistrationLogic کو بغیر بریکٹ کے امپورٹ کر رہے ہیں کیونکہ وہاں 'export default' ہے۔
+ */
 import RegistrationLogic from '../../utils/RegistrationLogic'; 
 import { SecurityUtils } from '../../utils/SecurityUtils';
 
