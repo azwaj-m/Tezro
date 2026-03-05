@@ -1,17 +1,77 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
-import { useAuth } from '../context/AuthContext'; // ✅ اب یہ ایرر نہیں دے گا
+import { useAuth } from '../context/AuthContext';
+import { verifyAndExecute } from '../firebase/voiceAuth';
+import { CommandResolver } from '../utils/CommandResolver';
 import SuperSearchBar from './SuperSearchBar';
 
 const Layout = ({ children }) => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const [adminClicks, setAdminClicks] = useState(0);
+  const [isVoiceActive, setIsVoiceActive] = useState(false);
+  const [voiceStatus, setVoiceStatus] = useState("");
   
   const { user, logout, verifyAdminKeys } = useAuth();
   const { theme, darkMode, setDarkMode } = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
+
+  // 🎤 یونیورسل وائس کمانڈ لاجک (سیکیورٹی + ملٹی لینگویج)
+  const startUniversalVoice = async () => {
+    setIsVoiceActive(true);
+    setVoiceStatus("سن رہا ہوں...");
+
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const mediaRecorder = new MediaRecorder(stream);
+      let chunks = [];
+
+      mediaRecorder.ondataavailable = (e) => chunks.push(e.data);
+      mediaRecorder.onstop = async () => {
+        const audioBlob = new Blob(chunks, { type: 'audio/wav' });
+        
+        // 1. سیکیورٹی چیک (صرف مالک کی آواز کا ویکٹر موازنہ)
+        const auth = await verifyAndExecute(audioBlob, user?.voiceSignature);
+
+        if (auth.authorized) {
+          // 2. اسپیچ ٹو ٹیکسٹ (براؤزر کی مفت API استعمال کرتے ہوئے)
+          const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+          const recognition = new SpeechRecognition();
+          recognition.lang = user?.preferredLang || 'ur-PK';
+
+          recognition.onresult = async (event) => {
+            const transcript = event.results[0][0].transcript;
+            setVoiceStatus(`کمانڈ: ${transcript}`);
+            
+            // 3. کمانڈ ریزولو کرنا (بنگالی، عربی، اردو، انگلش سب یہاں ہینڈل ہوں گے)
+            const result = await CommandResolver.execute(audioBlob, transcript, user?.voiceSignature);
+            handleVoiceAction(result);
+          };
+          recognition.start();
+        } else {
+          setVoiceStatus("❌ آواز میچ نہیں ہوئی!");
+          setTimeout(() => setIsVoiceActive(false), 2000);
+        }
+      };
+
+      mediaRecorder.start();
+      setTimeout(() => mediaRecorder.stop(), 3000); // 3 سیکنڈ کی لسننگ
+    } catch (err) {
+      setVoiceStatus("مائیکروفون ایرر!");
+      setIsVoiceActive(false);
+    }
+  };
+
+  // 🚀 وائس ایکشنز کو نیویگیٹ کرنا
+  const handleVoiceAction = (res) => {
+    if (res.success) {
+      if (res.action === 'BOOK_RIDE') navigate('/');
+      if (res.action === 'CHECK_BALANCE') navigate('/pay');
+      if (res.action === 'EMERGENCY') alert("🚨 ایمرجنسی الرٹ بھیج دیا گیا ہے!");
+    }
+    setTimeout(() => setIsVoiceActive(false), 2000);
+  };
 
   const handleSecretClick = async () => {
     const newCount = adminClicks + 1;
@@ -35,9 +95,9 @@ const Layout = ({ children }) => {
   ];
 
   return (
-    <div style={{ background: theme.bg, color: theme.text, minHeight: '100vh', transition: '0.3s' }}>
+    <div style={{ background: theme.bg, color: theme.text, minHeight: '100vh', transition: '0.3s', position: 'relative' }}>
       
-      {/* ☰ Sidebar */}
+      {/* ☰ Sidebar (وہی لاجک) */}
       <div style={{
         position: 'fixed', top: 0, left: isSidebarOpen ? 0 : '-320px',
         width: '320px', height: '100%', background: theme.card,
@@ -78,6 +138,14 @@ const Layout = ({ children }) => {
 
       {isSidebarOpen && <div onClick={() => setSidebarOpen(false)} style={styles.backdrop} />}
 
+      {/* 🎙️ Floating Voice UI (صرف جب ایکٹیو ہو) */}
+      {isVoiceActive && (
+        <div style={styles.voiceOverlay}>
+          <div style={styles.voicePulse}>🎤</div>
+          <p>{voiceStatus}</p>
+        </div>
+      )}
+
       <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
         <header style={{ ...styles.header, background: theme.card, borderBottom: `1px solid ${theme.border}` }}>
           <button onClick={() => setSidebarOpen(true)} style={{ background: 'none', border: 'none', fontSize: '24px', color: theme.text }}>☰</button>
@@ -100,24 +168,40 @@ const Layout = ({ children }) => {
           {children}
         </main>
 
+        {/* 🧭 فوٹر میں وائس بٹن کی شمولیت */}
         <footer style={{ ...styles.footer, background: theme.card, borderTop: `1px solid ${theme.border}` }}>
-          <div onClick={() => navigate('/')} style={{ color: location.pathname === '/' ? theme.accent : theme.text, fontSize: '22px' }}>🏠</div>
-          <div onClick={() => navigate('/pay')} style={{ opacity: location.pathname === '/pay' ? 1 : 0.4, color: theme.text, fontSize: '22px' }}>💳</div>
-          <div onClick={() => navigate('/notifications')} style={{ opacity: 0.4, color: theme.text, fontSize: '22px' }}>🔔</div>
-          <div onClick={() => setSidebarOpen(true)} style={{ opacity: 0.4, color: theme.text, fontSize: '22px' }}>👤</div>
+          <div onClick={() => navigate('/')} style={{ color: location.pathname === '/' ? theme.accent : theme.text, fontSize: '22px', cursor: 'pointer' }}>🏠</div>
+          <div onClick={() => navigate('/pay')} style={{ opacity: location.pathname === '/pay' ? 1 : 0.4, color: theme.text, fontSize: '22px', cursor: 'pointer' }}>💳</div>
+          
+          {/* مین وائس بٹن */}
+          <div onClick={startUniversalVoice} style={styles.mainMic}>🎤</div>
+          
+          <div onClick={() => navigate('/notifications')} style={{ opacity: 0.4, color: theme.text, fontSize: '22px', cursor: 'pointer' }}>🔔</div>
+          <div onClick={() => setSidebarOpen(true)} style={{ opacity: 0.4, color: theme.text, fontSize: '22px', cursor: 'pointer' }}>👤</div>
         </footer>
       </div>
     </div>
   );
 };
 
-// Styles (وہی رہیں گے جو آپ نے دیے تھے)
 const styles = {
   header: { padding: '12px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'sticky', top: 0, zIndex: 1000 },
   secretBtn: { position: 'absolute', top: '-8px', right: '-12px', fontSize: '8px', color: 'rgba(128,128,128,0.2)', cursor: 'default', userSelect: 'none' },
   profileCircle: { width: '35px', height: '35px', borderRadius: '50%', border: '1px solid #00FF88', overflow: 'hidden', cursor: 'pointer' },
-  footer: { padding: '15px', display: 'flex', justifyContent: 'space-around', position: 'sticky', bottom: 0 },
-  backdrop: { position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)', zIndex: 1500 }
+  footer: { padding: '15px', display: 'flex', justifyContent: 'space-around', alignItems: 'center', position: 'sticky', bottom: 0 },
+  backdrop: { position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)', zIndex: 1500 },
+  mainMic: { 
+    width: '55px', height: '55px', background: '#00FF88', borderRadius: '50%', 
+    display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '24px', 
+    marginTop: '-30px', boxShadow: '0 4px 15px rgba(0,255,136,0.4)', cursor: 'pointer', color: '#000' 
+  },
+  voiceOverlay: {
+    position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.9)', zIndex: 3000,
+    display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', color: '#00FF88'
+  },
+  voicePulse: {
+    fontSize: '50px', marginBottom: '20px', animation: 'pulse 1.5s infinite'
+  }
 };
 
 export default Layout;
