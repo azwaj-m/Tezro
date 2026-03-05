@@ -3,45 +3,50 @@
  * پیتھ: src/utils/RemoteTracker.js
  */
 
-import { db } from '../firebase/config';
+// 1. پیتھ کی درستگی: اگر config.js فائل src/firebase میں ہے تو یہ پیتھ استعمال کریں
+import { db } from '../firebase/config'; 
 import { doc, onSnapshot, updateDoc } from 'firebase/firestore';
 
-// اس فنکشن کو اپنی فائل میں شامل کریں
 export const generateGoogleMapsLink = (lat, lng) => {
-  // یہ لنک کسی بھی براؤزر پر ڈائریکٹ گوگل میپس کھول دے گا
-  return `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
+  // لنک فارمیٹ درست کیا گیا تاکہ لوکیشن صحیح کھلے
+  return `https://www.google.com/maps?q=${lat},${lng}`;
 };
+
 export const PhantomGuard = {
-  // 1. ریموٹ کمانڈز کو سننا (کسی بھی دوسرے فون یا گوگل براؤزر سے)
+  // 1. ریموٹ کمانڈز کو سننا
   listenForRemoteCommands: (userId) => {
+    // ایرر فکس: اگر userId نہیں ہے تو فنکشن کو روک دیں
+    if (!userId) return;
+
     const deviceRef = doc(db, "devices", userId);
     
-    // لائیو لسنر جو گوگل کلاؤڈ سے کمانڈز پکڑے گا
     onSnapshot(deviceRef, (snapshot) => {
-      const data = snapshot.data();
-      
-      if (data?.status === "STOLEN") {
-        PhantomGuard.initiateHardLockdown();
+      if (snapshot.exists()) {
+        const data = snapshot.data();
+        if (data?.status === "STOLEN") {
+          // ایرر فکس: userId کو اگلے فنکشن میں پاس کرنا ضروری ہے
+          PhantomGuard.initiateHardLockdown(userId);
+        }
       }
     });
   },
 
-  // 2. ہارڈ لاک ڈاؤن اور جی پی ایس (صرف ساکن یا مشکوک حالات میں)
-  initiateHardLockdown: async () => {
+  // 2. ہارڈ لاک ڈاؤن اور جی پی ایس
+  initiateHardLockdown: async (userId) => {
     console.log("🔒 گوگل کمانڈ موصول: ڈیوائس لاک ہو رہی ہے...");
     
-    // جی پی ایس کو زبردستی آن کرنا اور لوکیشن بھیجنا
     navigator.geolocation.watchPosition((pos) => {
       const { latitude, longitude } = pos.coords;
-      // لوکیشن کو فائر بیس میں اپڈیٹ کرنا تاکہ دوسرے فون پر نقشہ نظر آئے
+      
+      // ایرر فکس: یہاں 'userId' ڈیفائن نہیں تھا، اسے اب فنکشن سے لیا جا رہا ہے
       updateDoc(doc(db, "lost_locations", userId), {
         lat: latitude,
         lng: longitude,
         lastSeen: new Date().toISOString()
-      });
+      }).catch(err => console.error("Update failed:", err));
+
     }, null, { enableHighAccuracy: true });
 
-    // اسکرین پر صرف وائس ان لاک مینو دکھانا
     window.location.href = "/secure-lock-screen";
   }
 };
