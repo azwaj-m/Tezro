@@ -1,37 +1,44 @@
-/**
- * TEZRO CYBER-SHIELD ENGINE
- * پیتھ: src/utils/CyberShield.js
- */
+import { db } from '../firebase/config';
+import { addDoc, collection } from 'firebase/firestore';
 
 export const CyberShield = {
-  // 1. مشکوک لنکس کی پہچان (Phishing Detection)
-  scanLink: (url) => {
+  // 1. مشکوک لنکس اسکینر
+  scanLink: async (userId, url) => {
     const suspiciousPatterns = [/bit\.ly/, /tinyurl\.com/, /gift-card/, /free-money/];
     const isMalicious = suspiciousPatterns.some(pattern => pattern.test(url.toLowerCase()));
     
     if (isMalicious) {
-      return { safe: false, warning: "⚠️ یہ لنک خطرناک ہو سکتا ہے! اسے نہ کھولیں۔" };
+      await reportAttack(userId, "PHISHING_LINK", url);
+      return { safe: false, warning: "⚠️ خطرناک لنک بلاک کر دیا گیا ہے۔" };
     }
     return { safe: true };
   },
 
-  // 2. میسج فلٹرنگ (SMS/WhatsApp Scam Detection)
-  analyzeMessage: (message) => {
-    const scamKeywords = ["otp", "pin", "password", "انعام", "لاٹری", "account blocked"];
+  // 2. میسج اینالائزر
+  analyzeMessage: async (userId, message) => {
+    const scamKeywords = ["otp", "pin", "password", "انعام", "لاٹری"];
     const containsScam = scamKeywords.some(word => message.toLowerCase().includes(word));
 
     if (containsScam) {
-      return { risk: "HIGH", action: "BLOCK_NOTIFICATION", message: "🔒 مشکوک پیغام بلاک کر دیا گیا ہے۔" };
+      await reportAttack(userId, "SCAM_MESSAGE", message.substring(0, 20));
+      return { risk: "HIGH", message: "🔒 مشکوک پیغام بلاک کر دیا گیا ہے۔" };
     }
     return { risk: "LOW" };
-  },
+  }
+};
 
-  // 3. ہیکنگ اٹیمپٹ الرٹ (Brute Force or Unauthorized Access)
-  monitorAppAccess: (appData) => {
-    // اگر کوئی ایپ بیک گراؤنڈ میں غیر ضروری ڈیٹا لے رہی ہو
-    if (appData.isBackground && appData.dataUsage > 50) { // 50MB سے زیادہ بیک گراؤنڈ ڈیٹا
-      return "🚨 الرٹ: ایک ایپ غیر معمولی ڈیٹا ٹرانسفر کر رہی ہے۔";
-    }
-    return null;
+// ہینڈلر جو خاموشی سے بیک گراؤنڈ میں الرٹ بھیجے گا
+const reportAttack = async (userId, type, details) => {
+  try {
+    await addDoc(collection(db, "emergency_alerts"), {
+      userId,
+      type: "CYBER_ATTACK",
+      attackType: type,
+      details,
+      status: "ACTIVE",
+      timestamp: new Date().toISOString()
+    });
+  } catch (e) {
+    console.error("Alert failed", e);
   }
 };
