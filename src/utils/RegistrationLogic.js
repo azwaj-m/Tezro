@@ -1,9 +1,9 @@
 /**
  * TEZRO MASTER REGISTRATION LOGIC
- * پیتھ: src/utils/RegLogic.js
+ * پیتھ: src/utils/RegistrationLogic.js
  */
 
-const RegLogic = {
+const RegistrationLogic = {
   // 1. ڈائنامک کنفیگریشن
   getRequiredFields: (role) => {
     const common = {
@@ -50,4 +50,4 @@ const RegLogic = {
   }
 };
 
-export default RegLogic;
+export default RegistrationLogic;
