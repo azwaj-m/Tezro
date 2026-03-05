@@ -2,16 +2,16 @@ import React, { useState } from 'react';
 
 /**
  * 🛡️ مستند امپورٹ: 
- * ہم RegistrationLogic کو بغیر بریکٹ کے امپورٹ کر رہے ہیں کیونکہ وہاں 'export default' ہے۔
+ * رجسٹریشن لاجک کا نام اور پیتھ بالکل درست کر دیا گیا ہے۔
  */
-import RegLogic from '../../utils/RegLogic'; 
+import RegistrationLogic from '../../utils/RegistrationLogic'; 
 import { SecurityUtils } from '../../utils/SecurityUtils';
 
 const UniversalAuthPopup = ({ serviceType, onConfirm, onClose }) => {
   
-  // رجسٹریشن لاجک کا استعمال
-  const requiredFields = RegLogic?.getRequiredFields ? 
-                         RegLogic.getRequiredFields('BUYER') : [];
+  // 🛡️ فکسڈ: یہاں پہلے RegLogic تھا، اسے RegistrationLogic کر دیا گیا ہے
+  const requiredFields = RegistrationLogic?.getRequiredFields ? 
+                         RegistrationLogic.getRequiredFields('BUYER') : [];
   
   const [formData, setFormData] = useState({
     fullName: '',
@@ -23,8 +23,8 @@ const UniversalAuthPopup = ({ serviceType, onConfirm, onClose }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     
-    // 🛡️ لاجک کا تحفظ: ڈیٹا سینیٹائز کرنا
-    const secureData = RegLogic.sanitizeAfterVerification(formData);
+    // 🛡️ ڈیٹا سینیٹائز کرنا
+    const secureData = RegistrationLogic.sanitizeAfterVerification(formData);
     
     onConfirm({
       ...secureData,
