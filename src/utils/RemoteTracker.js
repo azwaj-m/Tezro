@@ -6,6 +6,11 @@
 import { db } from '../firebase/config';
 import { doc, onSnapshot, updateDoc } from 'firebase/firestore';
 
+// اس فنکشن کو اپنی فائل میں شامل کریں
+export const generateGoogleMapsLink = (lat, lng) => {
+  // یہ لنک کسی بھی براؤزر پر ڈائریکٹ گوگل میپس کھول دے گا
+  return `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
+};
 export const PhantomGuard = {
   // 1. ریموٹ کمانڈز کو سننا (کسی بھی دوسرے فون یا گوگل براؤزر سے)
   listenForRemoteCommands: (userId) => {
