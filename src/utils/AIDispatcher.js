@@ -1,33 +1,33 @@
-/**
- * TEZRO AI DISPATCHER (Fuel & Time Optimizer)
- * پیتھ: src/utils/AIDispatcher.js
- */
-
 export const AIDispatcher = {
   findBestDriver: (drivers, pickupLocation) => {
-    return drivers
-      .filter(driver => driver.isOnline && !driver.currentRideId)
-      .map(driver => {
-        const distance = calculateDistance(driver.location, pickupLocation);
-        
-        // 📉 اسکورنگ سسٹم: 
-        // 1. فاصلہ کم ہو 
-        // 2. ڈرائیور کسٹمر کی طرف ہی آ رہا ہو (Direction Match)
-        let score = distance; 
-        if (driver.heading === pickupLocation.direction) score -= 500; // بونس پوائنٹس
+    if (!drivers.length) return null;
 
-        return { ...driver, score };
-      })
-      .sort((a, b) => a.score - b.score)[0]; // سب سے بہترین ڈرائیور
+    let bestDriver = null;
+    let minScore = Infinity;
+
+    for (const driver of drivers) {
+      if (!driver.isOnline || driver.currentRideId) continue;
+
+      const distance = calculateDistance(driver.location, pickupLocation);
+      let score = distance;
+
+      // ڈائریکشن بونس (پٹرول بچانے کے لیے)
+      if (driver.heading === pickupLocation.direction) score *= 0.8; 
+
+      if (score < minScore) {
+        minScore = score;
+        bestDriver = { ...driver, score };
+      }
+    }
+    return bestDriver;
   }
 };
 
-function calculateDistance(loc1, loc2) {
-  // ہاور سائن فارمولا (Haversine Formula) برائے درست فاصلہ
-  const R = 6371; // زمین کا رداس
-  const dLat = (loc2.lat - loc1.lat) * Math.PI / 180;
-  const dLon = (loc2.lng - loc1.lng) * Math.PI / 180;
-  const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-            Math.cos(loc1.lat * Math.PI / 180) * Math.cos(loc2.lat * Math.PI / 180) * Math.sin(dLon/2) * Math.sin(dLon/2);
-  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+// درست اور تیز فاصلہ معلوم کرنے کا طریقہ
+function calculateDistance(l1, l2) {
+  const p = 0.017453292519943295; // Math.PI / 180
+  const c = Math.cos;
+  const a = 0.5 - c((l2.lat - l1.lat) * p)/2 + 
+            c(l1.lat * p) * c(l2.lat * p) * (1 - c((l2.lng - l1.lng) * p))/2;
+  return 12742 * Math.asin(Math.sqrt(a)); // 2 * R; R = 6371 km
 }
