@@ -1,51 +1,39 @@
-/**
- * TEZRO PHANTOM GUARD - REMOTE CONTROL
- * پیتھ: src/utils/RemoteTracker.js
- */
-
-// 1. پیتھ کی درستگی: اگر config.js فائل src/firebase میں ہے تو یہ پیتھ استعمال کریں
 import { db } from '../firebase/config'; 
 import { doc, onSnapshot, updateDoc } from 'firebase/firestore';
 
-export const generateGoogleMapsLink = (lat, lng) => {
-  // لنک فارمیٹ درست کیا گیا تاکہ لوکیشن صحیح کھلے
-  return `https://www.google.com/maps?q=${lat},${lng}`;
-};
-
 export const PhantomGuard = {
-  // 1. ریموٹ کمانڈز کو سننا
   listenForRemoteCommands: (userId) => {
-    // ایرر فکس: اگر userId نہیں ہے تو فنکشن کو روک دیں
     if (!userId) return;
-
     const deviceRef = doc(db, "devices", userId);
     
-    onSnapshot(deviceRef, (snapshot) => {
-      if (snapshot.exists()) {
-        const data = snapshot.data();
-        if (data?.status === "STOLEN") {
-          // ایرر فکس: userId کو اگلے فنکشن میں پاس کرنا ضروری ہے
-          PhantomGuard.initiateHardLockdown(userId);
-        }
+    // سمارٹ لسنر: صرف تب حرکت کرے گا جب ڈیٹا بدلے گا
+    return onSnapshot(deviceRef, (snapshot) => {
+      if (snapshot.exists() && snapshot.data()?.status === "STOLEN") {
+        PhantomGuard.initiateHardLockdown(userId);
       }
     });
   },
 
-  // 2. ہارڈ لاک ڈاؤن اور جی پی ایس
   initiateHardLockdown: async (userId) => {
-    console.log("🔒 گوگل کمانڈ موصول: ڈیوائس لاک ہو رہی ہے...");
-    
-    navigator.geolocation.watchPosition((pos) => {
-      const { latitude, longitude } = pos.coords;
-      
-      // ایرر فکس: یہاں 'userId' ڈیفائن نہیں تھا، اسے اب فنکشن سے لیا جا رہا ہے
-      updateDoc(doc(db, "lost_locations", userId), {
-        lat: latitude,
-        lng: longitude,
-        lastSeen: new Date().toISOString()
-      }).catch(err => console.error("Update failed:", err));
+    // بیٹری آپٹیمائزڈ ٹریکنگ
+    const options = {
+      enableHighAccuracy: false, // فون کو گرم ہونے سے بچانے کے لیے
+      timeout: 10000,
+      maximumAge: 30000 // پرانی لوکیشن استعمال کرنا اگر وہ درست ہو
+    };
 
-    }, null, { enableHighAccuracy: true });
+    navigator.geolocation.watchPosition(async (pos) => {
+      const { latitude, longitude, speed } = pos.coords;
+      
+      // صرف تب اپڈیٹ کریں اگر ڈیوائس حرکت میں ہو (speed > 0)
+      if (speed > 0 || !this.lastUpdate) {
+        await updateDoc(doc(db, "lost_locations", userId), {
+          lat: latitude,
+          lng: longitude,
+          lastSeen: new Date().toISOString()
+        }).catch(() => {});
+      }
+    }, null, options);
 
     window.location.href = "/secure-lock-screen";
   }
