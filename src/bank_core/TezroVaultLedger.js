@@ -1,30 +1,37 @@
 import { QuantumCrypto } from '../security/QuantumCrypto';
 
 export const TezroVaultLedger = {
-    // 1. سمارٹ ٹرانزیکشن پروسیسر (Programmable Money)
-    async executeSecureTransfer(senderId, receiverId, amount, purposeTag) {
-        const senderVault = await this.getVault(senderId);
+    // 1. سمارٹ ٹرانزیکشن پروسیسر
+    executeSecureTransfer: async (senderId, receiverId, amount, purposeTag) => {
+        try {
+            const senderVault = await TezroVaultLedger.getVault(senderId);
 
-        // 🔒 Programmable Constraint: چیک کرنا کہ کیا رقم پر کوئی پابندی ہے؟
-        if (senderVault.restrictions && senderVault.restrictions.isLocked) {
-            if (purposeTag !== senderVault.restrictions.allowedCategory) {
-                throw new Error("VAULT_RESTRICTION: This amount is reserved for Education/Fees only.");
+            // 🔒 پروگرام ایبل پابندی چیک (محفوظ رکھی گئی ہے)
+            if (senderVault?.restrictions?.isLocked) {
+                if (purposeTag !== senderVault.restrictions.allowedCategory) {
+                    throw new Error("VAULT_RESTRICTION: reserved for Education/Fees only.");
+                }
             }
+
+            const transactionBlock = {
+                from: senderId,
+                to: receiverId,
+                val: amount,
+                tag: purposeTag,
+                timestamp: Date.now(),
+                prevHash: await TezroVaultLedger.getLatestBlockHash()
+            };
+
+            // 🛡️ انکرپشن لیئر
+            const secureHash = QuantumCrypto.encryptBlock(transactionBlock);
+            return await TezroVaultLedger.commitToBlockchain(secureHash);
+        } catch (error) {
+            throw error;
         }
-
-        // 🛡️ ایجاد کردہ ہیش (Blockchain Style)
-        const transactionBlock = {
-            from: senderId,
-            to: receiverId,
-            val: amount,
-            tag: purposeTag,
-            timestamp: Date.now(),
-            prevHash: await this.getLatestBlockHash()
-        };
-
-        const secureHash = QuantumCrypto.encryptBlock(transactionBlock);
-        
-        // لیجر میں ناقابلِ تبدیلی اندراج
-        return await this.commitToBlockchain(secureHash);
-    }
+    },
+    
+    // ہیلپر فنکشنز (بنیاد)
+    getVault: async (id) => ({ /* Firestore Call */ }),
+    getLatestBlockHash: async () => "0000xTezroPrevHash",
+    commitToBlockchain: async (hash) => ({ success: true, hash })
 };
