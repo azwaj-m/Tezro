@@ -1,207 +1,210 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../context/ThemeContext';
 import { useAuth } from '../context/AuthContext';
 import { verifyAndExecute } from '../firebase/voiceAuth';
 import { CommandResolver } from '../utils/CommandResolver';
 import SuperSearchBar from './SuperSearchBar';
 
+// لوگو فائل (assists فولڈر سے)
+import TezroLogo from '../assets/logo.png'; 
+
 const Layout = ({ children }) => {
-  const [isSidebarOpen, setSidebarOpen] = useState(false);
-  const [adminClicks, setAdminClicks] = useState(0);
-  const [isVoiceActive, setIsVoiceActive] = useState(false);
-  const [voiceStatus, setVoiceStatus] = useState("");
-  
-  const { user, logout, verifyAdminKeys } = useAuth();
-  const { theme, darkMode, setDarkMode } = useTheme();
-  const navigate = useNavigate();
-  const location = useLocation();
+    const [isSidebarOpen, setSidebarOpen] = useState(false);
+    const [adminClicks, setAdminClicks] = useState(0);
+    const [isVoiceActive, setIsVoiceActive] = useState(false);
+    const [voiceStatus, setVoiceStatus] = useState("");
+    
+    const { user, logout, verifyAdminKeys } = useAuth();
+    const { theme } = useTheme(); // گولڈ اور بلیک تھیم
+    const navigate = useNavigate();
+    const location = useLocation();
 
-  // 🎤 یونیورسل وائس کمانڈ لاجک (سیکیورٹی + ملٹی لینگویج)
-  const startUniversalVoice = async () => {
-    setIsVoiceActive(true);
-    setVoiceStatus("سن رہا ہوں...");
+    // 🎤 یونیورسل وائس کمانڈ (Re-engineered for 2026)
+    const startUniversalVoice = async () => {
+        setIsVoiceActive(true);
+        setVoiceStatus("TEZRO IS LISTENING...");
 
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const mediaRecorder = new MediaRecorder(stream);
-      let chunks = [];
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            const mediaRecorder = new MediaRecorder(stream);
+            let chunks = [];
 
-      mediaRecorder.ondataavailable = (e) => chunks.push(e.data);
-      mediaRecorder.onstop = async () => {
-        const audioBlob = new Blob(chunks, { type: 'audio/wav' });
-        
-        // 1. سیکیورٹی چیک (صرف مالک کی آواز کا ویکٹر موازنہ)
-        const auth = await verifyAndExecute(audioBlob, user?.voiceSignature);
+            mediaRecorder.ondataavailable = (e) => chunks.push(e.data);
+            mediaRecorder.onstop = async () => {
+                const audioBlob = new Blob(chunks, { type: 'audio/wav' });
+                
+                // سیکیورٹی چیک (صرف مالک کی آواز)
+                const auth = await verifyAndExecute(audioBlob, user?.voiceSignature);
 
-        if (auth.authorized) {
-          // 2. اسپیچ ٹو ٹیکسٹ (براؤزر کی مفت API استعمال کرتے ہوئے)
-          const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-          const recognition = new SpeechRecognition();
-          recognition.lang = user?.preferredLang || 'ur-PK';
+                if (auth.authorized) {
+                    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                    const recognition = new SpeechRecognition();
+                    recognition.lang = user?.preferredLang || 'ur-PK';
 
-          recognition.onresult = async (event) => {
-            const transcript = event.results[0][0].transcript;
-            setVoiceStatus(`کمانڈ: ${transcript}`);
-            
-            // 3. کمانڈ ریزولو کرنا (بنگالی، عربی، اردو، انگلش سب یہاں ہینڈل ہوں گے)
-            const result = await CommandResolver.execute(audioBlob, transcript, user?.voiceSignature);
-            handleVoiceAction(result);
-          };
-          recognition.start();
-        } else {
-          setVoiceStatus("❌ آواز میچ نہیں ہوئی!");
-          setTimeout(() => setIsVoiceActive(false), 2000);
+                    recognition.onresult = async (event) => {
+                        const transcript = event.results[0][0].transcript;
+                        setVoiceStatus(`EXECUTING: ${transcript}`);
+                        const result = await CommandResolver.execute(audioBlob, transcript, user?.voiceSignature);
+                        handleVoiceAction(result);
+                    };
+                    recognition.start();
+                } else {
+                    setVoiceStatus("❌ VOICE MISMATCH!");
+                    setTimeout(() => setIsVoiceActive(false), 2000);
+                }
+            };
+
+            mediaRecorder.start();
+            setTimeout(() => mediaRecorder.stop(), 3000); 
+        } catch (err) {
+            setVoiceStatus("MIC ERROR!");
+            setIsVoiceActive(false);
         }
-      };
+    };
 
-      mediaRecorder.start();
-      setTimeout(() => mediaRecorder.stop(), 3000); // 3 سیکنڈ کی لسننگ
-    } catch (err) {
-      setVoiceStatus("مائیکروفون ایرر!");
-      setIsVoiceActive(false);
-    }
-  };
+    const handleVoiceAction = (res) => {
+        if (res.success) {
+            if (res.action === 'BOOK_RIDE') navigate('/ride');
+            if (res.action === 'CHECK_BALANCE') navigate('/banking');
+            if (res.action === 'EMERGENCY') alert("🚨 PANIC SIGNAL SENT TO HEADQUARTERS!");
+        }
+        setTimeout(() => setIsVoiceActive(false), 2000);
+    };
 
-  // 🚀 وائس ایکشنز کو نیویگیٹ کرنا
-  const handleVoiceAction = (res) => {
-    if (res.success) {
-      if (res.action === 'BOOK_RIDE') navigate('/');
-      if (res.action === 'CHECK_BALANCE') navigate('/pay');
-      if (res.action === 'EMERGENCY') alert("🚨 ایمرجنسی الرٹ بھیج دیا گیا ہے!");
-    }
-    setTimeout(() => setIsVoiceActive(false), 2000);
-  };
+    // 🔒 خفیہ ایڈمن ایکسیس (برقرار رکھا گیا ہے)
+    const handleSecretClick = async () => {
+        const newCount = adminClicks + 1;
+        setAdminClicks(newCount);
+        if (newCount === 15) {
+            setAdminClicks(0);
+            const secretKey = prompt("🔒 ENTER QUANTUM ADMIN KEY:");
+            if (secretKey) {
+                const isAuthorized = await verifyAdminKeys(secretKey);
+                if (isAuthorized) navigate('/admin');
+                else alert("ACCESS DENIED: SYSTEM LOGGED");
+            }
+        }
+    };
 
-  const handleSecretClick = async () => {
-    const newCount = adminClicks + 1;
-    setAdminClicks(newCount);
-    if (newCount === 15) {
-      setAdminClicks(0);
-      const secretKey = prompt("🔒 ENTER ADMIN ACCESS KEY:");
-      if (secretKey) {
-        const isAuthorized = await verifyAdminKeys(secretKey);
-        if (isAuthorized) navigate('/admin');
-        else alert("ACCESS DENIED!");
-      }
-    }
-  };
+    return (
+        <div className="min-h-screen bg-[#050505] text-white overflow-hidden relative">
+            
+            {/* ☰ Side Sidebar Drawer */}
+            <AnimatePresence>
+                {isSidebarOpen && (
+                    <>
+                        <motion.div 
+                            initial={{ x: '-100%' }} animate={{ x: 0 }} exit={{ x: '-100%' }}
+                            transition={{ type: 'spring', damping: 25 }}
+                            className="fixed inset-y-0 left-0 w-[300px] bg-[#0a0a0a] border-r border-[#D4AF37]/20 z-[3000] p-8"
+                        >
+                            <div className="mb-10 flex flex-col items-center">
+                                <div className="w-20 h-20 rounded-full border-2 border-[#D4AF37] p-1 mb-4 shadow-[0_0_15px_rgba(212,175,55,0.3)]">
+                                    <img src={user?.photo || "https://via.placeholder.com/80"} className="w-full h-full rounded-full object-cover" alt="user" />
+                                </div>
+                                <h4 className="font-black text-[#D4AF37] tracking-wider">{user?.name || "REHMAN"}</h4>
+                                <span className="text-[8px] bg-[#D4AF37] text-black px-2 py-0.5 rounded-full mt-2 font-bold uppercase">Pro Verified</span>
+                            </div>
 
-  const menuItems = [
-    { id: 'home', label: 'Home', icon: '🏠', path: '/' },
-    { id: 'wallet', label: 'Payments & Wallet', icon: '💳', path: '/pay' },
-    { id: 'history', label: 'Orders / Rides', icon: '🕒', path: '/history' },
-    { id: 'settings', label: 'Settings', icon: '⚙️', path: '/settings' },
-  ];
+                            <nav className="space-y-4">
+                                {[
+                                    { id: 'home', label: 'Dashboard', icon: '🏠', path: '/' },
+                                    { id: 'wallet', label: 'Tezro Vault', icon: '💳', path: '/banking' },
+                                    { id: 'history', label: 'Ride History', icon: '🕒', path: '/history' },
+                                    { id: 'settings', label: 'Security Settings', icon: '⚙️', path: '/settings' },
+                                ].map(item => (
+                                    <button 
+                                        key={item.id} 
+                                        onClick={() => { navigate(item.path); setSidebarOpen(false); }}
+                                        className={`w-full flex items-center gap-4 p-4 rounded-2xl transition-all ${location.pathname === item.path ? 'bg-[#D4AF37]/10 border border-[#D4AF37]/20' : 'hover:bg-white/5'}`}
+                                    >
+                                        <span className="text-xl">{item.icon}</span>
+                                        <span className="text-xs font-bold uppercase tracking-widest">{item.label}</span>
+                                    </button>
+                                ))}
+                            </nav>
 
-  return (
-    <div style={{ background: theme.bg, color: theme.text, minHeight: '100vh', transition: '0.3s', position: 'relative' }}>
-      
-      {/* ☰ Sidebar (وہی لاجک) */}
-      <div style={{
-        position: 'fixed', top: 0, left: isSidebarOpen ? 0 : '-320px',
-        width: '320px', height: '100%', background: theme.card,
-        zIndex: 2000, transition: '0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-        padding: '25px', boxShadow: isSidebarOpen ? '10px 0 50px rgba(0,0,0,0.5)' : 'none',
-        display: 'flex', flexDirection: 'column', borderRight: `1px solid ${theme.border}`
-      }}>
-        <div style={{ marginBottom: '30px', textAlign: 'center' }}>
-          <img src={user?.photo || "https://via.placeholder.com/80"} 
-               style={{ width: '70px', height: '70px', borderRadius: '50%', border: `2px solid ${theme.accent}` }} alt="u" />
-          <h4 style={{ margin: '10px 0 0 0' }}>{user?.name || "Tezro User"}</h4>
-          <small style={{ color: theme.accent, fontSize: '10px' }}>PRO MEMBER</small>
-        </div>
+                            <button onClick={logout} className="absolute bottom-10 left-8 right-8 py-4 border border-red-500/30 text-red-500 rounded-2xl text-[10px] font-black uppercase tracking-[3px] hover:bg-red-500/10 transition-all">
+                                Terminate Session
+                            </button>
+                        </motion.div>
+                        <motion.div 
+                            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                            onClick={() => setSidebarOpen(false)}
+                            className="fixed inset-0 bg-black/80 backdrop-blur-md z-[2500]" 
+                        />
+                    </>
+                )}
+            </AnimatePresence>
 
-        <div style={{ flex: 1 }}>
-          {menuItems.map(item => (
-            <div key={item.id} onClick={() => { navigate(item.path); setSidebarOpen(false); }}
-              style={{
-                padding: '15px', borderRadius: '12px', display: 'flex', alignItems: 'center', gap: '15px',
-                cursor: 'pointer', marginBottom: '8px', background: location.pathname === item.path ? 'rgba(0,255,136,0.1)' : 'transparent'
-              }}
-            >
-              <span>{item.icon}</span>
-              <span style={{ fontWeight: '500' }}>{item.label}</span>
+            {/* 🎙️ Voice Overlay UI */}
+            <AnimatePresence>
+                {isVoiceActive && (
+                    <motion.div 
+                        initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                        className="fixed inset-0 bg-black/95 z-[4000] flex flex-col items-center justify-center p-10 text-center"
+                    >
+                        <div className="relative">
+                            <motion.div animate={{ scale: [1, 1.5, 1] }} transition={{ repeat: Infinity, duration: 2 }} className="absolute inset-0 bg-[#D4AF37]/20 rounded-full blur-3xl" />
+                            <div className="w-24 h-24 bg-[#D4AF37] rounded-full flex items-center justify-center text-black text-4xl shadow-[0_0_50px_rgba(212,175,55,0.5)] relative z-10">🎤</div>
+                        </div>
+                        <h2 className="mt-12 text-[#D4AF37] font-black tracking-widest text-lg">{voiceStatus}</h2>
+                        <p className="mt-4 text-gray-500 text-[10px] uppercase font-bold tracking-[2px]">Voice Biometrics Active</p>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            {/* --- MAIN INTERFACE --- */}
+            <div className="flex flex-col h-screen">
+                
+                {/* Header */}
+                <header className="px-6 py-4 flex justify-between items-center border-b border-white/5 bg-black/50 backdrop-blur-xl sticky top-0 z-[1000]">
+                    <button onClick={() => setSidebarOpen(true)} className="text-2xl opacity-70 hover:opacity-100">☰</button>
+                    
+                    <div className="relative flex flex-col items-center">
+                        <img src={TezroLogo} className="h-8 mb-1" alt="Tezro" />
+                        <span onClick={handleSecretClick} className="absolute -top-1 -right-3 text-[8px] opacity-10 cursor-default select-none">®</span>
+                    </div>
+
+                    <div onClick={() => navigate('/profile')} className="w-9 h-9 rounded-xl border border-[#D4AF37]/30 overflow-hidden cursor-pointer active:scale-90 transition-transform">
+                        <img src={user?.photo || "https://via.placeholder.com/40"} className="w-full h-full object-cover" alt="p" />
+                    </div>
+                </header>
+
+                {/* Search Bar (Only on Home) */}
+                {location.pathname === '/' && (
+                    <div className="px-6 pt-4">
+                        <SuperSearchBar />
+                    </div>
+                )}
+
+                {/* Main Content Area */}
+                <main className="flex-1 overflow-y-auto custom-scrollbar relative">
+                    {children}
+                </main>
+
+                {/* Footer Navigation */}
+                <footer className="px-8 py-5 bg-[#0a0a0a] border-t border-white/5 flex justify-between items-center relative z-[1000]">
+                    <button onClick={() => navigate('/')} className={`text-xl ${location.pathname === '/' ? 'text-[#D4AF37]' : 'opacity-30'}`}>🏠</button>
+                    <button onClick={() => navigate('/banking')} className={`text-xl ${location.pathname === '/banking' ? 'text-[#D4AF37]' : 'opacity-30'}`}>💳</button>
+                    
+                    {/* Floating Voice Button */}
+                    <motion.button 
+                        whileTap={{ scale: 0.8 }}
+                        onClick={startUniversalVoice}
+                        className="w-16 h-16 bg-[#D4AF37] rounded-full flex items-center justify-center text-black text-2xl -mt-12 shadow-[0_10px_30px_rgba(212,175,55,0.4)] border-[6px] border-[#050505]"
+                    >
+                        🎤
+                    </motion.button>
+                    
+                    <button onClick={() => navigate('/history')} className={`text-xl ${location.pathname === '/history' ? 'text-[#D4AF37]' : 'opacity-30'}`}>🕒</button>
+                    <button onClick={() => setSidebarOpen(true)} className="text-xl opacity-30">👤</button>
+                </footer>
             </div>
-          ))}
         </div>
-
-        <div style={{ borderTop: `1px solid ${theme.border}`, paddingTop: '15px' }}>
-          <button onClick={setDarkMode} style={{ width: '100%', padding: '12px', borderRadius: '10px', background: 'rgba(128,128,128,0.1)', color: theme.text, border: 'none', marginBottom: '10px' }}>
-            {darkMode ? '☀️ Light Mode' : '🌙 Dark Mode'}
-          </button>
-          <button onClick={logout} style={{ width: '100%', padding: '12px', borderRadius: '10px', border: '1px solid #ff4444', color: '#ff4444', background: 'none' }}>
-            Sign Out
-          </button>
-        </div>
-      </div>
-
-      {isSidebarOpen && <div onClick={() => setSidebarOpen(false)} style={styles.backdrop} />}
-
-      {/* 🎙️ Floating Voice UI (صرف جب ایکٹیو ہو) */}
-      {isVoiceActive && (
-        <div style={styles.voiceOverlay}>
-          <div style={styles.voicePulse}>🎤</div>
-          <p>{voiceStatus}</p>
-        </div>
-      )}
-
-      <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
-        <header style={{ ...styles.header, background: theme.card, borderBottom: `1px solid ${theme.border}` }}>
-          <button onClick={() => setSidebarOpen(true)} style={{ background: 'none', border: 'none', fontSize: '24px', color: theme.text }}>☰</button>
-          
-          <div style={{ position: 'relative' }}>
-            <span onClick={handleSecretClick} style={styles.secretBtn}>®</span>
-            <div onClick={() => navigate('/')} style={{ fontWeight: '900', color: theme.accent, fontSize: '20px', letterSpacing: '2px', cursor: 'pointer' }}>
-              TEZRO
-            </div>
-          </div>
-
-          <div onClick={() => navigate('/profile')} style={styles.profileCircle}>
-            <img src={user?.photo || "https://via.placeholder.com/40"} style={{ width: '100%' }} alt="p" />
-          </div>
-        </header>
-
-        {location.pathname === '/' && <SuperSearchBar onSearch={(type, val) => console.log(type, val)} />}
-
-        <main style={{ flex: 1, overflowY: 'auto', padding: '10px' }}>
-          {children}
-        </main>
-
-        {/* 🧭 فوٹر میں وائس بٹن کی شمولیت */}
-        <footer style={{ ...styles.footer, background: theme.card, borderTop: `1px solid ${theme.border}` }}>
-          <div onClick={() => navigate('/')} style={{ color: location.pathname === '/' ? theme.accent : theme.text, fontSize: '22px', cursor: 'pointer' }}>🏠</div>
-          <div onClick={() => navigate('/pay')} style={{ opacity: location.pathname === '/pay' ? 1 : 0.4, color: theme.text, fontSize: '22px', cursor: 'pointer' }}>💳</div>
-          
-          {/* مین وائس بٹن */}
-          <div onClick={startUniversalVoice} style={styles.mainMic}>🎤</div>
-          
-          <div onClick={() => navigate('/notifications')} style={{ opacity: 0.4, color: theme.text, fontSize: '22px', cursor: 'pointer' }}>🔔</div>
-          <div onClick={() => setSidebarOpen(true)} style={{ opacity: 0.4, color: theme.text, fontSize: '22px', cursor: 'pointer' }}>👤</div>
-        </footer>
-      </div>
-    </div>
-  );
-};
-
-const styles = {
-  header: { padding: '12px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'sticky', top: 0, zIndex: 1000 },
-  secretBtn: { position: 'absolute', top: '-8px', right: '-12px', fontSize: '8px', color: 'rgba(128,128,128,0.2)', cursor: 'default', userSelect: 'none' },
-  profileCircle: { width: '35px', height: '35px', borderRadius: '50%', border: '1px solid #00FF88', overflow: 'hidden', cursor: 'pointer' },
-  footer: { padding: '15px', display: 'flex', justifyContent: 'space-around', alignItems: 'center', position: 'sticky', bottom: 0 },
-  backdrop: { position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)', zIndex: 1500 },
-  mainMic: { 
-    width: '55px', height: '55px', background: '#00FF88', borderRadius: '50%', 
-    display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '24px', 
-    marginTop: '-30px', boxShadow: '0 4px 15px rgba(0,255,136,0.4)', cursor: 'pointer', color: '#000' 
-  },
-  voiceOverlay: {
-    position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.9)', zIndex: 3000,
-    display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', color: '#00FF88'
-  },
-  voicePulse: {
-    fontSize: '50px', marginBottom: '20px', animation: 'pulse 1.5s infinite'
-  }
+    );
 };
 
 export default Layout;
