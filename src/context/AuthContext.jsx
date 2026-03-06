@@ -1,51 +1,53 @@
-import React, { createContext, useState, useEffect, useContext } from 'react';
+import React, { createContext, useState, useEffect, useContext, useCallback } from 'react';
+import { auth, db } from '../firebase/config';
+import { onAuthStateChanged, signOut } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [role, setRole] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  // ایپ کھلتے ہی چیک کرے گا کہ کیا یوزر پہلے سے لاگ ان ہے
+  // سیکیورٹی: ڈیٹا کو انکرپٹ کر کے سیو کرنا (بیسک لیول)
+  const saveSecurely = (key, data) => {
+    const encrypted = btoa(JSON.stringify(data)); // Tezro Vault logic simple version
+    localStorage.setItem(key, encrypted);
+  };
+
   useEffect(() => {
-    const savedUser = localStorage.getItem('tezro_user');
-    if (savedUser) setUser(JSON.parse(savedUser));
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      if (firebaseUser) {
+        const docRef = doc(db, "users", firebaseUser.uid);
+        const docSnap = await getDoc(docRef);
+        
+        const userData = {
+          uid: firebaseUser.uid,
+          email: firebaseUser.email,
+          ...(docSnap.exists() ? docSnap.data() : {})
+        };
+        
+        setUser(userData);
+        setRole(userData.role || 'user');
+        saveSecurely('tezro_session', { uid: firebaseUser.uid, role: userData.role });
+      } else {
+        setUser(null);
+        setRole(null);
+        localStorage.removeItem('tezro_session');
+      }
+      setLoading(false);
+    });
+    return () => unsubscribe();
   }, []);
 
-  const loginWithGoogle = (googleData) => {
-    const newUser = {
-      name: googleData.name,
-      email: googleData.email,
-      photo: googleData.picture,
-      balance: 0.00,
-      isLoggedIn: true
-    };
-    setUser(newUser);
-    localStorage.setItem('tezro_user', JSON.stringify(newUser));
-  };
-
-  const logout = () => {
-    setUser(null);
-    localStorage.removeItem('tezro_user');
-  };
-
-  // 🕵️ ایڈمن کی تصدیق کا فنکشن (Layout کی ضرورت کے مطابق)
-  const verifyAdminKeys = async (key) => {
-    // یہاں آپ اپنا اصل ایڈمن کی لاجک ڈال سکتے ہیں
-    return key === "ADMIN786"; 
-  };
+  const logout = () => signOut(auth);
 
   return (
-    <AuthContext.Provider value={{ user, setUser, loginWithGoogle, logout, verifyAdminKeys }}>
+    <AuthContext.Provider value={{ user, role, loading, logout }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
-// 🚀 یہ وہ ہک ہے جس کی وجہ سے بلڈ فیل ہو رہی تھی
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
-  return context;
-};
+export const useAuth = () => useContext(AuthContext);
