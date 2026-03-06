@@ -1,29 +1,33 @@
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState, useContext, useEffect } from 'react';
 
 const ThemeContext = createContext();
 
 export const ThemeProvider = ({ children }) => {
-  const [darkMode, setDarkMode] = useState(true);
+  // پچھلی پسند کو یاد رکھنا (Persistence)
+  const [darkMode, setDarkMode] = useState(() => {
+    return localStorage.getItem('tezro_theme') === 'light' ? false : true;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('tezro_theme', darkMode ? 'dark' : 'light');
+    // CSS Variables کو اپڈیٹ کرنا تاکہ رینڈرنگ تیز ہو
+    const root = document.documentElement;
+    root.style.setProperty('--bg-color', darkMode ? '#1A0F0A' : '#F5F5F5');
+    root.style.setProperty('--text-color', darkMode ? '#F3E5AB' : '#2D3436');
+  }, [darkMode]);
 
   const theme = {
     darkMode,
-    setDarkMode,
-    bg: darkMode ? '#360F49' : '#C472C6', // گہرا براؤن بمقابلہ فریش وائٹ
-    card: darkMode ? 'rgba(45, 25, 15, 0.9)' : 'rgba(255, 255, 255, 0.95)',
-    border: darkMode ? '#D4AF37' : '#A855F7', // گولڈن بمقابلہ الیکٹرک پرپل
-    text: darkMode ? '#F3E5AB' : '#2D3436',
-    shadow: darkMode ? '0 10px 25px rgba(212, 175, 55, 0.2)' : '0 10px 25px rgba(168, 85, 247, 0.2)'
+    toggleTheme: () => setDarkMode(!darkMode),
+    colors: {
+      bg: darkMode ? '#1A0F0A' : '#F5F5F5',
+      border: darkMode ? '#D4AF37' : '#A855F7',
+      card: darkMode ? 'rgba(30, 20, 15, 0.95)' : '#FFFFFF',
+      text: darkMode ? '#F3E5AB' : '#2D3436'
+    }
   };
 
-  return (
-    <ThemeContext.Provider value={theme}>
-      {children}
-    </ThemeContext.Provider>
-  );
+  return <ThemeContext.Provider value={theme}>{children}</ThemeContext.Provider>;
 };
 
-export const useTheme = () => {
-  const context = useContext(ThemeContext);
-  if (!context) throw new Error("useTheme must be used within a ThemeProvider");
-  return context;
-};
+export const useTheme = () => useContext(ThemeContext);
