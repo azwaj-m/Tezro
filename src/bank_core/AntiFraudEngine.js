@@ -1,31 +1,28 @@
 export const AntiFraudEngine = {
-    // ممنوعہ کیٹیگریز کی لسٹ (International MCC Standards)
-    RESTRICTED_CATEGORIES: ['7995', '5967', '7273', '6211'], // Gambling, Adult, High-Risk Trading
-    
+    // آپ کے فراہم کردہ انٹرنیشنل اسٹینڈرڈز (محفوظ)
+    RESTRICTED_CATEGORIES: ['7995', '5967', '7273', '6211'], 
+
     async validateTransaction(userId, cardToken, merchantData) {
+        // 1. والٹ ڈیٹا حاصل کریں
         const userVault = await this.getUserVault(userId);
-
-        // 1. کیٹیگری چیک کرنا
+        
+        // 2. کیٹیگری چیک (Gambling/High-Risk)
         if (this.RESTRICTED_CATEGORIES.includes(merchantData.mcc)) {
-            let warningCount = userVault.securityWarnings || 0;
-            warningCount += 1;
+            let warningCount = (userVault.securityWarnings || 0) + 1;
 
-            // 2. وارننگ لاجک (صرف دو بار کی مہلت)
             if (warningCount >= 2) {
-                await this.permBlockCard(cardToken, "PERMANENT_BAN_SUSPICIOUS_ACTIVITY");
-                return { 
-                    status: "TERMINATED", 
-                    message: "Card permanently blocked after 2 warnings for prohibited transactions." 
-                };
+                // مستقل بلاک (آپ کا اوریجنل لاجک)
+                await this.permBlockCard(cardToken, "PERMANENT_BAN_SUSPICIOUS");
+                return { status: "TERMINATED", message: "Card permanently blocked." };
             } else {
+                // پہلی وارننگ
                 await this.updateWarningCount(userId, warningCount);
                 return { 
                     status: "REJECTED", 
-                    message: `WARNING ${warningCount}/2: This transaction type is prohibited. Another attempt will block your card.` 
+                    message: `WARNING ${warningCount}/2: This type is prohibited.` 
                 };
             }
         }
-
         return { status: "AUTHORIZED" };
     }
 };
