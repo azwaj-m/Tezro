@@ -1,74 +1,93 @@
-           <div>
-              <h2 style={{ ...styles.heroTitle, color: activeTheme.text }}>Ride Anywhere</h2>
-              <p style={{ color: activeTheme.border, fontSize: '11px', margin: 0 }}>Safe, Fast & Secure</p>
-           </div>
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { MapContainer, TileLayer, useMap } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
+
+// میپ آئیکن فکس
+import icon from 'leaflet/dist/images/marker-icon.png';
+import iconShadow from 'leaflet/dist/images/marker-shadow.png';
+
+let DefaultIcon = L.icon({
+    iconUrl: icon,
+    shadowUrl: iconShadow,
+    iconSize: [25, 41],
+    iconAnchor: [12, 41]
+});
+L.Marker.prototype.options.icon = DefaultIcon;
+
+function MapResizer() {
+  const map = useMap();
+  useEffect(() => {
+    const timer = setTimeout(() => { map.invalidateSize(); }, 500);
+    return () => clearTimeout(timer);
+  }, [map]);
+  return null;
+}
+
+const HomeScreen = () => {
+  const navigate = useNavigate();
+  const [balance] = useState("1,250,500");
+
+  const services = [
+    { name: 'Ride', icon: '📍', path: '/ride' },
+    { name: 'Food', icon: '🍔', path: '/food' },
+    { name: 'Shop', icon: '🛒', path: '/shop' },
+    { name: 'Parcel', icon: '📦', path: '/parcel' },
+    { name: 'Vault', icon: '💳', path: '/banking' }
+  ];
+
+  return (
+    <div className="min-h-screen bg-[#050505] text-[#F3E5AB] pb-24">
+      {/* HEADER */}
+      <header className="p-6 pt-12 bg-black border-b border-[#D4AF37]/20 flex justify-between items-center">
+        <div>
+          <h2 className="text-[#D4AF37] font-black tracking-widest text-xl">TEZRO</h2>
+          <p className="text-white font-bold">Rs. {balance}</p>
         </div>
-        <button style={{ ...styles.bookNowBtn, background: activeTheme.border, color: '#000' }}>Book Now</button>
+        <button className="bg-[#39FF14]/10 text-[#39FF14] text-[10px] px-3 py-1 rounded-full border border-[#39FF14]/20 animate-pulse">
+            SYSTEM: SECURE
+        </button>
+      </header>
+
+      {/* MAP SECTION */}
+      <div className="p-4">
+        <div className="h-[220px] rounded-[30px] overflow-hidden border border-[#D4AF37]/30 relative">
+          <MapContainer center={[31.4504, 73.1350]} zoom={13} style={{height: '100%', width: '100%'}} zoomControl={false}>
+            <MapResizer />
+            <TileLayer url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png" />
+          </MapContainer>
+          <div className="absolute bottom-4 left-0 right-0 px-6 z-[1000]">
+             <div className="bg-black/80 backdrop-blur-md p-2 rounded-2xl border border-white/10 flex">
+                <input type="text" placeholder="Where to?" className="bg-transparent flex-1 px-3 outline-none text-sm text-white" />
+                <button className="bg-[#D4AF37] text-black px-4 py-1 rounded-xl font-bold text-xs">GO</button>
+             </div>
+          </div>
+        </div>
       </div>
 
-      {/* 3. SERVICE GRID */}
-      <div style={styles.serviceGrid}>
+      {/* SERVICES GRID */}
+      <div className="grid grid-cols-5 gap-2 px-4 mt-4">
         {services.map((s, i) => (
-          <div 
-            key={i} 
-            style={{ ...styles.glassButton, background: activeTheme.card, borderColor: activeTheme.border }} 
-            onClick={() => handleServiceClick(s)}
-          >
-            <div style={styles.iconBox}>{s.icon}</div>
-            <div style={{ ...styles.label, color: activeTheme.text }}>{s.name}</div>
+          <div key={i} onClick={() => navigate(s.path)} className="flex flex-col items-center gap-2 p-3 bg-white/5 rounded-2xl border border-white/5 active:scale-90 transition-all">
+            <span className="text-xl">{s.icon}</span>
+            <span className="text-[9px] font-bold uppercase opacity-60">{s.name}</span>
           </div>
         ))}
       </div>
 
-      {/* --- FOOTER --- */}
-      <footer style={{ ...styles.footer, background: activeTheme.bg, borderTop: `1px solid ${activeTheme.border}44` }}>
-        {[
-          {n: 'Home', i: '🏠', p: '/'},
-          {n: 'Search', i: '🔍', p: '/search'},
-          {n: 'Orders', i: '📦', p: '/orders'},
-          {n: 'Profile', i: '👤', p: '/business-portal'}
-        ].map((tab, i) => (
-          <div key={i} onClick={() => navigate(tab.p)} style={{ ...styles.navItem, color: activeTheme.text }}>
-            <span style={{fontSize: '18px'}}>{tab.i}</span>
-            <span>{tab.n}</span>
-          </div>
-        ))}
-      </footer>
-
-      {showAuth && (
-        <UniversalAuthPopup 
-          serviceType={selectedService?.type} 
-          orderData={{ total: 0 }}
-          onConfirm={(data) => { setShowAuth(false); alert("Success!"); }}
-          onClose={() => setShowAuth(false)}
-        />
-      )}
+      {/* HERO CARD */}
+      <div className="p-4">
+        <div className="bg-gradient-to-br from-[#1a1a1a] to-black p-6 rounded-[30px] border border-[#D4AF37]/20 flex justify-between items-center" onClick={() => navigate('/ride')}>
+            <div>
+                <h3 className="text-white font-black text-lg">Ride Anywhere</h3>
+                <p className="text-[#D4AF37] text-xs">Safe, Fast & Secure</p>
+            </div>
+            <button className="bg-[#D4AF37] text-black px-6 py-2 rounded-full font-black text-xs uppercase shadow-[0_0_20px_rgba(212,175,55,0.2)]">Book Now</button>
+        </div>
+      </div>
     </div>
   );
-};
-
-// اسٹائلز وہی رہیں گے جو آپ کے پاس ہیں
-const styles = {
-  container: { minHeight: '100vh', padding: '16px', paddingTop: '80px', paddingBottom: '90px', display: 'flex', flexDirection: 'column' },
-  header: { position: 'fixed', top: 0, left: 0, right: 0, height: '65px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 20px', zIndex: 1000 },
-  installBtn: { border: 'none', padding: '8px 15px', borderRadius: '20px', fontWeight: 'bold', fontSize: '11px', cursor: 'pointer' },
-  mapFrame: { height: '220px', borderRadius: '22px', overflow: 'hidden', border: '1px solid', marginBottom: '15px', position: 'relative', zIndex: 1 },
-  leafletMap: { height: '100%', width: '100%' },
-  floatingSearch: { position: 'absolute', bottom: '15px', left: '50%', transform: 'translateX(-50%)', width: '90%', zIndex: 1000 },
-  glassSearch: { backdropFilter: 'blur(10px)', borderRadius: '12px', padding: '8px 12px', display: 'flex', alignItems: 'center', border: '1px solid' },
-  searchInput: { background: 'none', border: 'none', marginLeft: '10px', outline: 'none', flex: 1, fontSize: '14px' },
-  rideNowSmall: { border: 'none', borderRadius: '8px', padding: '6px 15px', fontWeight: 'bold', cursor: 'pointer' },
-  mainRideHero: { borderRadius: '22px', padding: '18px', marginBottom: '18px', borderStyle: 'solid', borderWidth: '1px 1px 4px 1px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' },
-  heroContent: { display: 'flex', alignItems: 'center', gap: '15px' },
-  carGraphic: { fontSize: '40px' },
-  heroTitle: { fontSize: '17px', fontWeight: 'bold', margin: 0 },
-  bookNowBtn: { border: 'none', borderRadius: '12px', padding: '10px 20px', fontWeight: 'bold', fontSize: '12px' },
-  serviceGrid: { display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '8px' },
-  glassButton: { borderRadius: '18px', padding: '15px 5px', textAlign: 'center', borderStyle: 'solid', borderWidth: '1px 1px 3px 1px' },
-  iconBox: { fontSize: '24px', marginBottom: '5px' },
-  label: { fontSize: '10px', fontWeight: 'bold' },
-  footer: { position: 'fixed', bottom: 0, left: 0, right: 0, height: '75px', display: 'flex', justifyContent: 'space-around', alignItems: 'center', zIndex: 1000 },
-  navItem: { display: 'flex', flexDirection: 'column', alignItems: 'center', fontSize: '10px', gap: '4px' }
 };
 
 export default HomeScreen;
