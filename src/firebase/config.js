@@ -1,11 +1,10 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+import { getFirestore } from "firebase/firestore"; // Lite version can be used for basic CRUD
 import { getAuth } from "firebase/auth";
 import { getStorage } from "firebase/storage";
 
-// Vercel یا مقامی .env فائل سے ڈیٹا اٹھانا
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "fallback_key_here", 
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
   projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
   storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
@@ -13,6 +12,7 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID
 };
 
+// Singleton Instance تاکہ میموری بار بار استعمال نہ ہو
 const app = initializeApp(firebaseConfig);
 
 export const db = getFirestore(app);
