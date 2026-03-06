@@ -1,31 +1,53 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTheme } from '../../context/ThemeContext';
 import { useNavigate } from 'react-router-dom';
+import { db } from '../../firebase/config';
+import { doc, updateDoc, onSnapshot } from "firebase/firestore";
 
 const AdminDashboard = () => {
   const theme = useTheme();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('Overview');
   const [showEmail, setShowEmail] = useState(true);
-
-  // لائیو کنٹرول اسٹیٹس (یہ ڈیٹا بیس سے جڑیں گی)
-  const [commissions, setCommissions] = useState({ RIDE: 15, FOOD: 10, SHOP: 5, HOTEL: 12 });
-  const [fares, setFares] = useState({ base: 45, surge: 1.5 });
+  
+  // 1. اسٹیٹس (جو اب فائر بیس سے کنٹرول ہوں گی)
+  const [commissions, setCommissions] = useState({ RIDE: 0, FOOD: 0, SHOP: 0, HOTEL: 0 });
+  const [fares, setFares] = useState({ base: 0, surge: 0 });
+  const [loading, setLoading] = useState(true);
 
   const activeTheme = theme || { bg: '#1A0F0A', border: '#D4AF37', card: 'rgba(45,25,15,0.9)', text: '#F3E5AB' };
 
-  const menuItems = [
-    { id: 'Overview', icon: '📊', label: 'Overview' },
-    { id: 'Users', icon: '👥', label: 'Performance' },
-    { id: 'Finance', icon: '💰', label: 'Commission' },
-    { id: 'Rides', icon: '🚗', label: 'Fare Control' },
-    { id: 'Vendors', icon: '🏪', label: 'CMS' },
-  ];
+  // 2. فائر بیس سے لائیو ڈیٹا اٹھانا (Real-time Sync)
+  useEffect(() => {
+    const unsub = onSnapshot(doc(db, "settings", "global_config"), (snapshot) => {
+      if (snapshot.exists()) {
+        const data = snapshot.data();
+        setCommissions(data.commissions || { RIDE: 15, FOOD: 10, SHOP: 5, HOTEL: 12 });
+        setFares(data.fares || { base: 45, surge: 1.5 });
+      }
+      setLoading(false);
+    });
+    return () => unsub();
+  }, []);
+
+  // 3. ڈیٹا بیس میں سیو کرنے کا فنکشن
+  const handleSave = async () => {
+    try {
+      const configRef = doc(db, "settings", "global_config");
+      await updateDoc(configRef, { commissions, fares });
+      alert("✅ ڈیٹا بیس میں تبدیلیاں محفوظ کر لی گئی ہیں!");
+    } catch (error) {
+      console.error("Save Error:", error);
+      alert("❌ سیونگ ناکام: فائر بیس رولز چیک کریں۔");
+    }
+  };
+
+  if (loading) return <div style={{color: activeTheme.border, textAlign: 'center', marginTop: '50px'}}>Loading Command Center...</div>;
 
   return (
     <div style={{ ...styles.container, background: activeTheme.bg }}>
       
-      {/* 1. TOP COMMAND BAR */}
+      {/* --- TOP BAR --- */}
       <div style={{ ...styles.topBar, borderBottom: `2px solid ${activeTheme.border}` }}>
         <h2 style={{ color: activeTheme.border, margin: 0 }}>🛡️ Tezro Master Control</h2>
         <div style={styles.headerActions}>
@@ -34,37 +56,39 @@ const AdminDashboard = () => {
         </div>
       </div>
 
-      {/* 2. NAVIGATION TABS */}
+      {/* --- MENU TABS --- */}
       <div style={styles.tabContainer}>
-        {menuItems.map((item) => (
-          <div 
-            key={item.id} 
-            onClick={() => setActiveTab(item.id)}
+        {[
+          { id: 'Overview', icon: '📊', label: 'Overview' },
+          { id: 'Users', icon: '👥', label: 'Performance' },
+          { id: 'Finance', icon: '💰', label: 'Commission' },
+          { id: 'Rides', icon: '🚗', label: 'Fare Control' },
+          { id: 'Vendors', icon: '🏪', label: 'CMS' },
+        ].map((item) => (
+          <div key={item.id} onClick={() => setActiveTab(item.id)}
             style={{
               ...styles.tab,
               borderColor: activeTab === item.id ? activeTheme.border : 'transparent',
               color: activeTab === item.id ? activeTheme.border : activeTheme.text,
               background: activeTab === item.id ? `${activeTheme.border}22` : 'transparent'
-            }}
-          >
+            }}>
             {item.icon} {item.label}
           </div>
         ))}
       </div>
 
-      {/* 3. DYNAMIC CONTENT AREA */}
+      {/* --- DYNAMIC CONTENT --- */}
       <div style={{ ...styles.contentArea, background: activeTheme.card, borderColor: activeTheme.border }}>
         {activeTab === 'Overview' && <OverviewStats theme={activeTheme} />}
         
-        {activeTab === 'Users' && (
-          <UserPerformance theme={activeTheme} />
-        )}
+        {activeTab === 'Users' && <UserPerformance theme={activeTheme} />}
 
         {activeTab === 'Finance' && (
           <CommissionControl 
             theme={activeTheme} 
             commissions={commissions} 
             setCommissions={setCommissions} 
+            onSave={handleSave}
           />
         )}
 
@@ -73,6 +97,7 @@ const AdminDashboard = () => {
             theme={activeTheme} 
             fares={fares} 
             setFares={setFares} 
+            onSave={handleSave}
           />
         )}
 
@@ -84,96 +109,48 @@ const AdminDashboard = () => {
   );
 };
 
-// --- 1. یوزر کارکردگی لسٹ (User Performance) ---
-const UserPerformance = ({ theme }) => {
-  const users = [
-    { name: 'Ali Ahmed', role: 'Rider', rating: '4.8', earnings: 'PKR 12,400', status: 'Active' },
-    { name: 'Khan Sweets', role: 'Vendor', rating: '4.5', earnings: 'PKR 45,000', status: 'Warning' },
-    { name: 'Zia Khan', role: 'Driver', rating: '3.2', earnings: 'PKR 2,100', status: 'Banned' },
-  ];
+// --- ذیلی اجزاء (Sub-components) بشمول آپ کے تمام ڈیزائن فیچرز ---
 
-  return (
-    <div>
-      <h4 style={{ color: theme.border }}>User & Vendor Performance</h4>
-      <div style={styles.tableHeader}>
-        <span>Name</span>
-        <span>Rating</span>
-        <span>Earnings</span>
-        <span>Action</span>
+const CommissionControl = ({ theme, commissions, setCommissions, onSave }) => (
+  <div>
+    <h4 style={{ color: theme.border }}>Global Commission Settings (%)</h4>
+    {Object.keys(commissions).map(key => (
+      <div key={key} style={styles.listRow}>
+        <span style={{ color: theme.text }}>{key} Commission</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <input type="number" value={commissions[key]} 
+            onChange={(e) => setCommissions({ ...commissions, [key]: Number(e.target.value) })}
+            style={styles.input} />
+          <span style={{ color: theme.border }}>%</span>
+        </div>
       </div>
-      {users.map(u => (
-        <div key={u.name} style={styles.listRow}>
-          <div style={{ flex: 1 }}>
-            <span style={{ color: theme.text, display: 'block' }}>{u.name}</span>
-            <small style={{ color: theme.border, fontSize: '10px' }}>{u.role}</small>
-          </div>
-          <span style={{ flex: 1, color: parseFloat(u.rating) < 4 ? 'red' : '#00ff00' }}>⭐ {u.rating}</span>
-          <span style={{ flex: 1, color: theme.text }}>{u.earnings}</span>
-          <div style={{ display: 'flex', gap: '5px' }}>
-            <button style={styles.miniBtnAction}>Details</button>
-            <button style={{ ...styles.miniBtnAction, color: u.status === 'Banned' ? 'green' : 'red' }}>
-              {u.status === 'Banned' ? 'Unban' : 'Ban'}
-            </button>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-};
+    ))}
+    <button onClick={onSave} style={{ ...styles.actionBtnWide, marginTop: '20px' }}>Save Changes to Cloud</button>
+  </div>
+);
 
-// --- 2. کمیشن کنٹرول (Commission Control) ---
-const CommissionControl = ({ theme, commissions, setCommissions }) => {
-  const updateComm = (key, val) => setCommissions({ ...commissions, [key]: val });
-
-  return (
-    <div>
-      <h4 style={{ color: theme.border }}>Global Commission Settings (%)</h4>
-      {Object.keys(commissions).map(key => (
-        <div key={key} style={styles.listRow}>
-          <span style={{ color: theme.text }}>{key} Commission</span>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <input 
-              type="number" 
-              value={commissions[key]} 
-              onChange={(e) => updateComm(key, e.target.value)}
-              style={styles.input} 
-            />
-            <span style={{ color: theme.border }}>%</span>
-          </div>
-        </div>
-      ))}
-      <button style={{ ...styles.actionBtnWide, marginTop: '20px', textAlign: 'center' }}>Save Changes</button>
-    </div>
-  );
-};
-
-// --- 3. فیئر کنٹرول (Ride Fare Control) ---
-const RideControl = ({ theme, fares, setFares }) => (
+const RideControl = ({ theme, fares, setFares, onSave }) => (
   <div>
     <h4 style={{ color: theme.border }}>Ride Fare & Surge Logic</h4>
     <div style={styles.listRow}>
       <span style={{ color: theme.text }}>Base Fare (per KM)</span>
-      <input 
-        value={fares.base} 
-        onChange={(e) => setFares({...fares, base: e.target.value})}
-        style={styles.input} 
-      />
+      <input type="number" value={fares.base} 
+        onChange={(e) => setFares({...fares, base: Number(e.target.value)})}
+        style={styles.input} />
     </div>
     <div style={styles.listRow}>
-      <span style={{ color: theme.text }}>Surge Multiplier (Peak Hours)</span>
-      <input 
-        value={fares.surge} 
-        onChange={(e) => setFares({...fares, surge: e.target.value})}
-        style={styles.input} 
-      />
+      <span style={{ color: theme.text }}>Surge Multiplier</span>
+      <input type="number" step="0.1" value={fares.surge} 
+        onChange={(e) => setFares({...fares, surge: Number(e.target.value)})}
+        style={styles.input} />
     </div>
-    <p style={{ color: theme.text, fontSize: '11px', opacity: 0.6 }}>
-      * Surge خودکار طور پر ٹریفک اور موسم کے حساب سے بھی لاگو ہوتا ہے۔
-    </p>
+    <button onClick={onSave} style={{ ...styles.actionBtnWide, marginTop: '20px' }}>Update Global Fares</button>
   </div>
 );
 
-// --- 4. جنرل اسٹیٹس (Overview) ---
+// (باقی تمام فنکشنز OverviewStats, UserPerformance, VendorControl اور Styles وہی رہیں گے جو آپ کے پاس پہلے تھے)
+// میں نے انہیں یہاں آپ کے ڈیزائن کے مطابق برقرار رکھا ہے۔
+
 const OverviewStats = ({ theme }) => (
   <div style={styles.grid}>
     {[
@@ -191,19 +168,35 @@ const OverviewStats = ({ theme }) => (
   </div>
 );
 
-// --- 5. وینڈر کنٹرول ---
+const UserPerformance = ({ theme }) => {
+  const users = [
+    { name: 'Ali Ahmed', role: 'Rider', rating: '4.8', earnings: 'PKR 12,400', status: 'Active' },
+    { name: 'Khan Sweets', role: 'Vendor', rating: '4.5', earnings: 'PKR 45,000', status: 'Warning' },
+    { name: 'Zia Khan', role: 'Driver', rating: '3.2', earnings: 'PKR 2,100', status: 'Banned' },
+  ];
+  return (
+    <div>
+      <h4 style={{ color: theme.border }}>User & Vendor Performance</h4>
+      <div style={styles.tableHeader}><span>Name</span><span>Rating</span><span>Earnings</span><span>Action</span></div>
+      {users.map(u => (
+        <div key={u.name} style={styles.listRow}>
+          <div style={{ flex: 1 }}><span style={{ color: theme.text, display: 'block' }}>{u.name}</span><small style={{ color: theme.border, fontSize: '10px' }}>{u.role}</small></div>
+          <span style={{ flex: 1, color: parseFloat(u.rating) < 4 ? 'red' : '#00ff00' }}>⭐ {u.rating}</span>
+          <span style={{ flex: 1, color: theme.text }}>{u.earnings}</span>
+          <div style={{ display: 'flex', gap: '5px' }}><button style={styles.miniBtnAction}>Details</button><button style={{ ...styles.miniBtnAction, color: u.status === 'Banned' ? 'green' : 'red' }}>{u.status === 'Banned' ? 'Unban' : 'Ban'}</button></div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
 const VendorControl = ({ theme, showEmail, setShowEmail }) => (
   <div>
     <h4 style={{ color: theme.border }}>CMS & Support Control</h4>
     <button style={styles.actionBtnWide}>Edit App Banners</button>
     <div style={{ ...styles.emailToggleCard, border: `1px dashed ${theme.border}55` }}>
       <h5 style={{ color: theme.border, margin: '0 0 10px 0' }}>Support Email Visible?</h5>
-      <button 
-        onClick={() => setShowEmail(!showEmail)}
-        style={{ ...styles.toggleBtn, background: showEmail ? '#2ecc71' : '#e74c3c' }}
-      >
-        {showEmail ? 'ON (Visible)' : 'OFF (Hidden)'}
-      </button>
+      <button onClick={() => setShowEmail(!showEmail)} style={{ ...styles.toggleBtn, background: showEmail ? '#2ecc71' : '#e74c3c' }}>{showEmail ? 'ON (Visible)' : 'OFF (Hidden)'}</button>
     </div>
   </div>
 );
@@ -221,7 +214,7 @@ const styles = {
   listRow: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 0', borderBottom: '1px solid #333' },
   tableHeader: { display: 'flex', justifyContent: 'space-between', paddingBottom: '10px', borderBottom: '2px solid #444', fontSize: '11px', color: '#888' },
   miniBtnAction: { background: 'rgba(255,255,255,0.05)', border: '1px solid #444', color: 'white', padding: '4px 8px', borderRadius: '6px', fontSize: '10px' },
-  actionBtnWide: { width: '100%', padding: '12px', background: '#D4AF37', border: 'none', color: '#000', borderRadius: '10px', fontWeight: 'bold' },
+  actionBtnWide: { width: '100%', padding: '12px', background: '#D4AF37', border: 'none', color: '#000', borderRadius: '10px', fontWeight: 'bold', cursor: 'pointer' },
   input: { background: '#000', border: '1px solid #444', color: '#D4AF37', padding: '8px', borderRadius: '8px', width: '70px', textAlign: 'center' },
   emailToggleCard: { marginTop: '15px', padding: '15px', borderRadius: '12px', background: 'rgba(0,0,0,0.2)', textAlign: 'center' },
   toggleBtn: { border: 'none', color: '#fff', padding: '8px 20px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }
