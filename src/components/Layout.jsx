@@ -13,11 +13,10 @@ const Layout = ({ children }) => {
     const [voiceStatus, setVoiceStatus] = useState("");
     
     const { user, logout, verifyAdminKeys } = useAuth();
-    const { theme } = useTheme(); 
     const navigate = useNavigate();
     const location = useLocation();
 
-    // لوگو کا درست پاتھ (Public فولڈر کے لیے)
+    // لوگو پاتھ فکس (Public Assets)
     const TezroLogo = "/assists/logo.png"; 
 
     const startUniversalVoice = async () => {
@@ -30,8 +29,8 @@ const Layout = ({ children }) => {
             mediaRecorder.ondataavailable = (e) => chunks.push(e.data);
             mediaRecorder.onstop = async () => {
                 const audioBlob = new Blob(chunks, { type: 'audio/wav' });
-                const auth = await verifyAndExecute(audioBlob, user?.voiceSignature);
-                if (auth.authorized) {
+                const authResult = await verifyAndExecute(audioBlob, user?.voiceSignature);
+                if (authResult.authorized) {
                     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
                     const recognition = new SpeechRecognition();
                     recognition.lang = user?.preferredLang || 'ur-PK';
@@ -60,30 +59,28 @@ const Layout = ({ children }) => {
     };
 
     const handleSecretClick = async () => {
-        const newCount = adminClicks + 1;
-        setAdminClicks(newCount);
-        if (newCount === 15) {
-            setAdminClicks(0);
-            const secretKey = prompt("🔒 ENTER ADMIN KEY:");
-            if (secretKey) {
-                const isAuthorized = await verifyAdminKeys(secretKey);
-                if (isAuthorized) navigate('/admin');
+        setAdminClicks(prev => {
+            const newCount = prev + 1;
+            if (newCount === 15) {
+                const secretKey = prompt("🔒 ENTER ADMIN KEY:");
+                if (secretKey) {
+                    verifyAdminKeys(secretKey).then(isAuth => isAuth && navigate('/admin'));
+                }
+                return 0;
             }
-        }
+            return newCount;
+        });
     };
 
     return (
         <div style={{ background: '#050505', minHeight: '100vh', color: 'white', position: 'relative', overflow: 'hidden' }}>
-            
+            {/* Sidebar Overlay */}
+            {isSidebarOpen && <div onClick={() => setSidebarOpen(false)} style={styles.backdrop} />}
+
             {/* Sidebar */}
-            <div style={{
-                position: 'fixed', top: 0, left: isSidebarOpen ? 0 : '-300px',
-                width: '300px', height: '100%', background: '#0a0a0a',
-                zIndex: 3000, transition: '0.3s ease', padding: '30px',
-                borderRight: '1px solid rgba(212,175,55,0.2)'
-            }}>
+            <div style={{ ...styles.sidebar, left: isSidebarOpen ? 0 : '-300px' }}>
                 <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-                    <img src={user?.photo || "https://via.placeholder.com/80"} style={{ width: '70px', height: '70px', borderRadius: '50%', border: '2px solid #D4AF37' }} alt="u" />
+                    <img src={user?.photo || "https://via.placeholder.com/80"} style={styles.userImg} alt="u" />
                     <h4 style={{ color: '#D4AF37', marginTop: '15px' }}>{user?.name || "REHMAN"}</h4>
                 </div>
                 <button onClick={() => {navigate('/'); setSidebarOpen(false)}} style={styles.navBtn}>🏠 Dashboard</button>
@@ -91,9 +88,7 @@ const Layout = ({ children }) => {
                 <button onClick={logout} style={{ ...styles.navBtn, color: '#ff4444', marginTop: '50px' }}>Terminate Session</button>
             </div>
 
-            {isSidebarOpen && <div onClick={() => setSidebarOpen(false)} style={styles.backdrop} />}
-
-            {/* Voice Overlay */}
+            {/* Voice UI Overlay */}
             {isVoiceActive && (
                 <div style={styles.voiceOverlay}>
                     <div style={styles.micCircle}>🎤</div>
@@ -103,10 +98,9 @@ const Layout = ({ children }) => {
 
             <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
                 <header style={styles.header}>
-                    <button onClick={() => setSidebarOpen(true)} style={{ background: 'none', border: 'none', color: 'white', fontSize: '24px' }}>☰</button>
+                    <button onClick={() => setSidebarOpen(true)} style={styles.menuBtn}>☰</button>
                     <div style={{ position: 'relative' }}>
-                        {/* لوگو یہاں لوڈ ہوگا */}
-                        <img src={TezroLogo} style={{ height: '30px' }} alt="Tezro" onError={(e) => {e.target.style.display='none'}} />
+                        <img src={TezroLogo} style={{ height: '30px' }} alt="Tezro" onError={(e) => {e.target.style.opacity='0'}} />
                         <span onClick={handleSecretClick} style={styles.secretBtn}>®</span>
                     </div>
                     <div onClick={() => navigate('/profile')} style={styles.profileBox}>
@@ -132,16 +126,19 @@ const Layout = ({ children }) => {
 };
 
 const styles = {
-    header: { padding: '15px 25px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.05)' },
-    navBtn: { width: '100%', padding: '15px', background: 'none', border: 'none', color: 'white', textAlign: 'left', fontSize: '14px', fontWeight: 'bold' },
-    backdrop: { position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.8)', zIndex: 2500 },
+    header: { padding: '15px 25px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.05)', background: '#050505', zIndex: 1000 },
+    sidebar: { position: 'fixed', top: 0, width: '300px', height: '100%', background: '#0a0a0a', zIndex: 3000, transition: '0.3s ease', padding: '30px', borderRight: '1px solid rgba(212,175,55,0.2)' },
+    userImg: { width: '70px', height: '70px', borderRadius: '50%', border: '2px solid #D4AF37', objectFit: 'cover' },
+    navBtn: { width: '100%', padding: '15px', background: 'none', border: 'none', color: 'white', textAlign: 'left', fontSize: '14px', fontWeight: 'bold', cursor: 'pointer' },
+    menuBtn: { background: 'none', border: 'none', color: 'white', fontSize: '24px', cursor: 'pointer' },
+    backdrop: { position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.8)', zIndex: 2500, backdropFilter: 'blur(4px)' },
     voiceOverlay: { position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.95)', zIndex: 4000, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' },
     micCircle: { width: '80px', height: '80px', background: '#D4AF37', borderRadius: '50%', display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '30px', marginBottom: '20px', boxShadow: '0 0 30px rgba(212,175,55,0.5)' },
-    profileBox: { width: '35px', height: '35px', borderRadius: '10px', border: '1px solid #D4AF37', overflow: 'hidden' },
-    footer: { padding: '20px 30px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid rgba(255,255,255,0.05)' },
-    footBtn: { background: 'none', border: 'none', fontSize: '20px', cursor: 'pointer' },
-    mainMic: { width: '60px', height: '60px', background: '#D4AF37', borderRadius: '50%', display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '24px', marginTop: '-45px', border: '5px solid #050505', color: '#000', cursor: 'pointer' },
-    secretBtn: { position: 'absolute', top: '-5px', right: '-15px', fontSize: '8px', opacity: 0.2 }
+    profileBox: { width: '35px', height: '35px', borderRadius: '10px', border: '1px solid #D4AF37', overflow: 'hidden', cursor: 'pointer' },
+    footer: { padding: '20px 30px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid rgba(255,255,255,0.05)', background: '#050505' },
+    footBtn: { background: 'none', border: 'none', fontSize: '22px', cursor: 'pointer', transition: '0.2s' },
+    mainMic: { width: '60px', height: '60px', background: '#D4AF37', borderRadius: '50%', display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '24px', marginTop: '-45px', border: '5px solid #050505', color: '#000', cursor: 'pointer', boxShadow: '0 5px 15px rgba(0,0,0,0.3)' },
+    secretBtn: { position: 'absolute', top: '-5px', right: '-15px', fontSize: '10px', opacity: 0.1, cursor: 'pointer' }
 };
 
 export default Layout;
