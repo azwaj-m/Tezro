@@ -6,9 +6,6 @@ import { verifyAndExecute } from '../firebase/voiceAuth';
 import { CommandResolver } from '../utils/CommandResolver';
 import SuperSearchBar from './SuperSearchBar';
 
-// لوگو فائل
-import TezroLogo from '../assets/logo.png'; 
-
 const Layout = ({ children }) => {
     const [isSidebarOpen, setSidebarOpen] = useState(false);
     const [adminClicks, setAdminClicks] = useState(0);
@@ -19,6 +16,9 @@ const Layout = ({ children }) => {
     const { theme } = useTheme(); 
     const navigate = useNavigate();
     const location = useLocation();
+
+    // لوگو کا درست پاتھ (Public فولڈر کے لیے)
+    const TezroLogo = "/assists/logo.png"; 
 
     const startUniversalVoice = async () => {
         setIsVoiceActive(true);
@@ -75,7 +75,7 @@ const Layout = ({ children }) => {
     return (
         <div style={{ background: '#050505', minHeight: '100vh', color: 'white', position: 'relative', overflow: 'hidden' }}>
             
-            {/* Sidebar (Simple CSS) */}
+            {/* Sidebar */}
             <div style={{
                 position: 'fixed', top: 0, left: isSidebarOpen ? 0 : '-300px',
                 width: '300px', height: '100%', background: '#0a0a0a',
@@ -105,7 +105,8 @@ const Layout = ({ children }) => {
                 <header style={styles.header}>
                     <button onClick={() => setSidebarOpen(true)} style={{ background: 'none', border: 'none', color: 'white', fontSize: '24px' }}>☰</button>
                     <div style={{ position: 'relative' }}>
-                        <img src={TezroLogo} style={{ height: '30px' }} alt="Tezro" />
+                        {/* لوگو یہاں لوڈ ہوگا */}
+                        <img src={TezroLogo} style={{ height: '30px' }} alt="Tezro" onError={(e) => {e.target.style.display='none'}} />
                         <span onClick={handleSecretClick} style={styles.secretBtn}>®</span>
                     </div>
                     <div onClick={() => navigate('/profile')} style={styles.profileBox}>
