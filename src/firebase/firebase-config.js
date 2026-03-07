@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore"; // Lite version can be used for basic CRUD
+import { getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { getStorage } from "firebase/storage";
 
@@ -12,7 +12,7 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID
 };
 
-// Singleton Instance تاکہ میموری بار بار استعمال نہ ہو
+// Singleton Instance
 const app = initializeApp(firebaseConfig);
 
 export const db = getFirestore(app);
