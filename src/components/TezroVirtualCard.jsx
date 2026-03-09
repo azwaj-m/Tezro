@@ -76,3 +76,4 @@ const TezroVirtualCard = ({ cardData }) => {
         </div>
     );
 };
+export default TezroVirtualCard;

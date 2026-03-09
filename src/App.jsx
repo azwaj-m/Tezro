@@ -15,7 +15,7 @@ const FeaturesPage = lazy(() => import('./website/pages/FeaturesPage'));
 
 // --- APP SCREENS (Lazy Loaded) ---
 const HomeScreen = lazy(() => import('./screens/HomeScreen'));
-const AdminDashboard = lazy(() => import('./screens/Admin/AdminDashboard'));
+// // const AdminDashboard = lazy(() => import('./screens/Admin/AdminDashboard'));
 const Login = lazy(() => import('./screens/Auth/Login'));
 
 // لوڈنگ اسکرین
@@ -67,7 +67,7 @@ const App = () => {
                     {/* ایڈمن پینل (صرف ایڈمن کے لیے) */}
                     <Route 
                       path="admin" 
-                      element={role === 'admin' ? <AdminDashboard /> : <Navigate to="/app" />} 
+// //                       element={role === 'admin' ? <AdminDashboard /> : <Navigate to="/app" />} 
                     />
                   </Routes>
                 </Layout>
