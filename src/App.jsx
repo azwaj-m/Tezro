@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { getAnalytics, logEvent } from 'firebase/analytics';
-import { app } from './firebase/config'; // آپ کی موجودہ فائر بیس کنفگ
+import * as FirebaseModule from './firebase/config'; // آپ کی موجودہ فائر بیس کنفگ
 import AppShell from './AppShell';
 
 // 📡 Admin Monitoring Bridge
 const securityReport = (action) => {
   try {
-    const analytics = getAnalytics(app);
+    const analytics = getAnalytics(FirebaseModule.app);
     logEvent(analytics, 'security_heartbeat', {
       action: action,
       timestamp: new Date().toISOString(),
