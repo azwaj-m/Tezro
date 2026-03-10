@@ -5,8 +5,7 @@ export const startAntiFraud = () => {
 };
 
 const AntiFraudEngine = {
-    status: "SECURE",
-    checkVelocity: () => true
+    status: "SECURE"
 };
 
 export default AntiFraudEngine;

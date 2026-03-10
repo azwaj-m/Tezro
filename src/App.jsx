@@ -4,7 +4,7 @@ import { useAuth } from './context/AuthContext';
 
 // --- ENGINES (The Brain) ---
 import { initializeSecurity } from './security/TezroCore';
-import { startAntiFraud } from './finance/AntiFraudEngine.';
+import { startAntiFraud } from './finance/AntiFraudEngine';
 import { initVoiceEngine } from './utils/VoiceEngine';
 import { startAIDispatcher } from './utils/AIDispatcher';
 
