@@ -1,79 +1,110 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React from 'react';
+import { ShieldCheck, Zap, CreditCard } from 'lucide-react';
 
-const TezroVirtualCard = ({ cardData }) => {
-    const [isFlipped, setIsFlipped] = useState(false);
-    const [dynamicCVV, setDynamicCVV] = useState('***');
-    const [isLocked, setIsLocked] = useState(false);
+const TezroVirtualCard = ({ balance = "450,000.00", userName = "PREMIUM USER" }) => {
+  return (
+    <div style={styles.container}>
+      <style>
+        {`
+          @keyframes card-shine {
+            0% { left: -100%; }
+            100% { left: 100%; }
+          }
+          .glass-card {
+            background: linear-gradient(135deg, rgba(20, 20, 20, 0.9) 0%, rgba(40, 40, 40, 0.8) 100%);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.4s ease;
+          }
+          .glass-card:hover {
+            transform: rotateY(10deg) rotateX(5deg) scale(1.02);
+          }
+          .shine-layer {
+            position: absolute;
+            top: 0;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.1), transparent);
+            animation: card-shine 3s infinite linear;
+            transform: skewX(-20deg);
+          }
+        `}
+      </style>
 
-    // 🛡️ Dynamic CVV (60 سیکنڈز بعد تبدیلی - محفوظ فیچر)
-    useEffect(() => {
-        const updateCVV = () => {
-            setDynamicCVV(Math.floor(100 + Math.random() * 900));
-        };
-        updateCVV();
-        const interval = setInterval(updateCVV, 60000);
-        return () => clearInterval(interval);
-    }, []);
-
-    return (
-        <div className="p-4 sm:p-8 max-w-md mx-auto perspective-1000">
-            <motion.div 
-                animate={{ rotateY: isFlipped ? 180 : 0 }}
-                transition={{ duration: 0.6, type: 'spring', stiffness: 260, damping: 20 }}
-                onClick={() => setIsFlipped(!isFlipped)}
-                className="relative w-full h-56 rounded-[30px] cursor-pointer preserve-3d shadow-2xl"
-            >
-                {/* Front Side */}
-                <div className="absolute inset-0 bg-gradient-to-br from-[#1a1a1a] to-[#050505] border border-[#D4AF37]/30 p-8 rounded-[30px] backface-hidden flex flex-col justify-between">
-                    <div className="flex justify-between items-start">
-                        <h2 className="text-[#D4AF37] font-black italic tracking-widest text-sm">TEZRO PLATINUM</h2>
-                        <div className="h-6 w-10 bg-yellow-500/20 rounded-md border border-yellow-500/40" /> 
-                    </div>
-                    <p className="text-xl sm:text-2xl font-black tracking-[4px] text-white">
-                        {isLocked ? "**** **** **** ****" : "4532 •••• •••• 8890"}
-                    </p>
-                    <div className="flex justify-between items-end">
-                        <div className="text-[10px] uppercase font-bold text-gray-400">
-                            <p className="opacity-50">Card Holder</p>
-                            <p className="text-[#F3E5AB]">ABDUL REHMAN</p>
-                        </div>
-                        <div className="text-[10px] uppercase font-bold text-white text-right">
-                            <p className="opacity-50">Expiry</p>
-                            <p>08/29</p>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Back Side */}
-                <div className="absolute inset-0 bg-[#0a0a0a] border border-[#D4AF37]/30 rounded-[30px] rotate-y-180 backface-hidden overflow-hidden">
-                    <div className="w-full h-10 bg-black mt-6" />
-                    <div className="p-8">
-                        <div className="flex items-center gap-4">
-                            <div className="bg-white/10 w-24 h-8 rounded flex items-center justify-center">
-                                <span className="text-black bg-[#D4AF37] px-2 py-0.5 rounded font-black text-xs italic">
-                                    CVV: {dynamicCVV}
-                                </span>
-                            </div>
-                            <p className="text-[7px] text-gray-500 uppercase leading-tight">This code rotates every 60s for quantum security.</p>
-                        </div>
-                    </div>
-                </div>
-            </motion.div>
-
-            {/* Controls */}
-            <div className="mt-8 space-y-3">
-                <div className="flex justify-between items-center p-4 bg-white/5 rounded-2xl border border-white/5">
-                    <p className="text-xs font-bold text-white">Card Kill-Switch</p>
-                    <button 
-                        onClick={(e) => { e.stopPropagation(); setIsLocked(!isLocked); }}
-                        className={`w-10 h-5 rounded-full transition-colors ${isLocked ? 'bg-red-600' : 'bg-green-600'}`}
-                    >
-                        <div className={`w-4 h-4 bg-white rounded-full transition-transform ${isLocked ? 'translate-x-5' : 'translate-x-1'}`} />
-                    </button>
-                </div>
-            </div>
+      <div className="glass-card" style={styles.cardBody}>
+        <div className="shine-layer"></div>
+        
+        {/* Card Header */}
+        <div style={styles.cardHeader}>
+          <div style={styles.brandGroup}>
+            <div style={styles.goldLogo}>T</div>
+            <span style={styles.brandName}>TEZRO VAULT</span>
+          </div>
+          <ShieldCheck size={24} color="#FFD700" />
         </div>
-    );
+
+        {/* Chip & NFC */}
+        <div style={styles.chipArea}>
+          <div style={styles.simChip}></div>
+          <Zap size={20} color="rgba(255,215,0,0.5)" />
+        </div>
+
+        {/* Balance Display */}
+        <div style={styles.balanceSection}>
+          <p style={styles.balanceLabel}>AVAILABLE BALANCE</p>
+          <h2 style={styles.balanceAmount}>PKR {balance}</h2>
+        </div>
+
+        {/* Footer Info */}
+        <div style={styles.cardFooter}>
+          <div>
+            <p style={styles.footerLabel}>CARD HOLDER</p>
+            <p style={styles.footerVal}>{userName}</p>
+          </div>
+          <div style={{ textAlign: 'right' }}>
+            <p style={styles.footerLabel}>EXPIRES</p>
+            <p style={styles.footerVal}>12/29</p>
+          </div>
+        </div>
+      </div>
+      
+      {/* Quick Actions Below Card */}
+      <div style={styles.actionRow}>
+        <button style={styles.actionBtn}>Freeze Card</button>
+        <button style={{...styles.actionBtn, background: '#FFD700', color: '#000'}}>Add Money</button>
+      </div>
+    </div>
+  );
 };
+
+const styles = {
+  container: { padding: '20px', perspective: '1000px' },
+  cardBody: {
+    width: '100%',
+    height: '210px',
+    borderRadius: '20px',
+    padding: '25px',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    boxShadow: '0 20px 40px rgba(0,0,0,0.4)',
+    cursor: 'pointer'
+  },
+  cardHeader: { display: 'flex', justifyContent: 'space-between', alignItems: 'center' },
+  brandGroup: { display: 'flex', alignItems: 'center', gap: '10px' },
+  goldLogo: { width: '35px', height: '35px', borderRadius: '50%', background: 'linear-gradient(45deg, #BF953F, #FCF6BA)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#000', fontWeight: 'bold', fontSize: '1.2rem', boxShadow: '0 0 10px rgba(255,215,0,0.5)' },
+  brandName: { color: '#FFD700', fontWeight: 'bold', letterSpacing: '2px', fontSize: '0.9rem' },
+  chipArea: { display: 'flex', alignItems: 'center', gap: '15px', marginTop: '10px' },
+  simChip: { width: '45px', height: '35px', background: 'linear-gradient(135deg, #d4af37, #fcf6ba)', borderRadius: '6px' },
+  balanceSection: { margin: '15px 0' },
+  balanceLabel: { color: 'rgba(255,255,255,0.4)', fontSize: '0.6rem', letterSpacing: '1px' },
+  balanceAmount: { color: '#fff', fontSize: '1.6rem', fontWeight: 'bold', margin: '5px 0' },
+  cardFooter: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' },
+  footerLabel: { color: 'rgba(255,255,255,0.4)', fontSize: '0.5rem', marginBottom: '2px' },
+  footerVal: { color: '#fff', fontSize: '0.8rem', fontWeight: 'bold', letterSpacing: '1px' },
+  actionRow: { display: 'flex', gap: '10px', marginTop: '20px' },
+  actionBtn: { flex: 1, padding: '12px', borderRadius: '10px', background: '#111', color: '#FFD700', border: '1px solid #333', fontSize: '0.8rem', fontWeight: 'bold', cursor: 'pointer' }
+};
+
 export default TezroVirtualCard;
