@@ -1,41 +1,44 @@
 export const TezroFirewall = {
-    // 📊 ڈیٹا بیس (Redis/Cache) سے صارف کی حالیہ سرگرمی حاصل کرنا
-    async validateAccess(userId, locationId, actionType) {
+    // 🛡️ بیرونی خطرات اور مشکوک سرگرمی کا تجزیہ
+    async validateMerchantAction(merchantId, actionType, payload) {
         const now = Date.now();
-        const userLogs = await this.getRecentLogs(userId);
+        const logs = await this.getRecentLogs(merchantId);
 
-        // 1. لوکیشن بیسڈ فلٹر (10 بار رائیڈ بکنگ کی حد)
-        const locationBookings = userLogs.filter(log => 
-            log.locationId === locationId && 
-            log.type === 'RIDE_REQUEST' && 
-            (now - log.timestamp) < 600000 // پچھلے 10 منٹ
+        // 1. 🚨 Anti-Bot/Rapid Fire Protection
+        const rapidActions = logs.filter(log => 
+            (now - log.timestamp) < 5000 // پچھلے 5 سیکنڈ میں
         );
-
-        if (locationBookings.length >= 10) {
-            this.triggerSecurityLock(userId, "LOCATION_SPAM_DETECTED");
-            throw new Error("SECURITY_ALERT: Limit exceeded from this location. Try again later.");
+        
+        if (rapidActions.length > 5) {
+            this.reportToAdmin(merchantId, "BOT_ATTACK_SUSPECTED", payload);
+            throw new Error("EXTERNAL_THREAT_DETECTED: System temporarily locked.");
         }
 
-        // 2. ٹرانزیکشن ویلوسٹی (5 منٹ کا لازمی وقفہ)
-        const lastSuccessTx = userLogs.find(log => 
-            log.type === 'TRANSACTION' && 
-            log.status === 'SUCCESS'
-        );
-
-        if (lastSuccessTx && (now - lastSuccessTx.timestamp) < 300000) { // 300,000ms = 5 mins
-            throw new Error("COOLDOWN_ACTIVE: For your security, please wait 5 minutes between transactions.");
+        // 2. 🛡️ Kitchen Fraud Protection (Fake Ready Alerts)
+        if (actionType === 'MARK_READY') {
+            const pendingOrders = await this.getPendingOrders(merchantId);
+            if (pendingOrders.length === 0) {
+                this.reportToAdmin(merchantId, "GHOST_ORDER_VERIFICATION_FAILED", payload);
+                return { action: "BLOCK", reason: "Attempted to ready a non-existent order." };
+            }
         }
 
-        // 3. اسمارٹ OTP چیلنج (10 منٹ کے اندر دوبارہ ٹرانزیکشن پر)
-        const recentTx = userLogs.find(log => 
-            log.type === 'TRANSACTION' && 
-            (now - log.timestamp) < 600000 // 10 mins
-        );
-
-        if (recentTx) {
-            return { action: "REQUIRE_OTP", reason: "RAPID_TRANSACTION_REVERIFICATION" };
+        // 3. 🌐 Cross-Site Request Forgery (CSRF) & Origin Check
+        if (payload.origin !== "tezro.com" && payload.origin !== "admin.tezro.com") {
+            this.reportToAdmin(merchantId, "UNAUTHORIZED_ORIGIN_ACCESS", payload);
+            throw new Error("ACCESS_DENIED: Request from unauthorized source.");
         }
 
-        return { action: "PROCEED", status: "SECURE" };
-    }
+        return { action: "PROCEED", status: "VERIFIED" };
+    },
+
+    // 📡 ایڈمن پینل کو فوری الرٹ بھیجنا
+    async reportToAdmin(id, threatType, details) {
+        console.log(`🛰️ SOS: Sending ${threatType} report to Tezro-Admin...`);
+        // یہاں آپ Firebase کے 'security_alerts' کلیکشن میں ڈیٹا ایڈ کریں گے
+        // تاکہ ایڈمن کے پاس 'Threat Spike' نظر آئے
+    },
+
+    async getRecentLogs(id) { return []; }, // Placeholder
+    async getPendingOrders(id) { return []; } // Placeholder
 };
