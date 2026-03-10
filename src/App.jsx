@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { initializeSecurity } from './security/TezroCore';
-import { startAntiFraud } from './finance/AntiFraudEngine';
+import { startAntiFraud } from './finance/SecurityEngine';
 import { initVoiceEngine } from './utils/VoiceEngine';
 import { startAIDispatcher } from './utils/AIDispatcher';
 import AppShell from './AppShell';
