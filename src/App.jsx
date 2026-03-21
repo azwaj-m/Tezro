@@ -1,8 +1,12 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { getAnalytics, logEvent } from 'firebase/analytics';
-import * as FirebaseModule from './firebase/config'; // آپ کی موجودہ فائر بیس کنفگ
+import * as FirebaseModule from './firebase/config'; 
 import AppShell from './AppShell';
+
+// 🛠️ MASTER CONTROL SWITCH
+// یہاں آپ اپنی ضرورت کے مطابق تبدیل کر سکتے ہیں: "WALLET", "RIDE", "FOOD", "ALL"
+const ACTIVE_MODULE = "WALLET"; 
 
 // 📡 Admin Monitoring Bridge
 const securityReport = (action) => {
@@ -10,11 +14,12 @@ const securityReport = (action) => {
     const analytics = getAnalytics(FirebaseModule.app);
     logEvent(analytics, 'security_heartbeat', {
       action: action,
+      module: ACTIVE_MODULE, // اب ایڈمن کو یہ بھی پتہ چلے گا کہ کون سا ماڈیول آن ہے
       timestamp: new Date().toISOString(),
       origin: 'USER_APP',
       status: 'LIVE_MONITORING'
     });
-    console.log("🛡️ Tezro Security: Heartbeat sent to Admin.");
+    console.log(`🛡️ Tezro Security: Heartbeat (${ACTIVE_MODULE}) sent to Admin.`);
   } catch (error) {
     console.error("Security Bridge Error:", error);
   }
@@ -22,17 +27,15 @@ const securityReport = (action) => {
 
 function App() {
   useEffect(() => {
-    // جیسے ہی ایپ کھلے، ایڈمن کو اطلاع دیں
     securityReport("USER_APP_INITIALIZED");
-    
-    // سیکیورٹی چیک کا وقفہ (اختیاری: ہر 5 منٹ بعد ایڈمن کو بتاتا رہے کہ ایپ محفوظ ہے)
     const interval = setInterval(() => securityReport("STILL_ACTIVE"), 300000);
     return () => clearInterval(interval);
   }, []);
 
   return (
     <Router>
-      <AppShell />
+      {/* ہم ACTIVE_MODULE کو بطور 'prop' پاس کر رہے ہیں تاکہ AppShell کو پتہ ہو کیا دکھانا ہے */}
+      <AppShell activeModule={ACTIVE_MODULE} />
     </Router>
   );
 }
