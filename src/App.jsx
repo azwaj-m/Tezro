@@ -12,8 +12,8 @@ import * as FirebaseModule from './firebase';
 import HomeScreen from './screens/HomeScreen';
 import RideScreen from './screens/RideDashboard'; 
 import FoodScreen from './screens/FoodDashboard';
-import ShopScreen from './screens/Shop';
-import ParcelScreen from './screens/Logistics';
+import ShopScreen from './screens/Shop/ShopHome';
+import ParcelScreen from './screens/Logistics/SecureDeliveryManager';
 import VaultScreen from './screens/UniversalBankingHub';
 
 // 🛠️ MASTER CONTROL
