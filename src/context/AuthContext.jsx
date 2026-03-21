@@ -1,47 +1,30 @@
-import React, { createContext, useState, useEffect, useContext, useCallback } from 'react';
-import { auth, db } from '../firebase/config';
-import { onAuthStateChanged, signOut } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
+import React, { createContext, useState, useEffect, useContext } from 'react';
 
+// ہم اب فائر بیس سے کچھ امپورٹ نہیں کر رہے تاکہ ایرر نہ آئے
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [role, setRole] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  // سیکیورٹی: ڈیٹا کو انکرپٹ کر کے سیو کرنا (بیسک لیول)
-  const saveSecurely = (key, data) => {
-    const encrypted = btoa(JSON.stringify(data)); // Tezro Vault logic simple version
-    localStorage.setItem(key, encrypted);
-  };
+  // ہم نے یہاں ایک فرضی (Mock) یوزر ڈیٹا ڈال دیا ہے
+  const [user, setUser] = useState({
+    uid: 'tezro-dev-123',
+    displayName: 'Tezro Elite Member',
+    email: 'dev@tezro.app',
+    photoURL: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Tezro',
+    isVendor: false,
+    role: 'admin'
+  });
+  const [role, setRole] = useState('admin');
+  const [loading, setLoading] = useState(false); // لوڈنگ کو فورا ختم کر دیا
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
-      if (firebaseUser) {
-        const docRef = doc(db, "users", firebaseUser.uid);
-        const docSnap = await getDoc(docRef);
-        
-        const userData = {
-          uid: firebaseUser.uid,
-          email: firebaseUser.email,
-          ...(docSnap.exists() ? docSnap.data() : {})
-        };
-        
-        setUser(userData);
-        setRole(userData.role || 'user');
-        saveSecurely('tezro_session', { uid: firebaseUser.uid, role: userData.role });
-      } else {
-        setUser(null);
-        setRole(null);
-        localStorage.removeItem('tezro_session');
-      }
-      setLoading(false);
-    });
-    return () => unsubscribe();
+    // یہاں ہم نے فائر بیس کے 'onAuthStateChanged' کو ایک ڈمی فنکشن سے بدل دیا
+    console.log("Tezro Vault: Running in Offline/Mock Mode");
   }, []);
 
-  const logout = () => signOut(auth);
+  const logout = () => {
+    console.log("Mock Logout triggered");
+    setUser(null);
+  };
 
   return (
     <AuthContext.Provider value={{ user, role, loading, logout }}>
