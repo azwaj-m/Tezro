@@ -5,7 +5,7 @@ import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { useAuth } from '../context/AuthContext';
 import MobileRecharge from '../components/MobileRecharge'; // ریچارج کمپوننٹ امپورٹ کریں
-import TransactionsList from './TransactionsList'; // ٹرانزیکشن لسٹ امپورٹ کریں
+import TransactionsList from '../components/TransactionsList'; // ٹرانزیکشن لسٹ امپورٹ کریں
 
 // میپ آئیکن فکس
 import icon from 'leaflet/dist/images/marker-icon.png';
