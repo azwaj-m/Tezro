@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, ShieldCheck, Clock, MapPin, Search } from 'lucide-react';
 import { useWallet } from '../hooks/useWallet';
-import { useRide } from '../hooks/useRide';
+import { useLiveTracking } from '../hooks/useLiveTracking';
 import { auth } from '../firebase-config';
 import { SecurityEngine } from '../Tezro_Vault/SecurityEngine';
 import RideMap from '../components/RideMap';
