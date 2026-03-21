@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { useWallet } from '../hooks/useWallet';
 import { useTheme } from '../context/ThemeContext';
+// یہاں آپ کا ٹرانزیکشن لسٹ کمپوننٹ امپورٹ کریں
+import TransactionsList from './TransactionsList'; 
 import { SecurityEngine } from '../../Tezro_Vault/SecurityEngine';
 
 const Sidebar = ({ isOpen, toggleSidebar, user }) => {
     const { balance } = useWallet();
     const [showBizOptions, setShowBizOptions] = useState(false);
 
-    // بزنس رجسٹریشن کے اختیارات
     const bizRoles = [
         { id: 'vendor', label: 'Shopkeeper / Vendor', icon: '🏪' },
         { id: 'rider', label: 'Delivery Boy', icon: '🛵' },
@@ -16,7 +17,6 @@ const Sidebar = ({ isOpen, toggleSidebar, user }) => {
 
     const handleRoleSelection = (role) => {
         alert(`Opening Registration for: ${role.toUpperCase()}\nSecurity Fee: PKR 5000 (Refundable)`);
-        // یہاں رجسٹریشن فارم کا پاپ اپ لاجک آئے گا
     };
 
     return (
@@ -46,12 +46,17 @@ const Sidebar = ({ isOpen, toggleSidebar, user }) => {
                     <h2 className="text-2xl font-black text-[#F3E5AB]">Rs. {balance?.toLocaleString()}</h2>
                 </div>
 
-                <nav className="flex flex-col gap-1 px-4 overflow-y-auto max-h-[50vh]">
+                {/* 3. Navigation & Activities */}
+                <nav className="flex flex-col gap-1 px-4 overflow-y-auto" style={{ maxHeight: 'calc(100vh - 400px)' }}>
                     <div className="sidebar-item"><span>🚗</span> Ride History</div>
                     <div className="sidebar-item"><span>🥡</span> Food Orders</div>
-                    <div className="sidebar-item"><span>💳</span> Transactions</div>
                     
-                    {/* 3. Business Portal Logic */}
+                    {/* 🔄 Transactions List Added Here */}
+                    <div className="mt-4 mb-2">
+                        <TransactionsList currentUser={user} />
+                    </div>
+                    
+                    {/* 4. Business Portal Logic */}
                     <div className="mt-4 pt-4 border-t border-white/5">
                         {!user?.isVendor ? (
                             <div className="px-4">
@@ -68,7 +73,7 @@ const Sidebar = ({ isOpen, toggleSidebar, user }) => {
                                             <div 
                                                 key={role.id} 
                                                 onClick={() => handleRoleSelection(role.id)}
-                                                className="p-3 bg-white/5 rounded-xl border border-white/10 hover:border-[#D4AF37] cursor-pointer text-xs flex items-center gap-3 transition-all"
+                                                className="p-3 bg-white/5 rounded-xl border border-white/10 hover:border-[#D4AF37] cursor-pointer text-xs flex items-center gap-3 transition-all text-white"
                                             >
                                                 <span>{role.icon}</span> {role.label}
                                             </div>
@@ -81,7 +86,7 @@ const Sidebar = ({ isOpen, toggleSidebar, user }) => {
                         )}
                     </div>
 
-                    {/* 4. Security & SOS */}
+                    {/* 5. Security & SOS */}
                     <div className="mt-auto pt-6 px-4 space-y-4 pb-8">
                         <div className="sidebar-item text-gray-400 text-sm"><span>🛡️</span> Security & Audit Logs</div>
                         
