@@ -4,7 +4,7 @@ import { MapContainer, TileLayer, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { useAuth } from '../context/AuthContext';
-import MobileRecharge from './MobileRecharge'; // ریچارج کمپوننٹ امپورٹ کریں
+import MobileRecharge from '../components/MobileRecharge'; // ریچارج کمپوننٹ امپورٹ کریں
 import TransactionsList from './TransactionsList'; // ٹرانزیکشن لسٹ امپورٹ کریں
 
 // میپ آئیکن فکس
