@@ -4,7 +4,7 @@
  */
 
 import React, { useState } from 'react';
-import { db } from '../../firebase/config';
+import { db } from '../../firebase';
 import { updateDoc, doc } from 'firebase/firestore';
 
 const SecurityMaster = ({ user }) => {

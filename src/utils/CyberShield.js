@@ -1,4 +1,4 @@
-import { db } from '../firebase/config';
+import { db } from '../firebase';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 
 export const CyberShield = {

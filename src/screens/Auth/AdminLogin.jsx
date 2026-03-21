@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { auth, db } from '../../firebase/config'; // درست شدہ پاتھ
+import { auth, db } from '../../firebase'; // درست شدہ پاتھ
 import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { useNavigate } from 'react-router-dom';

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 // 1. پاتھ درست کیا گیا (آپ کی نئی فائل کے نام کے مطابق)
-import { auth } from "../../firebase/config"; 
+import { auth } from "../../firebase"; 
 // اگر فائل اسی فولڈر اسٹرکچر میں ہے جو میں نے اوپر بتایا ہے
 import { 
   GoogleAuthProvider, 

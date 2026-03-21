@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { db } from '../../firebase/config';
+import { db } from '../../firebase';
 import { collection, query, onSnapshot, doc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { Mic, ShieldCheck, AlertTriangle } from 'lucide-react';
 import { TezroFirewall } from '../../security/TezroFirewall';

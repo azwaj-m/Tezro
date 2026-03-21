@@ -1,4 +1,4 @@
-import { db } from '../firebase/config'; 
+import { db } from '../firebase'; 
 import { doc, onSnapshot, updateDoc } from 'firebase/firestore';
 
 export const PhantomGuard = {

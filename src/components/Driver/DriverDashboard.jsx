@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { db } from '../../firebase/config';
+import { db } from '../../firebase';
 import { doc, onSnapshot, updateDoc } from 'firebase/firestore';
 
 const DriverDashboard = ({ driverId }) => {
