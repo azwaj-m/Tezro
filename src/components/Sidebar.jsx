@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useWallet } from '../hooks/useWallet';
 import { useTheme } from '../context/ThemeContext';
-import { SecurityEngine } from '../../Tezro_Vault/SecurityEngine';
+import { SecurityEngine } from '../../finance/SecurityEngine';
 // اپنی ہسٹری لسٹ کو یہاں امپورٹ کریں
 import TransactionsList from './TransactionsList'; 
 

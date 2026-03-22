@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { db } from '../../../firebase';
 import { collection, addDoc, query, where, onSnapshot, updateDoc, doc } from 'firebase/firestore';
-import { SecurityEngine } from '../../../../Tezro_Vault/SecurityEngine';
+import { SecurityEngine } from '../../../../finance/SecurityEngine';
 
 const UniversalAssetManager = ({ bizId, category }) => {
     const [assets, setAssets] = useState([]);

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { db } from '../firebase';
 import { doc, onSnapshot } from 'firebase/firestore';
-import { SecurityEngine } from '../../Tezro_Vault/SecurityEngine';
+import { SecurityEngine } from '../../finance/SecurityEngine';
 
 export const useLiveTracking = (orderId, type = 'ride') => {
     const [trackingData, setTrackingData] = useState({

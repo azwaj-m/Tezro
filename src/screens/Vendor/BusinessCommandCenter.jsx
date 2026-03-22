@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useBusinessData } from '../../hooks/useBusinessData';
-import { SecurityEngine } from '../../../Tezro_Vault/SecurityEngine';
+import { SecurityEngine } from '../../../finance/SecurityEngine';
 import InventoryManager from './modules/InventoryManager'; // For Shopping
 import BookingManager from './modules/BookingManager';   // For Hotels/Halls
 import FleetManager from './modules/FleetManager';       // For Logistics/Ride
