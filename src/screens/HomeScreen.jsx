@@ -1,122 +1,104 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MapContainer, TileLayer, useMap } from 'react-leaflet';
-import 'leaflet/dist/leaflet.css';
-import L from 'leaflet';
-import { Shield, Zap, Navigation, Coffee, Package, CreditCard, ChevronRight } from 'lucide-react';
-
-// میپ آئیکن فکس
-import icon from 'leaflet/dist/images/marker-icon.png';
-import iconShadow from 'leaflet/dist/images/marker-shadow.png';
-
-let DefaultIcon = L.icon({
-    iconUrl: icon,
-    shadowUrl: iconShadow,
-    iconSize: [25, 41],
-    iconAnchor: [12, 41]
-});
-L.Marker.prototype.options.icon = DefaultIcon;
-
-function MapResizer() {
-  const map = useMap();
-  useEffect(() => {
-    const timer = setTimeout(() => { map.invalidateSize(); }, 500);
-    return () => clearTimeout(timer);
-  }, [map]);
-  return null;
-}
+import { Shield, Zap, Navigation, Coffee, Package, CreditCard, ChevronRight, Bell, Search } from 'lucide-react';
+import MobileRecharge from '../components/MobileRecharge';
+import TransactionsList from '../components/TransactionsList';
 
 const HomeScreen = () => {
   const navigate = useNavigate();
-  const [balance] = useState("1,250,500");
-
-  const services = [
-    { name: 'Ride', icon: <Navigation size={22} />, path: '/ride', color: '#D4AF37' },
-    { name: 'Food', icon: <Coffee size={22} />, path: '/food', color: '#FF4500' },
-    { name: 'Shop', icon: <Zap size={22} />, path: '/shop', color: '#39FF14' },
-    { name: 'Parcel', icon: <Package size={22} />, path: '/parcel', color: '#00BFFF' },
-    { name: 'Vault', icon: <CreditCard size={22} />, path: '/banking', color: '#D4AF37' }
-  ];
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white pb-32 font-sans selection:bg-[#D4AF37]/30">
+    <div className="min-h-screen bg-[#050505] text-white pb-32 font-sans overflow-x-hidden">
       
-      {/* 1. PREMIUM HEADER */}
-      <header className="p-6 pt-14 bg-black/80 backdrop-blur-xl border-b border-white/5 flex justify-between items-center sticky top-0 z-[2000]">
-        <div>
-          <div className="flex items-center gap-2 mb-1">
-             <div className="w-2 h-2 bg-[#39FF14] rounded-full animate-pulse shadow-[0_0_10px_#39FF14]"></div>
-             <h2 className="text-[#D4AF37] font-black tracking-[4px] text-[10px] uppercase opacity-80">Tezro Core</h2>
+      {/* 1. ULTRA-GLASS HEADER */}
+      <header className="fixed top-0 left-0 right-0 z-[100] bg-black/40 backdrop-blur-2xl border-b border-white/5 p-5 pt-12 flex justify-between items-center">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-[#D4AF37] to-[#F3E5AB] flex items-center justify-center shadow-[0_0_20px_rgba(212,175,55,0.3)]">
+            <Shield size={22} className="text-black" />
           </div>
-          <div className="flex items-baseline gap-1">
-             <span className="text-gray-500 text-xs font-bold">PKR</span>
-             <h1 className="text-2xl font-black tracking-tight">{balance}</h1>
+          <div>
+            <h2 className="text-[#D4AF37] font-black tracking-[3px] text-[10px] uppercase">Tezro Gold</h2>
+            <p className="text-white text-xs font-bold">Good Evening, Chief</p>
           </div>
         </div>
-        <div className="bg-white/5 p-2 rounded-2xl border border-white/10">
-           <Shield size={20} className="text-[#D4AF37]" />
+        <div className="relative">
+          <Bell size={20} className="text-gray-400" />
+          <div className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full border-2 border-black"></div>
         </div>
       </header>
 
-      {/* 2. INTERACTIVE MAP CARD */}
-      <div className="px-5 mt-6">
-        <div className="group relative h-[240px] rounded-[35px] overflow-hidden border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] transition-all duration-500 hover:border-[#D4AF37]/40">
-          <MapContainer center={[31.4504, 73.1350]} zoom={14} style={{height: '100%', width: '100%', filter: 'grayscale(1) invert(1) opacity(0.6)'}} zoomControl={false}>
-            <MapResizer />
-            <TileLayer url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png" />
-          </MapContainer>
+      <div className="p-5 pt-32">
+        
+        {/* 2. THE WALLET VAULT CARD (THE STAR OF THE SHOW) */}
+        <div className="relative group overflow-hidden bg-gradient-to-br from-[#111] via-[#0a0a0a] to-black p-8 rounded-[40px] border border-white/10 shadow-2xl mb-10">
+          {/* Animated Background Glow */}
+          <div className="absolute -right-20 -top-20 w-64 h-64 bg-[#D4AF37]/10 blur-[100px] rounded-full group-hover:bg-[#D4AF37]/20 transition-all duration-700"></div>
           
-          {/* Search Bar Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent pointer-events-none"></div>
-          <div className="absolute bottom-6 left-0 right-0 px-6 z-[1000]">
-             <div className="bg-black/60 backdrop-blur-md p-2 rounded-[22px] border border-white/10 flex items-center shadow-2xl group-focus-within:border-[#D4AF37]/50 transition-all">
-                <div className="p-2 text-[#D4AF37]"><Navigation size={18} /></div>
-                <input type="text" placeholder="Search destination..." className="bg-transparent flex-1 px-2 outline-none text-xs font-medium text-white placeholder:text-gray-600" />
-                <button className="bg-[#D4AF37] text-black px-5 py-2.5 rounded-[16px] font-black text-[10px] uppercase tracking-wider hover:scale-95 transition-transform active:bg-white">Route</button>
+          <div className="relative z-10">
+            <div className="flex justify-between items-start mb-6">
+               <span className="text-[10px] font-black uppercase tracking-[3px] text-[#D4AF37]">Available Balance</span>
+               <div className="bg-white/5 px-3 py-1 rounded-full border border-white/10 text-[9px] font-bold">ACTIVE VAULT</div>
+            </div>
+            <div className="flex items-baseline gap-2 mb-8">
+               <span className="text-xl font-bold text-gray-500">PKR</span>
+               <h1 className="text-4xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-white via-[#F3E5AB] to-[#D4AF37]">
+                 1,250,500
+               </h1>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+               <button className="bg-[#D4AF37] text-black py-4 rounded-2xl font-black text-[11px] uppercase tracking-wider shadow-[0_10px_30px_rgba(212,175,55,0.2)] active:scale-95 transition-all">Send Money</button>
+               <button className="bg-white/5 border border-white/10 py-4 rounded-2xl font-black text-[11px] uppercase tracking-wider backdrop-blur-md active:scale-95 transition-all">Add Funds</button>
+            </div>
+          </div>
+        </div>
+
+        {/* 3. NEON SERVICES GRID */}
+        <h3 className="text-[10px] font-black uppercase tracking-[4px] text-gray-600 mb-6 px-2">Core Services</h3>
+        <div className="grid grid-cols-4 gap-4 mb-10">
+           {[
+             {n: 'Ride', i: <Navigation size={20} />, c: 'from-blue-500/20'},
+             {n: 'Food', i: <Coffee size={20} />, c: 'from-orange-500/20'},
+             {n: 'Shop', i: <Zap size={20} />, c: 'from-[#39FF14]/20'},
+             {n: 'Pay', i: <CreditCard size={20} />, c: 'from-purple-500/20'}
+           ].map((s, idx) => (
+             <div key={idx} className="flex flex-col items-center gap-3">
+               <div className={`w-16 h-16 bg-gradient-to-b ${s.c} to-black/40 rounded-3xl border border-white/5 flex items-center justify-center text-white shadow-xl active:scale-90 transition-all`}>
+                 {s.i}
+               </div>
+               <span className="text-[9px] font-black uppercase tracking-widest text-gray-400">{s.n}</span>
              </div>
-          </div>
+           ))}
+        </div>
+
+        {/* 4. PREMIUM MODULES */}
+        <div className="space-y-6">
+           <div className="bg-[#111]/50 backdrop-blur-md rounded-[35px] p-6 border border-white/5">
+              <div className="flex justify-between items-center mb-6">
+                <h3 className="text-[#D4AF37] text-xs font-black uppercase tracking-[2px]">Quick Recharge</h3>
+                <Zap size={14} className="text-[#D4AF37]" />
+              </div>
+              <MobileRecharge />
+           </div>
+
+           <div className="bg-gradient-to-r from-[#111] to-black rounded-[35px] p-2 border border-white/5">
+              <h3 className="text-gray-500 text-[9px] font-black uppercase p-5 tracking-[4px]">Live Activity</h3>
+              <TransactionsList />
+              <button className="w-full py-5 text-[#D4AF37] text-[10px] font-black uppercase tracking-widest opacity-40 hover:opacity-100 transition-all">
+                Full Financial Ledger
+              </button>
+           </div>
         </div>
       </div>
 
-      {/* 3. LUXURY SERVICES GRID */}
-      <div className="grid grid-cols-5 gap-3 px-5 mt-8">
-        {services.map((s, i) => (
-          <div key={i} onClick={() => navigate(s.path)} className="flex flex-col items-center gap-3">
-            <div className="w-14 h-14 bg-[#111] rounded-[22px] border border-white/5 flex items-center justify-center text-white transition-all active:scale-90 hover:border-[#D4AF37]/30 hover:bg-[#1a1a1a] shadow-lg">
-              {s.icon}
-            </div>
-            <span className="text-[9px] font-black uppercase tracking-[1px] text-gray-500">{s.name}</span>
-          </div>
-        ))}
-      </div>
-
-      {/* 4. PROMO ACTION CARD */}
-      <div className="px-5 mt-10">
-        <div className="relative overflow-hidden bg-gradient-to-br from-[#1a1a1a] to-black p-8 rounded-[40px] border border-white/5 flex justify-between items-center group cursor-pointer active:scale-95 transition-all">
-            {/* Background Glow */}
-            <div className="absolute -right-10 -top-10 w-32 h-32 bg-[#D4AF37]/10 blur-[50px] rounded-full"></div>
-            
-            <div className="relative z-10">
-                <h3 className="text-white font-black text-xl mb-1 flex items-center gap-2">
-                  Priority Ride <Zap size={18} className="text-[#D4AF37]" />
-                </h3>
-                <p className="text-gray-500 text-[10px] font-bold uppercase tracking-widest">Get a driver in 2 mins</p>
-            </div>
-            <div className="relative z-10 bg-[#D4AF37] text-black p-3 rounded-full shadow-[0_10px_20px_rgba(212,175,55,0.3)]">
-               <ChevronRight size={20} />
-            </div>
-        </div>
-      </div>
-
-      {/* 5. BOTTOM STATUS BAR */}
-      <div className="fixed bottom-0 left-0 right-0 p-6 z-[3000]">
-         <div className="bg-white/5 backdrop-blur-2xl border border-white/10 p-4 rounded-[30px] flex justify-around items-center shadow-2xl">
-            <div className="text-[#D4AF37]"><Navigation size={22} /></div>
-            <div className="text-gray-600 opacity-50"><Package size={22} /></div>
-            <div className="text-gray-600 opacity-50"><CreditCard size={22} /></div>
-            <div className="text-gray-600 opacity-50"><Shield size={22} /></div>
+      {/* 5. FLOATING GLASS NAVIGATION */}
+      <nav className="fixed bottom-6 left-6 right-6 h-20 bg-black/60 backdrop-blur-3xl rounded-[30px] border border-white/10 flex justify-around items-center px-4 shadow-[0_20px_50px_rgba(0,0,0,0.8)] z-[2000]">
+         <div className="p-3 bg-[#D4AF37] text-black rounded-2xl shadow-[0_0_20px_rgba(212,175,55,0.4)]">
+           <Navigation size={24} />
          </div>
-      </div>
+         <div className="p-3 text-gray-500 hover:text-white transition-all"><Package size={24} /></div>
+         <div className="p-3 text-gray-500 hover:text-white transition-all"><CreditCard size={24} /></div>
+         <div className="p-3 text-gray-500 hover:text-white transition-all"><Shield size={24} /></div>
+      </nav>
 
     </div>
   );
