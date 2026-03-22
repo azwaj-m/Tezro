@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { db } from '../firebase-config';
+import { db } from '../firebase';
 import { doc, onSnapshot } from 'firebase/firestore';
 
 const LiveTracking = ({ orderId, type = 'ride' }) => {

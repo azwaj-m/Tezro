@@ -1,4 +1,4 @@
-import { db } from '../firebase-config';
+import { db } from '../firebase';
 import { doc, updateDoc, increment, arrayUnion } from 'firebase/firestore';
 
 export const processPayout = async (id, amount, rate) => {

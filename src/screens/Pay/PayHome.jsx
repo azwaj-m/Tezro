@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useTheme } from '../../context/ThemeContext';
 // 1. فائر بیس پاتھ درست کر دیا گیا (تاکہ بلیک اسکرین نہ آئے)
-import { db, auth } from '../../firebase-config'; 
+import { db, auth } from '../../firebase'; 
 import { doc, updateDoc, increment, onSnapshot, setDoc, getDoc } from "firebase/firestore";
 
 const PayHome = () => {

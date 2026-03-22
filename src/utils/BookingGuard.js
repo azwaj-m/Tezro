@@ -3,7 +3,7 @@
  * یہ فائل صارف کی اہلیت، سروس کے رولز اور پیمنٹ پالیسی کو کنٹرول کرتی ہے
  */
 
-import { db, auth } from '../firebase-config';
+import { db, auth } from '../firebase';
 import { doc, getDoc } from 'firebase/firestore';
 
 export const BookingGuard = {

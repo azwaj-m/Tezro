@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRide } from '../../hooks/useRide';
 import { useWallet } from '../../hooks/useWallet';
-import { auth } from '../../firebase-config';
+import { auth } from '../../firebase';
 import { SecurityEngine } from '../../../Tezro_Vault/SecurityEngine';
 import RideMap from '../../components/RideMap';
 

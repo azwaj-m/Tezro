@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { db, auth } from '../../firebase-config';
+import { db, auth } from '../../firebase';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { SecurityEngine } from '../../../Tezro_Vault/SecurityEngine';
 import { RegistrationLogic } from '../../utils/RegistrationLogic';

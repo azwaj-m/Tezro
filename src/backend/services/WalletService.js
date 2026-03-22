@@ -1,4 +1,4 @@
-import { db } from '../../firebase-config';
+import { db } from '../../firebase';
 import { doc, runTransaction, serverTimestamp } from 'firebase/firestore';
 
 export const processVaultPayment = async (userId, vendorId, amount, orderId) => {

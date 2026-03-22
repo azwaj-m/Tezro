@@ -1,4 +1,4 @@
-import { db } from '../firebase-config'; // پاتھ کو اپنی فائل کی لوکیشن کے مطابق چیک کریں
+import { db } from '../firebase'; // پاتھ کو اپنی فائل کی لوکیشن کے مطابق چیک کریں
 import { 
     doc, 
     getDoc, 
