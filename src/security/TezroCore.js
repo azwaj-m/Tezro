@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { db } from '../firebase'; // آپ کے ٹری کے مطابق پاتھ درست کیا گیا ہے
+import { db } from '@/firebase'; // آپ کے ٹری کے مطابق پاتھ درست کیا گیا ہے
 import { updateDoc, doc } from 'firebase/firestore';
 
 /**

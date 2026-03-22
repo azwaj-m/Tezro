@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { X, Search, ChevronRight, AlertTriangle, Loader2, CheckCircle } from 'lucide-react';
 import confetti from 'canvas-confetti';
-import { auth, db, storage } from '../../firebase'; 
+import { auth, db, storage } from '@/firebase'; 
 import { doc, updateDoc, collection, addDoc, serverTimestamp, increment } from 'firebase/firestore';
 
 const SendMoneyModal = ({ isOpen, onClose, balance, currentUser }) => {

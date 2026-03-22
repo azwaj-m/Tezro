@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { db, auth } from '../firebase';
+import { db, auth } from '@/firebase';
 import { doc, onSnapshot, runTransaction, serverTimestamp } from 'firebase/firestore';
 import { SecurityEngine } from '../../utils/security/SecurityEngine';
 

@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { db } from '../firebase';
+import { db } from '@/firebase';
 import { doc, updateDoc } from 'firebase/firestore';
 
 export const useRiderLocation = (orderId, isTracking) => {

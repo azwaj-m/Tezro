@@ -47,6 +47,10 @@ const AppContent = () => {
     <div style={{ background: isDarkMode ? '#000308' : '#F8FAFC', minHeight: '100vh' }}>
       <Suspense fallback={<LoadingScreen />}>
         <Routes>
+          <Route path='/register-business' element={<BusinessRegistration />} />
+          <Route path='/vendor-dashboard' element={<BusinessCommandCenter />} />
+          <Route path='/register-business' element={<BusinessRegistration />} />
+          <Route path='/vendor-dashboard' element={<BusinessCommandCenter />} />
           {/* --- PUBLIC WEBSITE ROUTES --- */}
           <Route element={<WebsiteLayout />}>
             <Route path="/features" element={<FeaturesPage />} />

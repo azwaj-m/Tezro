@@ -1,4 +1,4 @@
-import { db } from '../firebase';
+import { db } from '@/firebase';
 import { collection, doc, runTransaction, serverTimestamp, increment } from 'firebase/firestore';
 
 export const orderService = {

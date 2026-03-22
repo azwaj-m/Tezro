@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { db } from '../firebase';
+import { db } from '@/firebase';
 import { collection, query, where, getDocs, limit, startAt, endAt, orderBy } from 'firebase/firestore';
 
 export const useSuperSearch = (activeService, searchTerm) => {

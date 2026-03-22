@@ -109,6 +109,7 @@ const Sidebar = ({ isOpen, toggleSidebar, user }) => {
                             EMERGENCY SOS
                         </button>
                     </div>
+{user && <button onClick={() => navigate('/register-business')} className='w-full p-3 mt-4 border border-gold text-gold rounded-lg shadow-[0_0_10px_#D4AF37]'>بزنس رجسٹریشن</button>}
                 </nav>
 
             </aside>
