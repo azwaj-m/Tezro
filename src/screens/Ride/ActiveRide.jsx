@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { SecurityEngine } from '../../utils/SecurityEngine';
+import { SecurityEngine } from '@/utils/security/SecurityEngine';
 import { AlertSystem } from '../../utils/AlertSystem';
 
 const ActiveRide = ({ rideData }) => {

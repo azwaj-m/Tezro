@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useTheme } from '../../context/ThemeContext';
 import { useShopStats } from '../../hooks/useShopStats';
-import { CommissionLogic } from '../../services/CommissionLogic';
-import { SecurityEngine } from '../../utils/security/SecurityEngine';
+import { CommissionLogic } from '@/services/CommissionLogic';
+import { SecurityEngine } from '@/utils/security/SecurityEngine';
 
 const VendorPortal = () => {
     // تھیم اور ڈیٹا ہکس

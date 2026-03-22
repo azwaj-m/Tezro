@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useWallet } from '../../hooks/useWallet';
-import { SecurityEngine } from '../../utils/security/SecurityEngine';
+import { SecurityEngine } from '@/utils/security/SecurityEngine';
 
 const UniversalCheckout = ({ cartItems, onClose }) => {
     const { balance, deductBalance } = useWallet();

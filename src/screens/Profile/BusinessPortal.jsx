@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { RegistrationLogic } from '../../utils/RegistrationLogic';
-import { SecurityEngine } from '../../utils/SecurityEngine';
+import { SecurityEngine } from '@/utils/security/SecurityEngine';
 
 const BusinessPortal = () => {
   const [activeTab, setActiveTab] = useState(null); // DRIVER, VENDOR, HOTEL, DELIVERY
