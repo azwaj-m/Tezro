@@ -60,15 +60,15 @@ const Sidebar = ({ isOpen, toggleSidebar, user }) => {
                 <nav className="flex flex-col gap-1 px-4 overflow-y-auto max-h-[55vh]">
                     
                     {/* Wired Features */}
-                    <div className="sidebar-item" onClick={() => goTo('/TezroUniverse')}>
+                    <div className="sidebar-item" onClick={() => goTo('/shop')}>
                         <span className="text-xl">🛍️</span> Tezro Mall
                     </div>
                     
-                    <div className="sidebar-item" onClick={() => goTo('/FoodHome')}>
+                    <div className="sidebar-item" onClick={() => goTo('/food')}>
                         <span className="text-xl">🍱</span> Tezro Food
                     </div>
                     
-                    <div className="sidebar-item" onClick={() => goTo('/RideHome')}>
+                    <div className="sidebar-item" onClick={() => goTo('/ride')}>
                         <span className="text-xl">🚗</span> Tezro Ride
                     </div>
 
