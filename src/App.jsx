@@ -1,3 +1,4 @@
+import BusinessRegistration from './components/Auth/BusinessRegistration';
 import React, { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './context/AuthContext'; 
