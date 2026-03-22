@@ -2,16 +2,58 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tezro Super App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Tezro - Digital Ecosystem</title>
+    
+    <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+    <script>eruda.init();</script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
     <style>
-      body { margin: 0; background-color: #050505; color: white; transition: background 0.3s ease; }
-      html.light body { background-color: #f5f5f5; color: black; }
+      :root { --tezro-green: #10B981; --tezro-bg: #000308; }
+      body { 
+        margin: 0; padding: 0; background-color: var(--tezro-bg);
+        font-family: 'Inter', sans-serif; color: white;
+        overflow: hidden; height: 100vh; width: 100vw;
+      }
+      #root { width: 100%; height: 100%; }
+
+      /* Super App Neon Loader */
+      .loader-wrapper {
+        position: fixed; inset: 0; display: flex; flex-direction: column;
+        align-items: center; justify-content: center; background: #000308; z-index: 9999;
+      }
+      .neon-circle {
+        width: 60px; height: 60px; border: 3px solid rgba(16, 185, 129, 0.1);
+        border-top: 3px solid var(--tezro-green); border-radius: 50%;
+        animation: spin 0.8s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+        box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
+      }
+      .loader-text {
+        margin-top: 20px; font-weight: 900; font-size: 10px;
+        letter-spacing: 4px; color: var(--tezro-green); text-transform: uppercase;
+        text-shadow: 0 0 10px rgba(16, 185, 129, 0.5); animate: pulse 1.5s infinite;
+      }
+      @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+      @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+      #debug-error {
+        display: none; position: fixed; bottom: 20px; left: 20px; right: 20px;
+        background: #ff4444; color: white; padding: 15px; border-radius: 12px;
+        font-size: 11px; z-index: 10000; font-family: monospace;
+      }
     </style>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <div class="loader-wrapper" id="initial-loader">
+        <div class="neon-circle"></div>
+        <p class="loader-text">Tezro Protocol</p>
+      </div>
+    </div>
+    <div id="debug-error"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
