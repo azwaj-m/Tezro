@@ -65,7 +65,7 @@ const HomeScreen = () => {
           <div className="absolute bottom-5 inset-x-5 flex gap-2 z-[1000]">
              <div className="flex-1 bg-black/50 backdrop-blur-md p-4 rounded-xl border border-white/5 text-xs text-white/70 flex items-center gap-2">
                <span>📍 Where to, Chief?</span>
-             </div>
+             </span>
              <button 
                 onClick={() => navigate('/ride')} // ایکٹیو بٹن
                 className="bg-[#10B981] text-black px-6 py-4 rounded-xl font-black text-[10px] uppercase tracking-wider shadow-[0_0_15px_rgba(16,185,129,0.4)] active:scale-95 transition-all"
@@ -80,7 +80,7 @@ const HomeScreen = () => {
            {['Set Pickup', 'Wallet', 'Promotions'].map((link, idx) => (
              <div key={idx} className={`p-4 rounded-xl text-center text-[10px] font-bold active:scale-95 transition-all ${isDarkMode ? 'bg-white/5 text-white/70' : 'bg-black/5 text-black/70'}`}>
                {link}
-             </div>
+             </span>
            ))}
         </div>
 
