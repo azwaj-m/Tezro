@@ -1,42 +1,40 @@
+{
+  "name": "tezro",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@yudiel/react-qr-scanner": "^2.0.0",
+    "canvas-confetti": "^1.9.2",
+    "clsx": "^2.1.1",
+    "firebase": "^11.0.0",
+    "framer-motion": "^12.35.2",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^2.5.1",
+    "leaflet": "^1.9.4",
+    "lucide-react": "^0.475.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-leaflet": "^5.0.0",
+    "react-router-dom": "^7.0.0",
+    "recharts": "^2.15.0",
+    "tailwind-merge": "^3.0.0"
+  },
+  "devDependencies": {
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@vitejs/plugin-react": "^4.3.4",
-    "@yudiel/react-qr-scanner": "^2.0.0",
-    "build": "vite build",
-    "canvas-confetti": "^1.9.2",
-    "clsx": "^2.1.1",
-    "dev": "vite",
     "eslint": "^9.11.1",
     "eslint-plugin-react": "^7.37.0",
     "eslint-plugin-react-hooks": "^5.1.0",
     "eslint-plugin-react-refresh": "^0.4.12",
-    "firebase": "^11.0.0",
-    "framer-motion": "^12.35.2",
     "globals": "^15.9.0",
-    "html2canvas": "^1.4.1",
-    "jspdf": "^2.5.1",
-    "leaflet": "^1.9.4",
-    "lint": "eslint .",
-    "lucide-react": "^0.344.0",
-    "lucide-react": "^0.577.0",
-    "preview": "vite preview"
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "react-leaflet": "^4.2.1",
-    "react-leaflet": "^5.0.0",
-    "react-router-dom": "^6.22.0",
-    "react-router-dom": "^7.0.0",
-    "recharts": "^2.15.0",
-    "tailwind-merge": "^3.5.0"
     "vite": "^6.0.0"
-  "dependencies": {
-  "devDependencies": {
-  "name": "tezro",
-  "private": true,
-  "scripts": {
-  "type": "module",
-  "version": "1.0.0",
   }
-  },
-{
 }
