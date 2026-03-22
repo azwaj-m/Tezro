@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { VoiceEngine } from '../utils/VoiceEngine';
+import { VoiceEngine } from '../utils/voice/VoiceEngine';
 import { useAuth } from '../context/AuthContext';
 
 const VoiceCommandHandler = () => {
