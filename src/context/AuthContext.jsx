@@ -1,34 +1,37 @@
-import React, { createContext, useState, useEffect, useContext } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { auth, db } from '../firebase';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore';
 
-// ہم اب فائر بیس سے کچھ امپورٹ نہیں کر رہے تاکہ ایرر نہ آئے
-export const AuthContext = createContext();
+const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  // ہم نے یہاں ایک فرضی (Mock) یوزر ڈیٹا ڈال دیا ہے
-  const [user, setUser] = useState({
-    uid: 'tezro-dev-123',
-    displayName: 'Tezro Elite Member',
-    email: 'dev@tezro.app',
-    photoURL: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Tezro',
-    isVendor: false,
-    role: 'admin'
-  });
-  const [role, setRole] = useState('admin');
-  const [loading, setLoading] = useState(false); // لوڈنگ کو فورا ختم کر دیا
+  const [user, setUser] = useState(null);
+  const [userData, setUserData] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // یہاں ہم نے فائر بیس کے 'onAuthStateChanged' کو ایک ڈمی فنکشن سے بدل دیا
-    console.log("Tezro Vault: Running in Offline/Mock Mode");
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      setUser(currentUser);
+      if (currentUser) {
+        // فائر بیس سے صارف کا ڈیٹا (رول، نام وغیرہ) نکالیں
+        const userDoc = await getDoc(doc(db, "users", currentUser.uid));
+        if (userDoc.exists()) {
+          setUserData(userDoc.data());
+        }
+      } else {
+        setUserData(null);
+      }
+      setLoading(false);
+    });
+    return () => unsubscribe();
   }, []);
 
-  const logout = () => {
-    console.log("Mock Logout triggered");
-    setUser(null);
-  };
+  const logout = () => signOut(auth);
 
   return (
-    <AuthContext.Provider value={{ user, role, loading, logout }}>
-      {children}
+    <AuthContext.Provider value={{ user, userData, logout, loading }}>
+      {!loading && children}
     </AuthContext.Provider>
   );
 };

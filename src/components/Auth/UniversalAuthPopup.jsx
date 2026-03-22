@@ -1,122 +1,72 @@
 import React, { useState } from 'react';
+import { auth } from '../../firebase';
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
+import { X, Lock, Mail, User } from 'lucide-react';
 
-/**
- * 🛡️ مستند امپورٹ: 
- * رجسٹریشن لاجک کا نام اور پیتھ بالکل درست کر دیا گیا ہے۔
- */
-import RegistrationLogic from '../../utils/RegistrationLogic'; 
-import { SecurityUtils } from '../../utils/SecurityUtils';
+const UniversalAuthPopup = ({ isOpen, onClose }) => {
+  const [isLogin, setIsLogin] = useState(true);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-const UniversalAuthPopup = ({ serviceType, onConfirm, onClose }) => {
-  
-  // 🛡️ فکسڈ: یہاں پہلے RegLogic تھا، اسے RegistrationLogic کر دیا گیا ہے
-  const requiredFields = RegistrationLogic?.getRequiredFields ? 
-                         RegistrationLogic.getRequiredFields('BUYER') : [];
-  
-  const [formData, setFormData] = useState({
-    fullName: '',
-    phone: '',
-    emergencyContacts: ['', ''],
-    address: ''
-  });
+  if (!isOpen) return null;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    // 🛡️ ڈیٹا سینیٹائز کرنا
-    const secureData = RegistrationLogic.sanitizeAfterVerification(formData);
-    
-    onConfirm({
-      ...secureData,
-      rawPhone: formData.phone,
-      emergency: formData.emergencyContacts.filter(n => n !== ""),
-      timestamp: new Date().toISOString()
-    });
-  };
-
-  const updateEmergency = (index, value) => {
-    const newContacts = [...formData.emergencyContacts];
-    newContacts[index] = value;
-    setFormData({ ...formData, emergencyContacts: newContacts });
+    try {
+      if (isLogin) {
+        await signInWithEmailAndPassword(auth, email, password);
+      } else {
+        await createUserWithEmailAndPassword(auth, email, password);
+      }
+      onClose();
+    } catch (error) {
+      alert(error.message);
+    }
   };
 
   return (
-    <div style={styles.overlay}>
-      <div style={styles.modal}>
-        <div style={styles.header}>
-          <h3 style={{ color: '#D4AF37', margin: 0 }}>🛡️ سیکیورٹی و رجسٹریشن</h3>
-          <button onClick={onClose} style={styles.closeBtn}>×</button>
-        </div>
+    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-[100] p-4">
+      <div className="bg-white rounded-2xl w-full max-w-md p-6 relative shadow-2xl">
+        <button onClick={onClose} className="absolute right-4 top-4 text-gray-400 hover:text-black">
+          <X size={24} />
+        </button>
         
-        <p style={styles.subText}>
-          {serviceType === 'RIDE' ? 'رائیڈ بک کرنے' : 'خریداری مکمل کرنے'} کے لیے رجسٹریشن لازمی ہے۔
-        </p>
+        <h2 className="text-2xl font-bold mb-6 text-center">
+          {isLogin ? 'Welcome to Tezro' : 'Join Tezro'}
+        </h2>
 
-        <form onSubmit={handleSubmit}>
-          <input 
-            required 
-            placeholder="آپ کا مکمل نام" 
-            style={styles.input} 
-            onChange={(e) => setFormData({...formData, fullName: e.target.value})}
-          />
-          
-          <input 
-            required 
-            type="tel" 
-            placeholder="فون نمبر" 
-            style={styles.input} 
-            onChange={(e) => setFormData({...formData, phone: e.target.value})}
-          />
-
-          <div style={styles.section}>
-            <label style={styles.label}>ایمرجنسی نمبرز (لازمی):</label>
-            {formData.emergencyContacts.map((contact, index) => (
-              <input 
-                key={index}
-                required={index === 0} 
-                placeholder={`نمبر ${index + 1}`} 
-                style={styles.inputSmall}
-                value={contact}
-                onChange={(e) => updateEmergency(index, e.target.value)}
-              />
-            ))}
-            {formData.emergencyContacts.length < 5 && (
-              <button 
-                type="button" 
-                onClick={() => setFormData({...formData, emergencyContacts: [...formData.emergencyContacts, '']})}
-                style={styles.addBtn}
-              >+ مزید نمبر شامل کریں</button>
-            )}
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="relative">
+            <Mail className="absolute left-3 top-3 text-gray-400" size={20} />
+            <input 
+              type="email" placeholder="Email Address" 
+              className="w-full pl-10 pr-4 py-3 border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
+              onChange={(e) => setEmail(e.target.value)}
+            />
           </div>
-
-          <textarea 
-            required 
-            placeholder="مکمل پتہ یا لوکیشن کی تفصیل" 
-            style={{...styles.input, height: '60px'}} 
-            onChange={(e) => setFormData({...formData, address: e.target.value})}
-          />
-
-          <button type="submit" style={styles.confirmBtn}>
-            رجسٹریشن مکمل کریں اور آگے بڑھیں
+          <div className="relative">
+            <Lock className="absolute left-3 top-3 text-gray-400" size={20} />
+            <input 
+              type="password" placeholder="Password" 
+              className="w-full pl-10 pr-4 py-3 border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+          
+          <button type="submit" className="w-full bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700 transition">
+            {isLogin ? 'Login' : 'Create Account'}
           </button>
         </form>
+
+        <p className="mt-6 text-center text-gray-600">
+          {isLogin ? "Don't have an account? " : "Already have an account? "}
+          <button onClick={() => setIsLogin(!isLogin)} className="text-blue-600 font-bold">
+            {isLogin ? 'Register' : 'Login'}
+          </button>
+        </p>
       </div>
     </div>
   );
-};
-
-const styles = {
-  overlay: { position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.85)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 1000, padding: '20px' },
-  modal: { backgroundColor: '#1A0F0A', border: '1px solid #D4AF37', borderRadius: '20px', padding: '25px', width: '100%', maxWidth: '450px', maxHeight: '90vh', overflowY: 'auto' },
-  header: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' },
-  closeBtn: { background: 'none', border: 'none', color: '#D4AF37', fontSize: '24px', cursor: 'pointer' },
-  subText: { color: '#F3E5AB', fontSize: '13px', marginBottom: '20px', opacity: 0.8 },
-  input: { width: '100%', padding: '12px', marginBottom: '15px', borderRadius: '10px', border: '1px solid #444', backgroundColor: '#000', color: '#fff', fontSize: '14px', boxSizing: 'border-box' },
-  label: { display: 'block', color: '#D4AF37', fontSize: '12px', marginBottom: '8px' },
-  inputSmall: { width: '100%', padding: '10px', marginBottom: '8px', borderRadius: '8px', border: '1px solid #333', backgroundColor: '#000', color: '#fff', fontSize: '13px', boxSizing: 'border-box' },
-  addBtn: { background: 'none', border: '1px dashed #D4AF37', color: '#D4AF37', width: '100%', padding: '8px', borderRadius: '8px', fontSize: '11px', cursor: 'pointer', marginBottom: '15px' },
-  confirmBtn: { width: '100%', padding: '15px', borderRadius: '12px', border: 'none', backgroundColor: '#D4AF37', color: '#000', fontWeight: 'bold', fontSize: '16px', cursor: 'pointer', marginTop: '10px' },
-  section: { marginBottom: '15px' }
 };
 
 export default UniversalAuthPopup;
