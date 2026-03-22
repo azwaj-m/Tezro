@@ -21,6 +21,16 @@ const Login = () => {
           <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/action/google.svg" className="w-6" alt="" />
           گوگل کے ساتھ داخل ہوں
         </button>
+n        {/* Guest Mode Window */}
+        <div className='mt-8 pt-6 border-t border-white/10 w-full'>
+          <p className='text-gray-500 text-[10px] mb-4 uppercase tracking-widest'>یا لاگ ان کے بغیر جائزہ لیں</p>
+          <button 
+            onClick={() => window.location.href = '/HomeScreen'}
+            className='w-full py-4 bg-transparent border-2 border-dashed border-[#D4AF37]/40 text-[#D4AF37] rounded-2xl font-black text-xs tracking-[3px] uppercase hover:bg-[#D4AF37]/5 transition-all outline-none'
+          >
+            ENTER GUEST WINDOW →
+          </button>
+        </div>
 
         {/* 2. گیسٹ موڈ ونڈو (لاگ ان کے بغیر معائنہ) */}
         <div className="pt-6 border-t border-white/10">
@@ -31,6 +41,16 @@ const Login = () => {
           >
             ایپ کا معائنہ کریں (Guest Mode)
           </button>
+n        {/* Guest Mode Window */}
+        <div className='mt-8 pt-6 border-t border-white/10 w-full'>
+          <p className='text-gray-500 text-[10px] mb-4 uppercase tracking-widest'>یا لاگ ان کے بغیر جائزہ لیں</p>
+          <button 
+            onClick={() => window.location.href = '/HomeScreen'}
+            className='w-full py-4 bg-transparent border-2 border-dashed border-[#D4AF37]/40 text-[#D4AF37] rounded-2xl font-black text-xs tracking-[3px] uppercase hover:bg-[#D4AF37]/5 transition-all outline-none'
+          >
+            ENTER GUEST WINDOW →
+          </button>
+        </div>
         </div>
       </div>
     </div>
