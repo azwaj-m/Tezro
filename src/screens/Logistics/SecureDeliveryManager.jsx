@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { SecurityEngine } from '../../finance/SecurityEngine';
+import { SecurityEngine } from '../finance/SecurityEngine';
 import { useLiveTracking } from '../../hooks/useLiveTracking';
 import { QrScanner } from '@yudiel/react-qr-scanner'; // سٹینڈرڈ QR اسکینر
 

@@ -1,3 +1,1 @@
-export const useLogistics = () => {
-  return { deliveryStatus: 'Idle', trackOrder: () => {} };
-};
+export { useLiveTracking as useLogistics } from './useLiveTracking';

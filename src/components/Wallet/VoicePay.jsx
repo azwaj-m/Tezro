@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { verifyAndExecute } from '../../firebase/voiceAuth';
+import { verifyAndExecute } from '../../security/VoiceGuardianEngine';
 import { TezroPay } from '../../utils/TezroPayService';
 import { useAuth } from '../../context/AuthContext';
 

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useTheme } from '../../context/ThemeContext';
 import { useShopStats } from '../../hooks/useShopStats';
 import { CommissionLogic } from '../../services/CommissionLogic';
-import { SecurityEngine } from '../../../finance/SecurityEngine';
+import { SecurityEngine } from '../finance/SecurityEngine';
 
 const VendorPortal = () => {
     // تھیم اور ڈیٹا ہکس

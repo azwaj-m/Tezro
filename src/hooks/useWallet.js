@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { db, auth } from '../firebase';
 import { doc, onSnapshot, runTransaction, serverTimestamp } from 'firebase/firestore';
-import { SecurityEngine } from '../../finance/SecurityEngine';
+import { SecurityEngine } from '../finance/SecurityEngine';
 
 export const useWallet = () => {
     const [balance, setBalance] = useState(0);

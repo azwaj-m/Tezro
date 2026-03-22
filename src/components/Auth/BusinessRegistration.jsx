@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { db, auth } from '../../firebase';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
-import { SecurityEngine } from '../../../finance/SecurityEngine';
+import { SecurityEngine } from '../finance/SecurityEngine';
 import { RegistrationLogic } from '../../utils/RegistrationLogic';
 
 const BusinessRegistration = ({ role, onClose }) => {
