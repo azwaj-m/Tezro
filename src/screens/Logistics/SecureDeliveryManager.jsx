@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { SecurityEngine } from '../../finance/SecurityEngine';
-import { useLogistics } from '../../hooks/useLogistics';
+import { useLiveTracking } from '../../hooks/useLiveTracking';
 import { QrScanner } from '@yudiel/react-qr-scanner'; // سٹینڈرڈ QR اسکینر
 
 const SecureDeliveryManager = () => {
-    const { activeDeliveries, updateStatus } = useLogistics();
+    const { activeDeliveries, updateStatus } = useLiveTracking();
     const [scanning, setScanning] = useState(false);
     const [otpMode, setOtpMode] = useState(null); // آرڈر آئی ڈی جس کا او ٹی پی چاہیے
 
