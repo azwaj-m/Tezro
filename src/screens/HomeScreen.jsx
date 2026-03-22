@@ -1,90 +1,110 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MapContainer, TileLayer, useMap } from 'react-leaflet';
-import 'leaflet/dist/leaflet.css';
-import { Navigation, Coffee, Zap, CreditCard, Shield, Bell, Package, ChevronRight, Search } from 'lucide-react';
+import '../neon.css'; // وہ نئ اسٹائل شیٹ امپورٹ کریں
+
+// اگر آپ کے پاس TEZRO کا لوگو اور سروسز کی تصاویر ہیں تو انہیں یہاں امپورٹ کریں
+// import logoUrl from '../assets/logo.png';
+// import carUrl from '../assets/car.png';
 
 const HomeScreen = () => {
   const navigate = useNavigate();
-  const [balance] = useState("1,250,500");
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white pb-32 font-sans selection:bg-gold/30">
+    <div className="min-h-screen bg-[#000308] text-white pb-24 font-sans overflow-x-hidden">
       
-      {/* 1. PREMIUM HEADER */}
-      <header className="fixed top-0 w-full z-[2000] bg-black/60 backdrop-blur-xl border-b border-white/5 p-5 pt-12 flex justify-between items-center">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-gradient-to-tr from-gold to-[#F3E5AB] rounded-2xl flex items-center justify-center shadow-[0_0_20px_rgba(212,175,55,0.3)]">
-            <Shield size={22} className="text-black" />
+      {/* 1. TOP HEADER (Logo, Menu, Bell) */}
+      <header className="p-5 pt-10 flex justify-between items-center">
+        <button className="text-white/70">☰</button>
+        {/* لوگو کی جگہ (اگر تصویر ہے تو <img> ٹیگ استعمال کریں) */}
+        <div className="flex flex-col items-center">
+          <div className="w-12 h-12 border-2 border-[#10B981] rounded-full flex items-center justify-center text-[#10B981] font-bold text-2xl shadow-[0_0_15px_#10B981]">
+            T
           </div>
-          <div>
-            <h2 className="text-gold font-black tracking-[3px] text-[10px] uppercase opacity-80">Tezro Authority</h2>
-            <p className="text-white text-xs font-bold">Rs. {balance}</p>
-          </div>
+          <span className="text-[9px] font-black uppercase tracking-[3px] mt-1 text-white/50">Tezro</span>
         </div>
-        <div className="p-2 bg-white/5 rounded-full border border-white/10 relative">
-          <Bell size={18} className="text-gray-400" />
-          <div className="absolute top-2 right-2 w-1.5 h-1.5 bg-red-500 rounded-full border border-black"></div>
+        <button className="relative">
+          <span className="text-xl">🔔</span>
+          <div className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></div>
         </div>
       </header>
 
-      <main className="pt-32 px-5 space-y-8">
-        
-        {/* 2. DYNAMIC DARK MAP */}
-        <div className="relative h-[260px] rounded-[40px] overflow-hidden border border-white/10 shadow-2xl group">
-          <MapContainer center={[31.4504, 73.1350]} zoom={14} zoomControl={false} style={{height: '100%', width: '100%'}}>
-            <TileLayer url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png" />
-          </MapContainer>
+      {/* 2. MAP AREA (Glassmorphism over Dark Map) */}
+      <div className="px-5 mb-5">
+        <div className="tezro-card h-[200px] overflow-hidden relative group">
+          {/* میپ کا بیک گراؤنڈ (Leaflet کے بغیر عارضی تصویر) */}
+          <div className="absolute inset-0 bg-[#0a0f18] group-hover:scale-105 transition-transform duration-1000">
+            {/* اگر Leaflet Map کام کر رہا ہے تو اسے یہاں رکھیں */}
+          </div>
           
-          {/* Map Overlay Search */}
-          <div className="absolute bottom-6 inset-x-6 z-[1000]">
-            <div className="bg-black/70 backdrop-blur-md border border-white/10 p-2 rounded-[24px] flex items-center shadow-2xl transition-all focus-within:border-gold/50">
-              <Search size={18} className="text-gold ml-3" />
-              <input type="text" placeholder="Where to, Chief?" className="bg-transparent flex-1 px-3 text-sm outline-none placeholder:text-gray-600" />
-              <button className="bg-gold text-black px-6 py-3 rounded-[18px] font-black text-[10px] uppercase tracking-wider active:scale-90 transition-all">Go</button>
-            </div>
+          {/* Neon Location Marker */}
+          <div className="absolute inset-0 flex items-center justify-center">
+             <div className="w-3 h-3 bg-[#10B981] rounded-full shadow-[0_0_20px_10px_rgba(16,185,129,0.4)] animate-pulse"></div>
+          </div>
+          
+          {/* Map Overlay Buttons (Where to? / Ride Now) */}
+          <div className="absolute bottom-4 inset-x-4 flex gap-2">
+             <div className="flex-1 bg-black/50 backdrop-blur-md p-3 rounded-xl border border-white/5 text-xs text-white/70 flex items-center gap-2">
+               <span>📍 Where to?</span>
+             </div>
+             <button className="bg-[#10B981] text-black px-5 py-3 rounded-xl font-black text-[10px] uppercase tracking-wider shadow-[0_0_15px_rgba(16,185,129,0.4)] active:scale-95 transition-all">
+               Ride Now &gt;
+             </div>
           </div>
         </div>
+      </div>
 
-        {/* 3. CORE SERVICES GRID */}
-        <div className="grid grid-cols-4 gap-4">
-          {[
-            { n: 'Ride', i: <Navigation size={22} />, p: '/ride', c: 'blue' },
-            { n: 'Food', i: <Coffee size={22} />, p: '/food', c: 'orange' },
-            { n: 'Vault', i: <CreditCard size={22} />, p: '/banking', c: 'gold' },
-            { n: 'Parcel', i: <Package size={22} />, p: '/parcel', c: 'purple' }
-          ].map((s, idx) => (
-            <div key={idx} onClick={() => navigate(s.p)} className="flex flex-col items-center gap-3 group">
-              <div className="w-16 h-16 bg-[#111] rounded-[24px] border border-white/5 flex items-center justify-center text-white transition-all group-active:scale-90 group-hover:border-gold/30 shadow-lg">
-                {s.i}
-              </div>
-              <span className="text-[9px] font-black uppercase tracking-widest text-gray-500 group-hover:text-gold transition-colors">{s.n}</span>
-            </div>
-          ))}
-        </div>
+      {/* 3. QUICK LINKS (Set Pickup, Wallet, Promotions) */}
+      <div className="px-5 mb-8 grid grid-cols-3 gap-3">
+         {['Set Pickup', 'Wallet', 'Promotions'].map((link, idx) => (
+           <div key={idx} className="bg-white/5 border border-white/5 p-3 rounded-xl text-center text-white/70 text-[10px] active:scale-95 transition-all">
+             {link}
+           </div>
+         ))}
+      </div>
 
-        {/* 4. LUXURY ACTION CARD */}
-        <div className="bg-gradient-to-r from-gold/20 to-transparent p-8 rounded-[40px] border border-gold/10 flex justify-between items-center group active:scale-[0.98] transition-all cursor-pointer" onClick={() => navigate('/ride')}>
-          <div>
-            <div className="flex items-center gap-2 mb-1">
-               <Zap size={14} className="text-gold fill-gold" />
-               <h3 className="font-black text-lg uppercase italic tracking-tighter">Priority Access</h3>
-            </div>
-            <p className="text-gold/60 text-[10px] font-bold tracking-[2px] uppercase">Instant Driver Dispatch</p>
-          </div>
-          <div className="bg-gold p-3 rounded-full text-black shadow-[0_0_20px_rgba(212,175,55,0.4)]">
-            <ChevronRight size={20} />
-          </div>
-        </div>
+      {/* 4. MAIN NEON SERVICE BUTTONS (The Big 4) */}
+      <div className="px-5 mb-10 grid grid-cols-2 gap-5">
+         
+         {/* Ride Button (Green Glow) */}
+         <button className="neon-btn btn-green p-6 h-40 rounded-[30px] flex flex-col justify-end" onClick={() => navigate('/ride')}>
+            {/* تصویر کی جگہ (<img>) */}
+            <div className="text-4xl mb-4 text-[#10B981]">🚗</div>
+            <span className="font-black text-white text-lg tracking-tighter">Ride</span>
+         </button>
 
-      </main>
+         {/* Food Button (Orange Glow) */}
+         <button className="neon-btn btn-orange p-6 h-40 rounded-[30px] flex flex-col justify-end" onClick={() => navigate('/food')}>
+            <div className="text-4xl mb-4 text-[#F97316]">🍔</div>
+            <span className="font-black text-white text-lg tracking-tighter">Food</span>
+         </button>
 
-      {/* 5. FLOATING GLASS NAV */}
-      <nav className="fixed bottom-8 inset-x-8 h-20 bg-black/40 backdrop-blur-2xl border border-white/10 rounded-[35px] flex justify-around items-center px-6 z-[2000] shadow-[0_20px_50px_rgba(0,0,0,0.8)]">
-        <div className="p-3 bg-gold text-black rounded-2xl shadow-[0_0_25px_rgba(212,175,55,0.4)]"><Navigation size={24} /></div>
-        <Package size={24} className="text-gray-600 hover:text-white transition-colors" />
-        <CreditCard size={24} className="text-gray-600 hover:text-white transition-colors" />
-        <Shield size={24} className="text-gray-600 hover:text-white transition-colors" />
+         {/* Shop Button (Blue Glow) */}
+         <button className="neon-btn btn-blue p-6 h-40 rounded-[30px] flex flex-col justify-end" onClick={() => navigate('/shop')}>
+            <div className="text-4xl mb-4 text-[#0EA5E9]">🛒</div>
+            <span className="font-black text-white text-lg tracking-tighter">Shop</span>
+         </button>
+
+         {/* Parcel Button (Green Glow) */}
+         <button className="neon-btn btn-green p-6 h-40 rounded-[30px] flex flex-col justify-end" onClick={() => navigate('/parcel')}>
+            <div className="text-4xl mb-4 text-[#10B981]">📦</div>
+            <span className="font-black text-white text-lg tracking-tighter">Parcel</span>
+         </button>
+      </div>
+
+      {/* 5. BOTTOM NAVIGATION BAR */}
+      <nav className="fixed bottom-0 inset-x-0 bg-black/80 backdrop-blur-xl border-t border-white/5 h-20 flex justify-around items-center px-6 z-[2000]">
+         <div className="text-[#10B981] flex flex-col items-center gap-1 font-bold text-[10px]">
+           <span>🏠</span> Home
+         </div>
+         <div className="text-white/50 flex flex-col items-center gap-1 text-[10px]">
+           <span>🚗</span> Ride
+         </div>
+         <div className="text-white/50 flex flex-col items-center gap-1 text-[10px]">
+           <span>📋</span> Orders
+         </div>
+         <div className="text-white/50 flex flex-col items-center gap-1 text-[10px]">
+           <span>👤</span> Profile
+         </div>
       </nav>
 
     </div>
