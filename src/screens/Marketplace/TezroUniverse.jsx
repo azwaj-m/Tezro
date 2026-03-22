@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAssets } from '../../hooks/useAssets';
-import AssetCard from '../../components/Marketplace/AssetCard';
-import CategorySlider from '../../components/Marketplace/CategorySlider';
+import AssetCard from '@/components/Marketplace/AssetCard';
+import CategorySlider from '@/components/Marketplace/CategorySlider';
 
 const TezroUniverse = () => {
     const { allAssets, loading } = useAssets();
