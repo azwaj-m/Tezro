@@ -14,7 +14,6 @@ const FeaturesPage = lazy(() => import('./website/pages/FeaturesPage'));
 // --- CORE APP SCREENS (Lazy) ---
 const HomeScreen = lazy(() => import('./screens/HomeScreen'));
 const Login = lazy(() => import('./screens/Auth/Login'));
-const AdminDashboard = lazy(() => import('./screens/Admin/AdminDashboard'));
 
 // --- SERVICE MODULES (Based on your Tree) ---
 const RideHome = lazy(() => import('./screens/Ride/RideHome'));
@@ -71,7 +70,6 @@ const AppContent = () => {
           
           {/* Vendor & Admin Panels */}
           <Route path="/vendor" element={<ProtectedRoute allowedRole="vendor"><VendorPortal /></ProtectedRoute>} />
-          <Route path="/admin" element={<ProtectedRoute allowedRole="admin"><AdminDashboard /></ProtectedRoute>} />
 
           {/* Fallback */}
           <Route path="*" element={<Navigate to="/" />} />
