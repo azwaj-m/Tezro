@@ -1,7 +1,7 @@
 import React, { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './context/AuthContext'; 
-import { ThemeProvider, useTheme } from './ThemeContext'; 
+import { ThemeProvider, useTheme } from './context/ThemeContext'; 
 
 // --- LAYOUTS ---
 import WebsiteLayout from './website/WebsiteLayout';
