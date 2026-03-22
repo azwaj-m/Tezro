@@ -1,4 +1,25 @@
-// عارضی طور پر فائر بیس کو خاموش کرنے کے لیے
-export const auth = { currentUser: { uid: 'mock-user-123', displayName: 'Tezro User' } };
-export const db = {}; 
-export default {};
+import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
+import { getDatabase } from "firebase/database";
+
+// Vercel Environment Variables سے کیز اٹھانا
+const firebaseConfig = {
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID
+};
+
+// فائر بیس کو انیشلائز کریں
+const app = initializeApp(firebaseConfig);
+
+// تمام سروسز کو ایکسپورٹ کریں تاکہ ہر جگہ استعمال ہو سکیں
+export const auth = getAuth(app);
+export const db = getFirestore(app);
+export const rtdb = getDatabase(app);
+
+export default app;
