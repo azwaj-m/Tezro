@@ -1,22 +1,19 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext';
+import { ThemeProvider } from './ThemeContext'; // نیا کنٹیکسٹ
 import HomeScreen from './screens/HomeScreen';
-import BottomNav from './components/BottomNav'; // اسکرین شاٹ والا نیویگیشن
+// دیگر امپورٹس...
 
 function App() {
   return (
-    <AuthProvider>
+    <ThemeProvider> {/* اب پوری ایپ تھیم کے کنٹرول میں ہے */}
       <Router>
-        <div className="bg-black min-h-screen">
-          <Routes>
-            <Route path="/" element={<HomeScreen />} />
-            {/* باقی روٹس یہاں شامل کریں */}
-          </Routes>
-          <BottomNav /> 
-        </div>
+        <Routes>
+          <Route path="/" element={<HomeScreen />} />
+          {/* باقی تمام روٹس (Ride, Food وغیرہ) یہاں آئیں گے */}
+        </Routes>
       </Router>
-    </AuthProvider>
+    </ThemeProvider>
   );
 }
 

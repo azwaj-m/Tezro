@@ -1,16 +1,23 @@
-/* 3D Glassmorphism and Neon Glow Effects */
-.tezro-card {
+/* 1. General Glassmorphism (Works in both modes) */
+.tezro-glass {
   background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 24px;
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  transition: all 0.3s ease;
 }
 
+html.light .tezro-glass {
+  background: rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* 2. Neon Button Base */
 .neon-btn {
   position: relative;
   transition: all 0.3s ease;
   overflow: hidden;
+  display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-start;
+  padding: 1.5rem;
 }
 
 .neon-btn::after {
@@ -18,37 +25,63 @@
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  opacity: 0;
-  transition: opacity 0.3s ease;
+  opacity: 0.1; /* Default soft glow */
+  transition: opacity 0.3s ease, box-shadow 0.3s ease;
 }
 
-.neon-btn:hover::after {
-  opacity: 1;
+.neon-btn:hover::after,
+.neon-btn:active::after {
+  opacity: 0.4;
 }
 
-/* Green Glow (Ride) */
+/* 3. Defined Neon Colors (Match image_4.png) */
+
+/* Green Glow (Ride, Parcel) */
 .btn-green {
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.4) 100%);
-  border: 1px solid rgba(16, 185, 129, 0.3);
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(5, 150, 105, 0.2) 100%);
+  border: 1px solid rgba(16, 185, 129, 0.2);
 }
 .btn-green::after {
-  box-shadow: 0 0 20px 5px rgba(16, 185, 129, 0.5);
+  box-shadow: 0 0 15px 5px rgba(16, 185, 129, 0.4);
 }
+.text-green-neon { color: #10B981; text-shadow: 0 0 10px rgba(16, 185, 129, 0.5); }
 
 /* Orange Glow (Food) */
 .btn-orange {
-  background: linear-gradient(135deg, rgba(249, 115, 22, 0.1) 0%, rgba(194, 65, 12) 100%);
-  border: 1px solid rgba(249, 115, 22, 0.3);
+  background: linear-gradient(135deg, rgba(249, 115, 22, 0.05) 0%, rgba(194, 65, 12, 0.2) 100%);
+  border: 1px solid rgba(249, 115, 22, 0.2);
 }
 .btn-orange::after {
-  box-shadow: 0 0 20px 5px rgba(249, 115, 22, 0.5);
+  box-shadow: 0 0 15px 5px rgba(249, 115, 22, 0.4);
 }
+.text-orange-neon { color: #F97316; text-shadow: 0 0 10px rgba(249, 115, 22, 0.5); }
 
-/* Blue Glow (Shop) */
+/* Blue Glow (Shop, Booking) */
 .btn-blue {
-  background: linear-gradient(135deg, rgba(14, 165, 233, 0.1) 0%, rgba(3, 105, 161, 0.4) 100%);
-  border: 1px solid rgba(14, 165, 233, 0.3);
+  background: linear-gradient(135deg, rgba(14, 165, 233, 0.05) 0%, rgba(3, 105, 161, 0.2) 100%);
+  border: 1px solid rgba(14, 165, 233, 0.2);
 }
 .btn-blue::after {
-  box-shadow: 0 0 20px 5px rgba(14, 165, 233, 0.5);
+  box-shadow: 0 0 15px 5px rgba(14, 165, 233, 0.4);
 }
+.text-blue-neon { color: #0EA5E9; text-shadow: 0 0 10px rgba(14, 165, 233, 0.5); }
+
+/* Purple Glow (Parcel, Booking Alternative) */
+.btn-purple {
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.05) 0%, rgba(126, 34, 206, 0.2) 100%);
+  border: 1px solid rgba(168, 85, 247, 0.2);
+}
+.btn-purple::after {
+  box-shadow: 0 0 15px 5px rgba(168, 85, 247, 0.4);
+}
+.text-purple-neon { color: #A855F7; text-shadow: 0 0 10px rgba(168, 85, 247, 0.5); }
+
+
+/* 4. Light Mode Adjustments (Keep glow but make contrast better) */
+html.light .neon-btn {
+  color: black;
+}
+html.light .btn-green { border-color: rgba(16, 185, 129, 0.5); }
+html.light .btn-orange { border-color: rgba(249, 115, 22, 0.5); }
+html.light .btn-blue { border-color: rgba(14, 165, 233, 0.5); }
+html.light .btn-purple { border-color: rgba(168, 85, 247, 0.5); }
