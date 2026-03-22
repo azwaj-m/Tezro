@@ -6,11 +6,16 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
+      // اب آپ کسی بھی فائل میں '@/utils/...' استعمال کر سکتے ہیں
       '@': path.resolve(__dirname, './src'),
     },
   },
   build: {
     outDir: 'dist',
-    chunkSizeWarningLimit: 1600,
-  }
+    rollupOptions: {
+      output: {
+        manualChunks: undefined,
+      },
+    },
+  },
 })
