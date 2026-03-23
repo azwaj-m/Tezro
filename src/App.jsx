@@ -5,14 +5,32 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { AuthProvider } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
 
-// Screens & Components
+// Core Screens
 import Login from './screens/Auth/Login';
 import HomeScreen from './screens/HomeScreen';
+
+// Ride Module
 import RideHome from './screens/Ride/RideHome';
+import RideOffers from './screens/Ride/RideOffers';
+
+// Food Module
 import FoodHome from './screens/Food/FoodHome';
-import BusinessRegistration from './components/Auth/BusinessRegistration';
-import BusinessCommandCenter from './screens/Vendor/BusinessCommandCenter';
+import FoodDashboard from './screens/FoodDashboard';
+
+// Shop & Marketplace
 import TezroUniverse from './screens/Marketplace/TezroUniverse';
+import ShopHome from './screens/Shop/ShopHome';
+
+// Logistics & Parcel
+import SecureDeliveryManager from './screens/Logistics/SecureDeliveryManager';
+
+// Booking & Banking
+import BookingScreen from './screens/User/BookingScreen';
+import UniversalBankingHub from './screens/UniversalBankingHub';
+import PayHome from './screens/Pay/PayHome';
+
+// Vendor & Admin
+import BusinessCommandCenter from './screens/Vendor/BusinessCommandCenter';
 
 function App() {
   return (
@@ -20,29 +38,38 @@ function App() {
       <ThemeProvider>
         <Router>
           <Routes>
-            {/* Auth Routes */}
+            {/* Auth */}
             <Route path="/" element={<Login />} />
-            
-            {/* Main App Routes */}
             <Route path="/HomeScreen" element={<HomeScreen />} />
-            
-            {/* Ride Section (Multiple paths to avoid "No match" error) */}
+
+            {/* Ride Routes */}
             <Route path="/ride" element={<RideHome />} />
             <Route path="/RideHome" element={<RideHome />} />
-            
-            {/* Food Section */}
+            <Route path="/ride-offers" element={<RideOffers />} />
+
+            {/* Food Routes */}
             <Route path="/food" element={<FoodHome />} />
             <Route path="/FoodHome" element={<FoodHome />} />
-            
-            {/* Shop / Marketplace (Draz Style) */}
+            <Route path="/food-dashboard" element={<FoodDashboard />} />
+
+            {/* Shop Routes */}
             <Route path="/shop" element={<TezroUniverse />} />
             <Route path="/TezroUniverse" element={<TezroUniverse />} />
-            
-            {/* Business & Vendor Portal */}
-            <Route path="/register-business" element={<BusinessRegistration />} />
-            <Route path="/vendor-dashboard" element={<BusinessCommandCenter />} />
+            <Route path="/mall" element={<ShopHome />} />
 
-            {/* Default Redirect: اگر کوئی غلط لنک کھولے تو ہوم پر بھیج دیں */}
+            {/* Parcel & Logistics */}
+            <Route path="/parcel" element={<SecureDeliveryManager />} />
+            <Route path="/logistics" element={<SecureDeliveryManager />} />
+
+            {/* Booking & Services */}
+            <Route path="/booking" element={<BookingScreen />} />
+            <Route path="/bank" element={<UniversalBankingHub />} />
+            <Route path="/pay" element={<PayHome />} />
+
+            {/* Admin & Vendor */}
+            <Route path="/admin" element={<BusinessCommandCenter />} />
+
+            {/* Fallback */}
             <Route path="*" element={<Navigate to="/HomeScreen" />} />
           </Routes>
         </Router>

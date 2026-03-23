@@ -106,7 +106,7 @@ const Sidebar = ({ isOpen, toggleSidebar, user }) => {
                             </div>
                         ) : (
                             <div 
-                                onClick={() => goTo('/vendor-dashboard')}
+                                onClick={() => goTo('/admin')}
                                 className="sidebar-item text-[#D4AF37] font-bold border border-[#D4AF37]/30 bg-[#D4AF37]/5"
                             >
                                 <span>🏢</span> Business Command Center
