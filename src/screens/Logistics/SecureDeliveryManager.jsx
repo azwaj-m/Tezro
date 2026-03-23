@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { SecurityEngine } from '@/utils/security/SecurityEngine';
 import { useLiveTracking } from '../../hooks/useLiveTracking';
-import { QrScanner } from '@yudiel/react-qr-scanner'; // سٹینڈرڈ QR اسکینر
+import { Scanner as QrScanner } from '@yudiel/react-qr-scanner'; // سٹینڈرڈ QR اسکینر
 
 const SecureDeliveryManager = () => {
     const { activeDeliveries, updateStatus } = useLiveTracking();
