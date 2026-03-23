@@ -1,36 +1,28 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { auth, db } from '@/firebase';
-import { onAuthStateChanged, signOut } from 'firebase/auth';
-import { doc, getDoc } from 'firebase/firestore';
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import { auth } from '../firebase';
+import { onAuthStateChanged } from 'firebase/auth';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [userData, setUserData] = useState(null);
+  const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      setUser(currentUser);
-      if (currentUser) {
-        // فائر بیس سے صارف کا ڈیٹا (رول، نام وغیرہ) نکالیں
-        const userDoc = await getDoc(doc(db, "users", currentUser.uid));
-        if (userDoc.exists()) {
-          setUserData(userDoc.data());
-        }
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setCurrentUser(user);
       } else {
-        setUserData(null);
+        // Guest Mode کے لیے عارضی یوزر
+        setCurrentUser({ uid: 'guest_user', displayName: 'Guest Traveler', isGuest: true });
       }
       setLoading(false);
     });
-    return () => unsubscribe();
+    return unsubscribe;
   }, []);
 
-  const logout = () => signOut(auth);
-
   return (
-    <AuthContext.Provider value={{ user, userData, logout, loading }}>
+    <AuthContext.Provider value={{ currentUser }}>
       {!loading && children}
     </AuthContext.Provider>
   );
