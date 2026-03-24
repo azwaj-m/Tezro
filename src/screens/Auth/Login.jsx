@@ -1,57 +1,65 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { signInWithGoogle, auth } from '../../firebase'; // اپنے پاتھ کے مطابق چیک کریں
+import { useRoleRedirect } from '../../hooks/useRoleRedirect';
 
 const Login = () => {
   const navigate = useNavigate();
+  const { redirectUser } = useRoleRedirect();
+
+  // گوگل لاگ ان اور رول ری ڈائریکشن کا فنکشن
+  const handleLogin = async () => {
+    try {
+      const result = await signInWithGoogle();
+      if (result && result.user) {
+        // یہاں جادو شروع ہوتا ہے: یہ صارف کی کیٹیگری پہچان کر اسے خود بخود بھیجے گا
+        await redirectUser(result.user);
+      }
+    } catch (error) {
+      console.error("Login Error:", error);
+      alert("لاگ ان میں مسئلہ پیش آیا، دوبارہ کوشش کریں۔");
+    }
+  };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-black p-6">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-black p-6 overflow-hidden">
+      
       {/* 1. جمبو (Jumbo) لوگو */}
-      <img 
-        src="/assets/logo.png" 
-        alt="Tezro" 
-        className="w-[100vw] max-w-[500px] mb-12 animate-pulse drop-shadow-[0_0_30px_rgba(57,255,20,0.5)]" 
-      />
+      <div className="relative group">
+        <img 
+          src="/assets/logo.png" 
+          alt="Tezro" 
+          className="w-[100vw] max-w-[500px] mb-12 animate-pulse drop-shadow-[0_0_50px_rgba(212,175,55,0.3)] transition-all duration-500 group-hover:scale-105" 
+        />
+      </div>
 
-      <div className="w-full max-w-sm space-y-6 text-center">
-        {/* گوگل لاگ ان بٹن (چمکدار ڈیزائن) */}
+      <div className="w-full max-w-sm space-y-8 text-center">
+        
+        {/* گوگل لاگ ان بٹن (پریمیم وائٹ ڈیزائن) */}
         <button 
-          className="w-full flex items-center justify-center gap-4 bg-white text-black px-8 py-5 rounded-3xl font-black text-lg shadow-[0_10px_40px_rgba(255,255,255,0.2)] active:scale-95 transition-all"
+          onClick={handleLogin}
+          className="w-full flex items-center justify-center gap-4 bg-white text-black px-8 py-5 rounded-3xl font-black text-lg shadow-[0_15px_50px_rgba(255,255,255,0.15)] active:scale-95 transition-all hover:bg-gray-100"
         >
-          <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/action/google.svg" className="w-6" alt="" />
+          <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/action/google.svg" className="w-6" alt="Google" />
           گوگل کے ساتھ داخل ہوں
         </button>
-n        {/* Guest Mode Window */}
-        <div className='mt-8 pt-6 border-t border-white/10 w-full'>
-          <p className='text-gray-500 text-[10px] mb-4 uppercase tracking-widest'>یا لاگ ان کے بغیر جائزہ لیں</p>
-          <button 
-            onClick={() => window.location.href = '/HomeScreen'}
-            className='w-full py-4 bg-transparent border-2 border-dashed border-[#D4AF37]/40 text-[#D4AF37] rounded-2xl font-black text-xs tracking-[3px] uppercase hover:bg-[#D4AF37]/5 transition-all outline-none'
-          >
-            ENTER GUEST WINDOW →
-          </button>
-        </div>
 
-        {/* 2. گیسٹ موڈ ونڈو (لاگ ان کے بغیر معائنہ) */}
-        <div className="pt-6 border-t border-white/10">
-          <p className="text-gray-500 text-xs mb-4">یا صرف معائنہ کریں</p>
+        {/* Guest Mode Window (بہتر اور صاف ستھرا ڈیزائن) */}
+        <div className='mt-12 pt-8 border-t border-white/10 w-full'>
+          <p className='text-gray-500 text-[10px] mb-6 uppercase tracking-[4px] font-bold'>OR EXPLORE AS GUEST</p>
+          
           <button 
             onClick={() => navigate('/HomeScreen?guest=true')}
-            className="w-full py-4 bg-transparent border-2 border-dashed border-[#D4AF37]/50 text-[#D4AF37] rounded-2xl font-bold text-sm tracking-widest uppercase hover:bg-[#D4AF37]/10 transition-colors"
-          >
-            ایپ کا معائنہ کریں (Guest Mode)
-          </button>
-n        {/* Guest Mode Window */}
-        <div className='mt-8 pt-6 border-t border-white/10 w-full'>
-          <p className='text-gray-500 text-[10px] mb-4 uppercase tracking-widest'>یا لاگ ان کے بغیر جائزہ لیں</p>
-          <button 
-            onClick={() => window.location.href = '/HomeScreen'}
-            className='w-full py-4 bg-transparent border-2 border-dashed border-[#D4AF37]/40 text-[#D4AF37] rounded-2xl font-black text-xs tracking-[3px] uppercase hover:bg-[#D4AF37]/5 transition-all outline-none'
+            className='w-full py-5 bg-transparent border-2 border-dashed border-[#D4AF37]/30 text-[#D4AF37] rounded-2xl font-black text-xs tracking-[3px] uppercase hover:bg-[#D4AF37]/10 hover:border-[#D4AF37] transition-all outline-none'
           >
             ENTER GUEST WINDOW →
           </button>
+          
+          <p className="mt-4 text-[9px] text-gray-600 leading-relaxed italic">
+            * گیسٹ موڈ میں ڈیٹا محفوظ نہیں کیا جائے گا
+          </p>
         </div>
-        </div>
+
       </div>
     </div>
   );
