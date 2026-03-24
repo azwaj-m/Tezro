@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { RegistrationLogic } from '../../utils/RegistrationLogic';
 import { SecurityEngine } from '@/utils/security/SecurityEngine';
 
 const BusinessPortal = () => {
@@ -8,7 +7,6 @@ const BusinessPortal = () => {
 
   // رجسٹریشن فارم کا ہینڈلر
   const renderForm = (type) => {
-    const fields = RegistrationLogic.getRequiredFields(type);
     
     return (
       <div style={styles.formContainer}>
