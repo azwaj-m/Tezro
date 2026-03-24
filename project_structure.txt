@@ -1,0 +1,197 @@
+.
+├── dist
+│   ├── assets
+│   │   ├── BookingScreen-D3DMDZHz.js
+│   │   ├── BusinessCommandCenter-4DW0dep2.js
+│   │   ├── EmergencySystem-BpQirzzb.js
+│   │   ├── FoodHome-CO8UY5gT.js
+│   │   ├── PayHome-SU91hsdq.js
+│   │   ├── RideHome-BHjuS1nc.js
+│   │   ├── SecureDeliveryManager-D3CP_1ly.js
+│   │   ├── TezroUniverse-e__PaDLV.js
+│   │   ├── UniversalBankingHub-_focn7Gs.js
+│   │   ├── index-DBSxgsz8.js
+│   │   ├── index-DJ-FwI0X.css
+│   │   ├── leaflet-Dgihpmma.css
+│   │   ├── leaflet-DlCzInyz.js
+│   │   ├── logo.png
+│   │   ├── useLiveTracking-CS5i3Czj.js
+│   │   └── vendor-BPY6EjPv.js
+│   └── index.html
+├── functions
+│   ├── index.js
+│   └── package.json
+├── index.html
+├── package-lock.json
+├── package.json
+├── postcss.config.js
+├── project_structure.txt
+├── public
+│   └── assets
+│       └── logo.png
+├── src
+│   ├── App.jsx
+│   ├── backend
+│   │   ├── controllers
+│   │   │   └── BusinessController.js
+│   │   └── services
+│   │       └── WalletService.js
+│   ├── components
+│   │   ├── Auth
+│   │   │   ├── BusinessRegistration.jsx
+│   │   │   └── UniversalAuthPopup.jsx
+│   │   ├── BottomNav.jsx
+│   │   ├── Checkout
+│   │   │   ├── TezroInvoice.jsx
+│   │   │   └── UniversalCheckout.jsx
+│   │   ├── Driver
+│   │   │   └── DriverDashboard.jsx
+│   │   ├── Emergency
+│   │   │   └── EmergencySystem.jsx
+│   │   ├── Food
+│   │   │   └── FoodMenu.jsx
+│   │   ├── Layout.jsx
+│   │   ├── LiveTracking.jsx
+│   │   ├── Marketplace
+│   │   │   ├── AssetCard.jsx
+│   │   │   └── CategorySlider.jsx
+│   │   ├── MobileRecharge.jsx
+│   │   ├── Navigation
+│   │   │   ├── Footer.jsx
+│   │   │   ├── Navbar.jsx
+│   │   │   └── TezroMainLayout.jsx
+│   │   ├── OrderHistory.jsx
+│   │   ├── RatingModal.jsx
+│   │   ├── ReviewForm.jsx
+│   │   ├── RideMap.jsx
+│   │   ├── RiderDashboard.jsx
+│   │   ├── Settings
+│   │   │   └── CyberSecurityMaster.jsx
+│   │   ├── Sidebar.jsx
+│   │   ├── SuperSearchBar.jsx
+│   │   ├── TezroVirtualCard.jsx
+│   │   ├── TransactionsList.jsx
+│   │   ├── User
+│   │   │   └── SafetyHealthReport.jsx
+│   │   ├── Wallet
+│   │   │   ├── SendMoneyModal.jsx
+│   │   │   ├── VoicePay.jsx
+│   │   │   └── WalletDashboard.jsx
+│   │   └── home
+│   │       └── QuickActions.jsx
+│   ├── context
+│   │   ├── AuthContext.jsx
+│   │   └── ThemeContext.jsx
+│   ├── finance
+│   │   ├── AutoRepaymentEngine.js
+│   │   ├── CreditEngine.js
+│   │   ├── TezroVaultLedger.js
+│   │   └── TokenizationEngine.js
+│   ├── firebase.js
+│   ├── global.css
+│   ├── hooks
+│   │   ├── useAssets.js
+│   │   ├── useBusinessData.js
+│   │   ├── useFoodData.js
+│   │   ├── useFoodStats.js
+│   │   ├── useHotelStats.js
+│   │   ├── useLiveDrivers.js
+│   │   ├── useLiveTracking.js
+│   │   ├── useLogistics.js
+│   │   ├── useRide.js
+│   │   ├── useRiderLocation.js
+│   │   ├── useShopStats.js
+│   │   ├── useSuperSearch.js
+│   │   ├── useTezroSettings.js
+│   │   └── useWallet.js
+│   ├── index.css
+│   ├── main.jsx
+│   ├── neon.css
+│   ├── screens
+│   │   ├── Auth
+│   │   │   ├── AdminLogin.jsx
+│   │   │   └── Login.jsx
+│   │   ├── Food
+│   │   │   ├── FoodHome.jsx
+│   │   │   └── MerchantDashboard.jsx
+│   │   ├── FoodDashboard.jsx
+│   │   ├── HomeScreen.jsx
+│   │   ├── HotelRegCard.jsx
+│   │   ├── Logistics
+│   │   │   └── SecureDeliveryManager.jsx
+│   │   ├── Marketplace
+│   │   │   └── TezroUniverse.jsx
+│   │   ├── Pay
+│   │   │   └── PayHome.jsx
+│   │   ├── Profile
+│   │   │   └── BusinessPortal.jsx
+│   │   ├── Ride
+│   │   │   ├── ActiveRide.jsx
+│   │   │   ├── RideComplete.jsx
+│   │   │   ├── RideHome.jsx
+│   │   │   ├── RideOffers.jsx
+│   │   │   └── SelectRide.jsx
+│   │   ├── RideDashboard.jsx
+│   │   ├── Rider
+│   │   │   └── RiderPanel.jsx
+│   │   ├── ServiceHome.jsx
+│   │   ├── Shop
+│   │   │   └── ShopHome.jsx
+│   │   ├── UniversalBankingHub.jsx
+│   │   ├── User
+│   │   │   └── BookingScreen.jsx
+│   │   ├── Vendor
+│   │   │   ├── BusinessCommandCenter.jsx
+│   │   │   ├── VendorPortal.jsx
+│   │   │   └── modules
+│   │   │       ├── BookingManager.jsx
+│   │   │       ├── FleetManager.jsx
+│   │   │       ├── InventoryManager.jsx
+│   │   │       └── UniversalAssetManager.jsx
+│   │   └── VendorDashboard.jsx
+│   ├── security
+│   │   ├── FinalSecurityShield.js
+│   │   ├── GhostData.js
+│   │   ├── SilentAuthenticator.js
+│   │   ├── TezroCore.js
+│   │   ├── TezroFirewall.js
+│   │   └── VoiceGuardianEngine.js
+│   ├── services
+│   │   ├── CommissionLogic.js
+│   │   ├── orderService.js
+│   │   └── payoutService.js
+│   ├── tests
+│   │   └── SecurityValidation.js
+│   ├── utils
+│   │   ├── AIDispatcher.js
+│   │   ├── BookingGuard.js
+│   │   ├── CommandDictionary.js
+│   │   ├── CommandResolver.js
+│   │   ├── DriverSafetyLogic.js
+│   │   ├── RegistrationLogic.js
+│   │   ├── RemoteTracker.js
+│   │   ├── SecurityUtils.js
+│   │   ├── TezroPayService.js
+│   │   ├── WalletSystem.js
+│   │   ├── security
+│   │   │   ├── AntiTheftEngine.js
+│   │   │   ├── CyberShield.js
+│   │   │   ├── SecurityEngine.js
+│   │   │   └── VoiceSecurityService.js
+│   │   ├── system
+│   │   │   ├── AlertSystem.js
+│   │   │   └── TezroDiagnostics.js
+│   │   └── voice
+│   │       ├── MultiLangVoice.js
+│   │       ├── VoiceCommandHandler.jsx
+│   │       └── VoiceEngine.js
+│   └── website
+│       ├── WebsiteLayout.jsx
+│       └── pages
+│           ├── AdsPage.jsx
+│           └── FeaturesPage.jsx
+├── tailwind.config.js
+├── vercel.json
+└── vite.config.js
+
+47 directories, 148 files
