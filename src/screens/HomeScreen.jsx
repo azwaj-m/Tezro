@@ -1,57 +1,64 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import Sidebar from '../components/Sidebar';
+import React from 'react';
+import SuperSearchBar from '../components/SuperSearchBar';
+import QuickActions from '../components/home/QuickActions';
+import WalletDashboard from '../components/Wallet/WalletDashboard';
+import TezroVirtualCard from '../components/TezroVirtualCard';
+import LiveTracking from '../components/LiveTracking';
+import CategorySlider from '../components/Marketplace/CategorySlider';
 import BottomNav from '../components/BottomNav';
-import { VoiceCommandHandler } from '../utils/voice/VoiceCommandHandler';
 
 const HomeScreen = () => {
-  const navigate = useNavigate();
-  const [isVoiceActive, setIsVoiceActive] = useState(false);
-
   return (
-    <div className="min-h-screen bg-black text-white font-sans pb-32 overflow-hidden">
-      <Sidebar />
-      <div className="p-8 pt-20">
-        <div className="flex justify-between items-center mb-12">
-          <h1 className="text-3xl font-black italic tracking-tighter">TEZRO <span className="text-[#D4AF37]">CORE</span></h1>
-          <div className="text-[8px] font-bold text-green-500 uppercase tracking-widest animate-pulse">System Live</div>
-        </div>
-
-        {/* Dynamic Voice Hub */}
-        <div className="flex flex-col items-center mb-16">
-          <div 
-            onClick={() => setIsVoiceActive(!isVoiceActive)}
-            className={`p-1 rounded-full bg-gradient-to-tr from-[#D4AF37] to-transparent shadow-[0_0_40px_rgba(212,175,55,0.1)] ${isVoiceActive ? 'animate-pulse scale-110' : ''} transition-all duration-500`}
-          >
-            <div className="bg-[#050505] rounded-full p-10 border-4 border-white/5 flex items-center justify-center active:scale-90 transition-transform cursor-pointer">
-              <span className="text-5xl">${isVoiceActive ? '🔊' : '🎙️'}</span>
-            </div>
+    <div className="min-h-screen bg-[#002d15] text-white pb-24 font-sans overflow-x-hidden">
+      {/* Top Header & Search Section */}
+      <div className="px-4 pt-6">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+             <span className="text-2xl font-bold text-[#d4af37]">Tezro</span>
           </div>
-          <p className="mt-4 text-[10px] font-black text-[#D4AF37] uppercase tracking-[4px]">
-            {isVoiceActive ? 'Listening...' : 'Activate Voice'}
-          </p>
+          <div className="w-10 h-10 rounded-full bg-gray-400 border-2 border-[#d4af37] overflow-hidden">
+            <img src="/assets/profile-placeholder.png" alt="Profile" className="w-full h-full object-cover" />
+          </div>
         </div>
-
-        {/* Core Modules Grid */}
-        <div className="grid grid-cols-4 gap-4">
-          {[
-            { icon: '🚕', p: '/ride' }, { icon: '🍔', p: '/food' }, 
-            { icon: '🛍️', p: '/shop' }, { icon: '📦', p: '/parcel' },
-            { icon: '💳', p: '/pay' }, { icon: '🏦', p: '/bank' }, 
-            { icon: '📅', p: '/booking' }, { icon: '⚙️', p: '/admin' }
-          ].map((item, idx) => (
-            <button 
-              key={idx} 
-              onClick={() => navigate(item.p)}
-              className="aspect-square bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center text-2xl hover:bg-[#D4AF37]/20 transition-all"
-            >
-              {item.icon}
-            </button>
-          ))}
+        
+        <SuperSearchBar />
+        
+        <div className="flex items-center gap-2 mt-4 text-xs text-[#00ff88]">
+          <span className="bg-[#004d25] px-2 py-1 rounded-full border border-[#00ff88]">Cyber Security Verified 🛡️</span>
         </div>
       </div>
 
-      <VoiceCommandHandler active={isVoiceActive} />
+      {/* Main Services Grid (Food, Ride, Shop, Services) */}
+      <div className="px-4 mt-6">
+        <QuickActions />
+      </div>
+
+      {/* Wallet & Card Section */}
+      <div className="px-4 mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+        <TezroVirtualCard />
+        <WalletDashboard />
+      </div>
+
+      {/* Live Map / Tracking Section */}
+      <div className="px-4 mt-8">
+        <div className="rounded-2xl overflow-hidden border border-[#d4af37]/30 shadow-lg shadow-black/50">
+          <LiveTracking />
+        </div>
+      </div>
+
+      {/* Tezro Universe / Category Slider */}
+      <div className="mt-8">
+        <div className="px-4 flex justify-between items-center mb-4">
+          <div>
+            <h2 className="text-xl font-bold text-[#d4af37]">Explore Tezro Universe</h2>
+            <p className="text-xs text-gray-400">تیزرو کائنات دریافت کریں</p>
+          </div>
+          <button className="text-[#d4af37] text-sm font-semibold">View All</button>
+        </div>
+        <CategorySlider />
+      </div>
+
+      {/* Bottom Navigation */}
       <BottomNav />
     </div>
   );
