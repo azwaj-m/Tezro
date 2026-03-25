@@ -1,21 +1,27 @@
+import React from 'react';
+
 const actions = [
-    { id: 'ride', label: 'Ride', icon: '🚗', color: 'bg-blue-500/10' },
-    { id: 'market', label: 'Market', icon: '🛒', color: 'bg-orange-500/10' },
-    { id: 'banking', label: 'Banking', icon: '💳', color: 'bg-[#D4AF37]/10' },
-    { id: 'bills', label: 'Bills', icon: '💡', color: 'bg-green-500/10' }
+  { id: 1, title: 'Food', urdu: 'کھانا', icon: '🍲' },
+  { id: 2, title: 'Ride', urdu: 'رائیڈ', icon: '🚗' },
+  { id: 3, title: 'Shop', urdu: 'شاپ', icon: '🛒' },
+  { id: 4, title: 'Services', urdu: 'سروسز', icon: '🛠️' },
 ];
 
-const QuickActions = () => (
-    <div className="grid grid-cols-4 gap-4">
-        {actions.map(action => (
-            <button key={action.id} className="flex flex-col items-center gap-2 group active:scale-90 transition-transform">
-                <div className={`w-16 h-16 ${action.color} border border-white/5 rounded-[22px] flex items-center justify-center text-2xl group-hover:border-[#D4AF37]/40 transition-all`}>
-                    {action.icon}
-                </div>
-                <span className="text-[10px] font-black uppercase text-gray-500 group-hover:text-white">{action.label}</span>
-            </button>
-        ))}
+const QuickActions = () => {
+  return (
+    <div className="grid grid-cols-2 gap-4">
+      {actions.map((item) => (
+        <button
+          key={item.id}
+          className="bg-gradient-to-b from-[#f3cf7a] to-[#b8860b] p-4 rounded-2xl flex flex-col items-center justify-center shadow-lg border border-[#ffd700]/50 active:scale-95 transition-transform"
+        >
+          <div className="text-3xl mb-1 drop-shadow-md">{item.icon}</div>
+          <div className="text-[#002d15] font-bold text-lg leading-tight">{item.title}</div>
+          <div className="text-[#002d15]/80 text-xs font-semibold">{item.urdu}</div>
+        </button>
+      ))}
     </div>
-);
+  );
+};
 
 export default QuickActions;
