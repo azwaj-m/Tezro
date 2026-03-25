@@ -1,23 +1,30 @@
-import { Link, useLocation } from "react-router-dom";
+import React from 'react';
 
-export default function BottomNav() {
-  const location = useLocation();
-
+const BottomNav = () => {
   return (
-    <div className="bottom-nav">
-
-      <Link to="/ride">
-        <button className={location.pathname === "/ride" ? "active-nav" : "nav-btn"}>
-          🚗
-        </button>
-      </Link>
-
-      <Link to="/sports">
-        <button className={location.pathname === "/sports" ? "active-nav" : "nav-btn"}>
-          ⚽
-        </button>
-      </Link>
-
+    <div className="fixed bottom-0 left-0 right-0 bg-[#001a0d]/90 backdrop-blur-md border-t border-[#d4af37]/30 px-6 py-3 flex justify-between items-center z-50">
+      <div className="flex flex-col items-center text-[#d4af37]">
+        <span className="text-xl">🏠</span>
+        <span className="text-[10px] font-bold">Home</span>
+      </div>
+      <div className="flex flex-col items-center text-gray-400">
+        <span className="text-xl">💳</span>
+        <span className="text-[10px]">Pay</span>
+      </div>
+      <div className="flex flex-col items-center text-gray-400">
+        <span className="text-xl">🧧</span>
+        <span className="text-[10px]">Offers</span>
+      </div>
+      <div className="flex flex-col items-center text-gray-400">
+        <span className="text-xl">🕒</span>
+        <span className="text-[10px]">History</span>
+      </div>
+      <div className="flex flex-col items-center text-gray-400">
+        <span className="text-xl">👤</span>
+        <span className="text-[10px]">Profile</span>
+      </div>
     </div>
   );
-}
+};
+
+export default BottomNav;
