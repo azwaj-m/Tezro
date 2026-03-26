@@ -25,6 +25,9 @@ export const AuthProvider = ({ children }) => {
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (context === undefined) throw new Error('useAuth must be used within AuthProvider');
+  // یہاں 'undefined' کے بجائے '!context' چیک کرنا زیادہ محفوظ ہے
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
   return context;
 };
