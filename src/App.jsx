@@ -1,13 +1,13 @@
 import React, { Suspense, lazy } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './context/AuthContext'; 
 import { useTheme } from './context/ThemeContext'; 
 
 // --- LAYOUTS ---
-import Layout from './components/Layout';           // سپر ایپ کا مین ڈھانچہ
+import Layout from './components/Layout';            // سپر ایپ کا مین ڈھانچہ
 import TezroMainLayout from './components/Navigation/TezroMainLayout'; 
 
-// --- APP SCREENS (Lazy Loaded for Performance) ---
+// --- APP SCREENS (Lazy Loaded based on your directory structure) ---
 const HomeScreen = lazy(() => import('./screens/HomeScreen'));
 const Login = lazy(() => import('./screens/Auth/Login'));
 const FoodHome = lazy(() => import('./screens/Food/FoodHome'));
@@ -45,46 +45,46 @@ const LoadingScreen = () => (
 );
 
 const App = () => {
-  const { user, role, loading } = useAuth();
-  const { colors } = useTheme();
+  // context سے ڈیٹا حاصل کرنا (undefined ایرر سے بچنے کے لیے نل چیک کے ساتھ)
+  const authContext = useAuth();
+  const themeContext = useTheme();
+
+  const user = authContext?.user;
+  const loading = authContext?.loading;
+  const colors = themeContext?.colors;
 
   if (loading) return <LoadingScreen />;
 
   return (
-    <Router>
-      <Suspense fallback={<LoadingScreen />}>
-        <div style={{ 
-          background: colors?.bg || '#000', 
-          minHeight: '100vh',
-          color: '#fff' 
-        }}>
-          <Routes>
-            
-            {/* 🔐 AUTHENTICATION: اگر لاگ ان نہیں تو لاگ ان پر بھیجیں */}
-            <Route path="/login" element={!user ? <Login /> : <Navigate to="/" />} />
+    <Suspense fallback={<LoadingScreen />}>
+      <div style={{ 
+        background: colors?.bg || '#000', 
+        minHeight: '100vh',
+        color: '#fff' 
+      }}>
+        <Routes>
+          
+          {/* 🔐 AUTHENTICATION: لاگ ان چیک */}
+          <Route path="/login" element={!user ? <Login /> : <Navigate to="/" />} />
 
-            {/* 📱 PROTECTED ROUTES: صرف لاگ ان صارفین کے لیے */}
-            <Route path="/" element={user ? <Layout><HomeScreen /></Layout> : <Navigate to="/login" />} />
-            
-            {/* سروسز کے روٹس */}
-            <Route path="/food" element={user ? <Layout><FoodHome /></Layout> : <Navigate to="/login" />} />
-            <Route path="/ride" element={user ? <Layout><RideHome /></Layout> : <Navigate to="/login" />} />
-            <Route path="/pay" element={user ? <Layout><PayHome /></Layout> : <Navigate to="/login" />} />
-            <Route path="/shop" element={user ? <Layout><ShopHome /></Layout> : <Navigate to="/login" />} />
-            <Route path="/banking" element={user ? <Layout><UniversalBankingHub /></Layout> : <Navigate to="/login" />} />
+          {/* 📱 PROTECTED ROUTES: آپ کے فائل سٹرکچر کے مطابق پاتھس */}
+          <Route path="/" element={user ? <Layout><HomeScreen /></Layout> : <Navigate to="/login" />} />
+          
+          <Route path="/food" element={user ? <Layout><FoodHome /></Layout> : <Navigate to="/login" />} />
+          <Route path="/ride" element={user ? <Layout><RideHome /></Layout> : <Navigate to="/login" />} />
+          <Route path="/pay" element={user ? <Layout><PayHome /></Layout> : <Navigate to="/login" />} />
+          <Route path="/shop" element={user ? <Layout><ShopHome /></Layout> : <Navigate to="/login" />} />
+          <Route path="/banking" element={user ? <Layout><UniversalBankingHub /></Layout> : <Navigate to="/login" />} />
 
-            {/* 🛡️ ADMIN PANEL: صرف ایڈمن کے لیے فول پروف سیکیورٹی */}
-            <Route 
-              path="/admin/*" 
-            />
+          {/* 🛡️ ADMIN/VENDOR DASHBOARDS: سٹرکچر کے مطابق */}
+          <Route path="/vendor" element={user ? <Layout><import('./screens/VendorDashboard') /></Layout> : <Navigate to="/login" />} />
 
-            {/* 404: غلط یو آر ایل پر واپس ہوم پر بھیجیں */}
-            <Route path="*" element={<Navigate to="/" />} />
+          {/* 404: واپس ہوم پر بھیجیں */}
+          <Route path="*" element={<Navigate to="/" />} />
 
-          </Routes>
-        </div>
-      </Suspense>
-    </Router>
+        </Routes>
+      </div>
+    </Suspense>
   );
 };
 
