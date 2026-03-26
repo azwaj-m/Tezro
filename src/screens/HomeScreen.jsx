@@ -9,56 +9,54 @@ import BottomNav from '../components/BottomNav';
 
 const HomeScreen = () => {
   return (
-    <div className="min-h-screen bg-[#002d15] text-white pb-24 font-sans overflow-x-hidden">
-      {/* Top Header & Search Section */}
-      <div className="px-4 pt-6">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
-             <span className="text-2xl font-bold text-[#d4af37]">Tezro</span>
-          </div>
-          <div className="w-10 h-10 rounded-full bg-gray-400 border-2 border-[#d4af37] overflow-hidden">
-            <img src="/assets/profile-placeholder.png" alt="Profile" className="w-full h-full object-cover" />
-          </div>
+    <div className="min-h-screen bg-[#002d15] text-white pb-28 font-sans">
+      {/* Header */}
+      <div className="px-4 pt-6 flex justify-between items-center mb-4">
+        <div className="flex items-center gap-2">
+           <span className="text-2xl font-black text-[#d4af37] tracking-tighter italic">Tezro</span>
         </div>
-        
-        <SuperSearchBar />
-        
-        <div className="flex items-center gap-2 mt-4 text-xs text-[#00ff88]">
-          <span className="bg-[#004d25] px-2 py-1 rounded-full border border-[#00ff88]">Cyber Security Verified 🛡️</span>
+        <div className="w-10 h-10 rounded-full border-2 border-[#d4af37] bg-yellow-700/30 overflow-hidden">
+          <img src="/assets/logo.png" alt="Profile" className="w-full h-full object-cover" />
         </div>
       </div>
 
-      {/* Main Services Grid (Food, Ride, Shop, Services) */}
-      <div className="px-4 mt-6">
+      {/* Search Section */}
+      <div className="px-4 mb-6">
+        <SuperSearchBar />
+        <div className="mt-3 flex items-center gap-1">
+          <span className="text-[10px] text-[#00ff88] bg-[#004d25] px-2 py-0.5 rounded-full border border-[#00ff88]/30">
+            Cyber Security Verified 🛡️
+          </span>
+        </div>
+      </div>
+
+      {/* 4 Main Buttons */}
+      <div className="px-4 mb-8">
         <QuickActions />
       </div>
 
-      {/* Wallet & Card Section */}
-      <div className="px-4 mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+      {/* Virtual Card & Wallet */}
+      <div className="px-4 mb-8 space-y-4">
         <TezroVirtualCard />
         <WalletDashboard />
       </div>
 
-      {/* Live Map / Tracking Section */}
-      <div className="px-4 mt-8">
-        <div className="rounded-2xl overflow-hidden border border-[#d4af37]/30 shadow-lg shadow-black/50">
+      {/* Live Map Tracking */}
+      <div className="px-4 mb-8 text-center">
+        <div className="rounded-2xl overflow-hidden border border-[#d4af37]/20 shadow-2xl h-48 relative bg-black/20">
           <LiveTracking />
         </div>
       </div>
 
-      {/* Tezro Universe / Category Slider */}
-      <div className="mt-8">
-        <div className="px-4 flex justify-between items-center mb-4">
-          <div>
-            <h2 className="text-xl font-bold text-[#d4af37]">Explore Tezro Universe</h2>
-            <p className="text-xs text-gray-400">تیزرو کائنات دریافت کریں</p>
-          </div>
-          <button className="text-[#d4af37] text-sm font-semibold">View All</button>
+      {/* Explore Section */}
+      <div className="mb-6">
+        <div className="px-4 flex justify-between items-end mb-4">
+          <h2 className="text-xl font-bold text-[#d4af37] leading-tight">Explore Tezro Universe</h2>
+          <span className="text-[#d4af37] text-xs font-semibold">View All</span>
         </div>
         <CategorySlider />
       </div>
 
-      {/* Bottom Navigation */}
       <BottomNav />
     </div>
   );

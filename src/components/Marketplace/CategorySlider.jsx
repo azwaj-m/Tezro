@@ -1,22 +1,18 @@
 import React from 'react';
 
-const categories = [
-  { id: 1, name: 'Gadgets', icon: '📱' },
-  { id: 2, name: 'Fashion', icon: '👕' },
-  { id: 3, name: 'Home', icon: '🏠' },
-  { id: 4, name: 'Food', icon: '🍔' },
-  { id: 5, name: 'Cars', icon: '🚗' }
-];
-
 const CategorySlider = () => {
+  const categories = [
+    { id: 1, name: 'Marketplace', img: 'https://placehold.co/100x100/004d25/d4af37?text=Shop' },
+    { id: 2, name: 'Food Menu', img: 'https://placehold.co/100x100/004d25/d4af37?text=Food' },
+    { id: 3, name: 'Ride Options', img: 'https://placehold.co/100x100/004d25/d4af37?text=Ride' }
+  ];
+
   return (
-    <div className="flex gap-4 overflow-x-auto pb-6 scrollbar-hide">
-      {categories.map(cat => (
-        <div key={cat.id} className="flex-shrink-0 flex flex-col items-center gap-2">
-          <div className="w-16 h-16 rounded-2xl bg-white/5 border border-[#D4AF37]/20 flex items-center justify-center text-2xl shadow-lg hover:bg-[#D4AF37]/10 transition-all cursor-pointer">
-            {cat.icon}
-          </div>
-          <span className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">{cat.name}</span>
+    <div className="flex gap-4 overflow-x-auto px-4 no-scrollbar pb-4">
+      {categories?.map((cat) => (
+        <div key={cat.id} className="min-w-[120px] bg-black/20 rounded-xl p-2 border border-[#d4af37]/10 text-center">
+          <img src={cat.img} alt={cat.name} className="w-full h-20 object-cover rounded-lg mb-2" />
+          <p className="text-[10px] font-bold text-[#d4af37]">{cat.name}</p>
         </div>
       ))}
     </div>

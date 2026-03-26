@@ -1,60 +1,23 @@
 @import "tailwindcss";
 
 :root {
-  --bg-dark: #000308;
-  --bg-light: #f8fafc;
-  --gold: #D4AF37;
-  --neon-green: #10B981;
-  --glass-white: rgba(255, 255, 255, 0.03);
-  --glass-border: rgba(255, 255, 255, 0.05);
+  --tezro-green: #002d15;
+  --tezro-gold: #d4af37;
 }
 
-/* Base Reset */
 * {
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
-  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 body {
   margin: 0;
+  padding: 0;
   font-family: 'Inter', sans-serif;
-  background-color: var(--bg-dark);
+  background-color: var(--tezro-green);
   color: white;
-  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 
-/* Dual Mode Logic */
-html.light body {
-  background-color: var(--bg-light);
-  color: #0f172a;
-}
-
-/* Leaflet Map Integration */
-.leaflet-container {
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-  background: #0a0f18 !important;
-}
-
-/* Dark Mode Map Filter */
-.dark-map .leaflet-tile {
-  filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
-}
-
-/* Super App Components Styling */
-.tezro-card {
-  background: var(--glass-white);
-  backdrop-filter: blur(12px);
-  border: 1px solid var(--glass-border);
-  border-radius: 24px;
-}
-
-html.light .tezro-card {
-  background: rgba(0, 0, 0, 0.02);
-  border: 1px solid rgba(0, 0, 0, 0.05);
-}
-
-/* Custom Scrollbar for Termux/Mobile */
+/* Scrollbar Hide */
 ::-webkit-scrollbar { width: 0px; background: transparent; }
