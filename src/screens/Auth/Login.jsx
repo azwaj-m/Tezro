@@ -52,7 +52,7 @@ const Login = () => {
             onClick={() => navigate('/HomeScreen?guest=true')}
             className='w-full py-5 bg-transparent border-2 border-dashed border-[#D4AF37]/30 text-[#D4AF37] rounded-2xl font-black text-xs tracking-[3px] uppercase hover:bg-[#D4AF37]/10 hover:border-[#D4AF37] transition-all outline-none'
           >
-            ENTER GUEST WINDOW →
+            onClick={() => props.onGuest()} style={{cursor: 'pointer'}}>ENTER GUEST WINDOW →
           </button>
           
           <p className="mt-4 text-[9px] text-gray-600 leading-relaxed italic">
