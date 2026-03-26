@@ -1,4 +1,4 @@
-import React, { Suspense, lazy } from 'react';
+import React, { useState, Suspense, lazy } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
 import { useTheme } from './context/ThemeContext';
@@ -22,19 +22,29 @@ const LoadingScreen = () => (
 );
 
 const App = () => {
-  const { user } = useAuth();
+  const { user, loading } = useAuth(); //
   const theme = useTheme();
+  const [isGuest, setIsGuest] = useState(false); // گیسٹ موڈ کے لیے سٹیٹ
+
+  if (loading) return <LoadingScreen />;
+
+  // صارف لاگ ان ہو یا گیسٹ بٹن دبایا ہو، دونوں صورتوں میں ایپ کھلے گی
+  const isAuthenticated = user || isGuest;
+
   const colors = theme?.colors;
 
   return (
     <div style={{ background: colors?.bg || '#000', minHeight: '100vh' }}>
       <Suspense fallback={<LoadingScreen />}>
         <Routes>
-          {/* Auth Route */}
-          <Route path="/login" element={!user ? <Login /> : <Navigate to="/" />} />
+          {/* لاگ ان روٹ - گیسٹ ہینڈلر کے ساتھ */}
+          <Route 
+            path="/login" 
+            element={!isAuthenticated ? <Login onGuest={() => setIsGuest(true)} /> : <Navigate to="/" />} 
+          />
 
-          {/* Protected Layout Routes */}
-          <Route element={user ? <Layout /> : <Navigate to="/login" />}>
+          {/* تمام پروٹیکٹڈ روٹس (Layout کے اندر) */}
+          <Route element={isAuthenticated ? <Layout /> : <Navigate to="/login" />}>
             <Route path="/" element={<HomeScreen />} />
             <Route path="/food" element={<FoodHome />} />
             <Route path="/ride" element={<RideHome />} />
@@ -44,7 +54,7 @@ const App = () => {
             <Route path="/vendor" element={<VendorDashboard />} />
           </Route>
 
-          {/* 404 Redirect */}
+          {/* ڈیفالٹ ری ڈائریکٹ */}
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </Suspense>
