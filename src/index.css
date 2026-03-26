@@ -1,28 +1,25 @@
 @import "tailwindcss";
-
 :root {
-  --tezro-bg: #002d15;
+  --tezro-bg: #001f0f; /* Slightly softer dark green for better contrast */
   --tezro-gold: #d4af37;
-  --gold-gradient: linear-gradient(180deg, #f3cf7a 0%, #b8860b 100%);
+  --luxury-gradient: linear-gradient(135deg, #f3cf7a 0%, #b8860b 100%);
+  --glass: rgba(255, 255, 255, 0.03);
 }
-
 body {
-  margin: 0;
   background-color: var(--tezro-bg);
-  color: white;
-  font-family: 'Inter', sans-serif;
-  overflow-x: hidden;
+  color: #f0f0f0;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
-
-.gold-card {
-  background: var(--gold-gradient);
-  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+.luxury-card {
+  background: var(--glass);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(212, 175, 55, 0.15);
+  transition: all 0.3s ease;
 }
-
-.glass-effect {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(212, 175, 55, 0.2);
+.btn-gold {
+  background: var(--luxury-gradient);
+  color: #002d15;
+  font-weight: 800;
+  box-shadow: 0 10px 20px rgba(184, 134, 11, 0.2);
 }
-
-::-webkit-scrollbar { width: 0px; }
