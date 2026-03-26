@@ -1,13 +1,10 @@
 import React, { Suspense, lazy } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { useAuth } from './context/AuthContext'; 
-import { useTheme } from './context/ThemeContext'; 
+import { useAuth } from './context/AuthContext';
+import { useTheme } from './context/ThemeContext';
+import Layout from './components/Layout';
 
-// --- LAYOUTS ---
-import Layout from './components/Layout';            // سپر ایپ کا مین ڈھانچہ
-import TezroMainLayout from './components/Navigation/TezroMainLayout'; 
-
-// --- APP SCREENS (Lazy Loaded based on your directory structure) ---
+// Lazy Loading Screens
 const HomeScreen = lazy(() => import('./screens/HomeScreen'));
 const Login = lazy(() => import('./screens/Auth/Login'));
 const FoodHome = lazy(() => import('./screens/Food/FoodHome'));
@@ -15,76 +12,43 @@ const RideHome = lazy(() => import('./screens/Ride/RideHome'));
 const PayHome = lazy(() => import('./screens/Pay/PayHome'));
 const ShopHome = lazy(() => import('./screens/Shop/ShopHome'));
 const UniversalBankingHub = lazy(() => import('./screens/UniversalBankingHub'));
+const VendorDashboard = lazy(() => import('./screens/VendorDashboard'));
 
-// پریمیم لوڈنگ اسکرین (سیکیورٹی اینیمیشن کے ساتھ)
 const LoadingScreen = () => (
-  <div style={{ 
-    height: '100vh', 
-    display: 'flex', 
-    flexDirection: 'column',
-    justifyContent: 'center', 
-    alignItems: 'center', 
-    background: '#000', 
-    color: '#FFD700' 
-  }}>
-    <div className="tezro-spinner" style={{
-      width: '50px',
-      height: '50px',
-      border: '3px solid rgba(255,215,0,0.1)',
-      borderTop: '3px solid #FFD700',
-      borderRadius: '50%',
-      animation: 'spin 1s linear infinite'
-    }}></div>
-    <p style={{ marginTop: '15px', fontWeight: 'bold', letterSpacing: '3px', fontSize: '12px' }}>
-      TEZRO SECURE CORE LOADING...
-    </p>
-    <style>{`
-      @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    `}</style>
+  <div className="h-screen w-full flex flex-col items-center justify-center bg-black text-[#FFD700]">
+    <div className="w-12 h-12 border-4 border-yellow-500/10 border-t-yellow-500 rounded-full animate-spin"></div>
+    <p className="mt-4 font-bold tracking-[0.2em] text-xs uppercase">Tezro Secure Core Loading...</p>
   </div>
 );
 
 const App = () => {
-  // context سے ڈیٹا حاصل کرنا (undefined ایرر سے بچنے کے لیے نل چیک کے ساتھ)
-  const authContext = useAuth();
-  const themeContext = useTheme();
-
-  const user = authContext?.user;
-  const loading = authContext?.loading;
-  const colors = themeContext?.colors;
-
-  if (loading) return <LoadingScreen />;
+  const { user } = useAuth();
+  const theme = useTheme();
+  const colors = theme?.colors;
 
   return (
-    <Suspense fallback={<LoadingScreen />}>
-      <div style={{ 
-        background: colors?.bg || '#000', 
-        minHeight: '100vh',
-        color: '#fff' 
-      }}>
+    <div style={{ background: colors?.bg || '#000', minHeight: '100vh' }}>
+      <Suspense fallback={<LoadingScreen />}>
         <Routes>
-          
-          {/* 🔐 AUTHENTICATION: لاگ ان چیک */}
+          {/* Auth Route */}
           <Route path="/login" element={!user ? <Login /> : <Navigate to="/" />} />
 
-          {/* 📱 PROTECTED ROUTES: آپ کے فائل سٹرکچر کے مطابق پاتھس */}
-          <Route path="/" element={user ? <Layout><HomeScreen /></Layout> : <Navigate to="/login" />} />
-          
-          <Route path="/food" element={user ? <Layout><FoodHome /></Layout> : <Navigate to="/login" />} />
-          <Route path="/ride" element={user ? <Layout><RideHome /></Layout> : <Navigate to="/login" />} />
-          <Route path="/pay" element={user ? <Layout><PayHome /></Layout> : <Navigate to="/login" />} />
-          <Route path="/shop" element={user ? <Layout><ShopHome /></Layout> : <Navigate to="/login" />} />
-          <Route path="/banking" element={user ? <Layout><UniversalBankingHub /></Layout> : <Navigate to="/login" />} />
+          {/* Protected Layout Routes */}
+          <Route element={user ? <Layout /> : <Navigate to="/login" />}>
+            <Route path="/" element={<HomeScreen />} />
+            <Route path="/food" element={<FoodHome />} />
+            <Route path="/ride" element={<RideHome />} />
+            <Route path="/pay" element={<PayHome />} />
+            <Route path="/shop" element={<ShopHome />} />
+            <Route path="/banking" element={<UniversalBankingHub />} />
+            <Route path="/vendor" element={<VendorDashboard />} />
+          </Route>
 
-          {/* 🛡️ ADMIN/VENDOR DASHBOARDS: سٹرکچر کے مطابق */}
-          <Route path="/vendor" element={user ? <Layout><import('./screens/VendorDashboard') /></Layout> : <Navigate to="/login" />} />
-
-          {/* 404: واپس ہوم پر بھیجیں */}
+          {/* 404 Redirect */}
           <Route path="*" element={<Navigate to="/" />} />
-
         </Routes>
-      </div>
-    </Suspense>
+      </Suspense>
+    </div>
   );
 };
 
