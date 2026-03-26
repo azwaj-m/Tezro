@@ -10,7 +10,6 @@ import TezroMainLayout from './components/Navigation/TezroMainLayout';
 // --- APP SCREENS (Lazy Loaded for Performance) ---
 const HomeScreen = lazy(() => import('./screens/HomeScreen'));
 const Login = lazy(() => import('./screens/Auth/Login'));
-const AdminDashboard = lazy(() => import('./screens/AdminDashboard'));
 const FoodHome = lazy(() => import('./screens/Food/FoodHome'));
 const RideHome = lazy(() => import('./screens/Ride/RideHome'));
 const PayHome = lazy(() => import('./screens/Pay/PayHome'));
@@ -77,7 +76,6 @@ const App = () => {
             {/* 🛡️ ADMIN PANEL: صرف ایڈمن کے لیے فول پروف سیکیورٹی */}
             <Route 
               path="/admin/*" 
-              element={user && role === 'admin' ? <AdminDashboard /> : <Navigate to="/" />} 
             />
 
             {/* 404: غلط یو آر ایل پر واپس ہوم پر بھیجیں */}

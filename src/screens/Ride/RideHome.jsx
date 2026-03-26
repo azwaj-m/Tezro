@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useRide } from '../../hooks/useRide';
 import { useWallet } from '../../hooks/useWallet';
-import { auth } from '@/firebase';
-import { SecurityEngine } from '@/utils/security/SecurityEngine';
+import { auth, db } from '../../firebase';
+import { SecurityEngine } from '../../utils/security/SecurityEngine';
 import RideMap from '../../components/RideMap';
 
 const RideHome = () => {
