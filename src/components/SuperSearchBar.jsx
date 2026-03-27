@@ -1,66 +1,66 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useSuperSearch } from '../hooks/useSuperSearch';
-import { MultiLangVoice } from '../utils/voice/MultiLangVoice';
+import { MultiLangVoice, SupportedLanguages } from '../utils/voice/MultiLangVoice';
 
-const SuperSearchBar = ({ activeService = 'FOOD' }) => {
-  const [searchTerm, setSearchTerm] = useState('');
+const SuperSearchBar = () => {
+  const [term, setTerm] = useState("");
+  const { results, loading } = useSuperSearch(term);
+  const navigate = useNavigate();
   const [isListening, setIsListening] = useState(false);
-  const { results, loading } = useSuperSearch(activeService, searchTerm);
 
-  // آواز کے ذریعے تلاش (Voice Search)
   const handleVoiceSearch = () => {
     setIsListening(true);
-    MultiLangVoice.listen('ur-PK', (transcript) => {
-      setSearchTerm(transcript);
+    // خود بخود صارف کی زبان پہچاننے یا ڈیفالٹ اردو/انگلش کے لیے
+    MultiLangVoice.listen('ur-PK', (text) => {
+      setTerm(text);
       setIsListening(false);
     });
   };
 
-  return (
-    <div className="relative w-full max-w-xl mx-auto mb-8 px-4">
-      {/* Search Input Group */}
-      <div className="relative group">
-        <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
-          <span className="text-[#d4af37] opacity-60 text-xl">🔍</span>
-        </div>
-        
-        <input
-          type="text"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          placeholder={`Search ${activeService.toLowerCase()} in Tezro...`}
-          className="w-full bg-[#001a0d] border-2 border-[#d4af37]/20 rounded-2xl py-4 pl-14 pr-14 text-white placeholder-gray-500 focus:outline-none focus:border-[#d4af37] focus:ring-4 focus:ring-[#d4af37]/10 transition-all duration-300"
-        />
+  const handleSelect = (item) => {
+    if (item.serviceType === 'RIDE') navigate('/RideHome');
+    else if (item.serviceType === 'FOOD') navigate('/FoodHome');
+    else navigate('/HomeScreen');
+    setTerm("");
+  };
 
+  return (
+    <div className="relative w-full max-w-xl mx-auto z-50">
+      <div className="relative flex items-center bg-[#002b14] border border-[#d4af37]/30 rounded-2xl overflow-hidden shadow-2xl">
+        <span className="pl-4 text-[#d4af37]">🔍</span>
+        <input 
+          type="text" 
+          value={term}
+          onChange={(e) => setTerm(e.target.value)}
+          placeholder="تلاش کریں: ڈاکٹر، پلمبر، کھانا یا رائیڈ..."
+          className="w-full bg-transparent py-4 px-4 text-white outline-none placeholder:text-gray-500 text-right"
+        />
         <button 
           onClick={handleVoiceSearch}
-          className={`absolute inset-y-0 right-4 flex items-center transition-transform active:scale-90 ${isListening ? 'animate-pulse text-red-500' : 'text-[#d4af37]'}`}
+          className={`p-4 ${isListening ? 'animate-pulse text-red-500' : 'text-[#d4af37]'}`}
         >
-          <span className="text-2xl">🎙️</span>
+          {isListening ? '🛑' : '🎙️'}
         </button>
       </div>
 
-      {/* Results Dropdown */}
-      {searchTerm.length >= 2 && (
-        <div className="absolute z-50 w-[92%] mt-2 bg-[#0a0a0a] border border-[#d4af37]/30 rounded-xl shadow-2xl overflow-hidden max-h-80 overflow-y-auto backdrop-blur-md">
-          {loading ? (
-            <div className="p-4 text-center text-[#d4af37] animate-pulse">تلاش جاری ہے...</div>
-          ) : results.length > 0 ? (
-            results.map((item) => (
-              <div 
-                key={item.id} 
-                className="p-4 border-b border-white/5 hover:bg-[#d4af37]/10 cursor-pointer flex justify-between items-center group transition-colors"
-              >
-                <div>
-                  <h4 className="text-white font-bold group-hover:text-[#d4af37]">{item.name}</h4>
-                  <p className="text-xs text-gray-400">{activeService} • {item.category || 'General'}</p>
-                </div>
-                <span className="text-[#d4af37] opacity-0 group-hover:opacity-100">→</span>
+      {/* سرچ رزلٹس ڈراپ ڈاؤن */}
+      {term.length > 1 && (
+        <div className="absolute top-full left-0 right-0 mt-2 bg-[#0a0a0a] border border-[#d4af37]/20 rounded-xl shadow-2xl max-h-96 overflow-y-auto">
+          {loading && <div className="p-4 text-center text-[#d4af37]">تلاش جاری ہے...</div>}
+          {results.map((item) => (
+            <div 
+              key={item.id}
+              onClick={() => handleSelect(item)}
+              className="p-4 border-b border-white/5 hover:bg-[#d4af37]/10 cursor-pointer flex justify-between items-center"
+            >
+              <span className="text-xs text-gray-500">{item.serviceType}</span>
+              <div className="text-right">
+                <p className="text-white font-bold">{item.name}</p>
+                <p className="text-[10px] text-[#d4af37]">{item.icon} {item.category || 'Tezro Service'}</p>
               </div>
-            ))
-          ) : (
-            <div className="p-4 text-center text-gray-500">کوئی نتیجہ نہیں ملا</div>
-          )}
+            </div>
+          ))}
         </div>
       )}
     </div>

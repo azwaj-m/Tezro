@@ -1,52 +1,59 @@
 import { useState, useEffect } from 'react';
 import { db } from '../firebase';
-import { collection, query, getDocs, limit, startAt, endAt, orderBy } from 'firebase/firestore';
+import { collection, getDocs, query, where, orderBy, limit } from 'firebase/firestore';
 
-export const useSuperSearch = (activeService, searchTerm) => {
+export const useSuperSearch = (searchTerm) => {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const fetchResults = async () => {
+    const searchAllServices = async () => {
       if (!searchTerm || searchTerm.length < 2) {
         setResults([]);
         return;
       }
 
       setLoading(true);
+      const allResults = [];
       
-      const collectionMap = {
-        FOOD: 'restaurants',
-        SHOP: 'products',
-        RIDE: 'locations',
-        HOTEL: 'hotels'
-      };
+      // تمام سروسز کے کلیکشنز کی فہرست
+      const collections = [
+        { name: 'restaurants', type: 'FOOD', icon: '🍔' },
+        { name: 'products', type: 'SHOP', icon: '🛍️' },
+        { name: 'locations', type: 'RIDE', icon: '🚗' },
+        { name: 'professionals', type: 'SERVICE', icon: '🛠️' }, // پلمبر، الیکٹریشن وغیرہ
+        { name: 'hotels', type: 'HOTEL', icon: '🏨' },
+        { name: 'doctors', type: 'HEALTH', icon: '👨‍⚕️' }
+      ];
 
-      const collectionName = collectionMap[activeService] || 'products';
-      
       try {
-        const q = query(
-          collection(db, collectionName),
-          orderBy('name'),
-          startAt(searchTerm),
-          endAt(searchTerm + '\uf8ff'),
-          limit(10)
-        );
+        const searchPromises = collections.map(async (col) => {
+          const q = query(
+            collection(db, col.name),
+            where('searchKeywords', 'array-contains', searchTerm.toLowerCase()),
+            limit(5)
+          );
+          const snap = await getDocs(q);
+          return snap.docs.map(doc => ({ 
+            id: doc.id, 
+            ...doc.data(), 
+            serviceType: col.type,
+            icon: col.icon 
+          }));
+        });
 
-        const querySnapshot = await getDocs(q);
-        const data = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        setResults(data);
+        const resolvedResults = await Promise.all(searchPromises);
+        setResults(resolvedResults.flat());
       } catch (error) {
-        console.error("Search Error: ", error);
+        console.error("Super Search Error:", error);
       } finally {
         setLoading(false);
       }
     };
 
-    const timeoutId = setTimeout(() => fetchResults(), 500);
+    const timeoutId = setTimeout(() => searchAllServices(), 500);
     return () => clearTimeout(timeoutId);
-
-  }, [activeService, searchTerm]);
+  }, [searchTerm]);
 
   return { results, loading };
 };
