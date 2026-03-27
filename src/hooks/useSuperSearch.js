@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { db } from '@/firebase';
-import { collection, query, where, getDocs, limit, startAt, endAt, orderBy } from 'firebase/firestore';
+import { db } from '../firebase';
+import { collection, query, getDocs, limit, startAt, endAt, orderBy } from 'firebase/firestore';
 
 export const useSuperSearch = (activeService, searchTerm) => {
   const [results, setResults] = useState([]);
@@ -15,7 +15,6 @@ export const useSuperSearch = (activeService, searchTerm) => {
 
       setLoading(true);
       
-      // ہم سروس کے حساب سے صحیح کلیکشن کا انتخاب کریں گے
       const collectionMap = {
         FOOD: 'restaurants',
         SHOP: 'products',
@@ -23,12 +22,12 @@ export const useSuperSearch = (activeService, searchTerm) => {
         HOTEL: 'hotels'
       };
 
-      const collectionName = collectionMap[activeService];
+      const collectionName = collectionMap[activeService] || 'products';
       
       try {
         const q = query(
           collection(db, collectionName),
-          orderBy('name'), // ہم 'name' کی بنیاد پر سرچ کریں گے
+          orderBy('name'),
           startAt(searchTerm),
           endAt(searchTerm + '\uf8ff'),
           limit(10)
@@ -44,7 +43,6 @@ export const useSuperSearch = (activeService, searchTerm) => {
       }
     };
 
-    // 'Debouncing' تاکہ ہر لفظ لکھنے پر ڈیٹا بیس پر بوجھ نہ پڑے
     const timeoutId = setTimeout(() => fetchResults(), 500);
     return () => clearTimeout(timeoutId);
 
