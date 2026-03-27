@@ -41,11 +41,12 @@ const Login = (props) => {
         <div className='mt-12 pt-8 border-t border-white/10 w-full'>
           <p className='text-gray-500 text-[10px] mb-6 uppercase tracking-[4px] font-bold'>OR EXPLORE AS GUEST</p>
           <button 
-            onClick={() => props.onGuest ? props.onGuest() : navigate('/?guest=true')}
+            onClick={() => props.onGuest ? props.onGuest() : navigate('/HomeScreen?guest=true')}
             className='w-full py-5 bg-transparent border-2 border-dashed border-[#D4AF37]/30 text-[#D4AF37] rounded-2xl font-black text-xs tracking-[3px] uppercase hover:bg-[#D4AF37]/10 hover:border-[#D4AF37] transition-all outline-none cursor-pointer'
           >
             ENTER GUEST WINDOW →
           </button>
+          <p className="mt-4 text-[9px] text-gray-600 leading-relaxed italic">* گیسٹ موڈ میں ڈیٹا محفوظ نہیں کیا جائے گا</p>
         </div>
       </div>
     </div>
