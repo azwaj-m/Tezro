@@ -1,4 +1,5 @@
 import L from 'leaflet';
+<<<<<<< HEAD
 import { db } from '../firebase'; 
 import { doc, onSnapshot, updateDoc } from 'firebase/firestore';
 
@@ -11,6 +12,14 @@ export const mapConfig = {
 };
 
 // 2. Premium Golden Marker
+=======
+
+export const mapConfig = {
+  url: "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
+  attribution: '&copy; Tezro Secure Systems'
+};
+
+>>>>>>> 53c48d2 (Integrated RemoteTracker with Golden Map Theme and Firebase Master Services)
 export const goldIcon = new L.Icon({
   iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-gold.png',
   shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
@@ -20,6 +29,7 @@ export const goldIcon = new L.Icon({
   shadowSize: [41, 41]
 });
 
+<<<<<<< HEAD
 // 3. PhantomGuard Security Logic
 export const PhantomGuard = {
   listenForRemoteCommands: (userId) => {
@@ -51,6 +61,17 @@ export const PhantomGuard = {
     // سیکیورٹی لاک اسکرین پر بھیجیں
     window.location.href = "/secure-lock-screen";
   }
+=======
+export const startLiveTracking = (callback) => {
+  if (!navigator.geolocation) return;
+  return navigator.geolocation.watchPosition(
+    (position) => {
+      callback({ lat: position.coords.latitude, lng: position.coords.longitude });
+    },
+    (err) => console.error(err),
+    { enableHighAccuracy: true }
+  );
+>>>>>>> 53c48d2 (Integrated RemoteTracker with Golden Map Theme and Firebase Master Services)
 };
 
 // 4. Live UI Tracking
