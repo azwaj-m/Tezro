@@ -1,25 +1,35 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const QuickActions = () => {
-  const actions = [
-    { id: 1, title: 'Food', urdu: 'کھانا', icon: '🍲' },
-    { id: 2, title: 'Ride', urdu: 'رائیڈ', icon: '🚗' },
-    { id: 3, title: 'Shop', urdu: 'شاپ', icon: '🛒' },
-    { id: 4, title: 'Services', urdu: 'سروسز', icon: '🛠️' },
+  const navigate = useNavigate();
+
+  // آپ کے سکرین سٹرکچر کے مطابق تمام سروسز
+  const services = [
+    { id: 1, name: 'Ride', icon: '🚕', path: '/ride', color: 'bg-yellow-500/10' },
+    { id: 2, name: 'Food', icon: '🍔', path: '/food', color: 'bg-orange-500/10' },
+    { id: 3, name: 'Pay', icon: '💸', path: '/pay', color: 'bg-blue-500/10' },
+    { id: 4, name: 'Shop', icon: '🛒', path: '/shop', color: 'bg-purple-500/10' },
+    { id: 5, name: 'Banking', icon: '🏦', path: '/banking', color: 'bg-green-500/10' },
+    { id: 6, name: 'Vendor', icon: '📊', path: '/vendor', color: 'bg-red-500/10' },
   ];
 
   return (
-    <div className="grid grid-cols-2 gap-4">
-      {actions && actions.length > 0 ? actions.map((item) => (
+    <div className="grid grid-cols-3 gap-4">
+      {services.map((service) => (
         <button
-          key={item.id}
-          className="bg-gradient-to-b from-[#f3cf7a] to-[#b8860b] p-4 rounded-2xl flex flex-col items-center justify-center shadow-lg border border-[#ffd700]/30 active:scale-95 transition-transform"
+          key={service.id}
+          onClick={() => navigate(service.path)}
+          className={`flex flex-col items-center justify-center p-5 rounded-[2rem] border border-white/5 ${service.color} hover:border-[#d4af37]/40 transition-all active:scale-90 group`}
         >
-          <div className="text-3xl mb-1">{item.icon}</div>
-          <div className="text-[#002d15] font-bold text-lg leading-tight">{item.title}</div>
-          <div className="text-[#002d15]/80 text-[10px] font-bold">{item.urdu}</div>
+          <span className="text-3xl mb-2 group-hover:scale-110 transition-transform">
+            {service.icon}
+          </span>
+          <span className="text-[9px] font-black text-white/80 uppercase tracking-tighter">
+            {service.name}
+          </span>
         </button>
-      )) : <p className="text-[#d4af37]">Loading Actions...</p>}
+      ))}
     </div>
   );
 };
