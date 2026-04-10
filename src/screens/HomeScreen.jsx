@@ -1,8 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MapContainer, TileLayer } from 'react-leaflet';
-
-// آپ کے فائل سٹرکچر کے مطابق امپورٹس
+import Sidebar from '../components/Sidebar';
 import SuperSearchBar from '../components/SuperSearchBar';
 import QuickActions from '../components/home/QuickActions';
 import WalletDashboard from '../components/Wallet/WalletDashboard';
@@ -11,20 +10,19 @@ import BottomNav from '../components/BottomNav';
 
 const HomeScreen = () => {
   const navigate = useNavigate();
+  const [isSidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="min-h-screen pb-28 px-5 pt-8 bg-[#001f0f] selection:bg-[#d4af37]">
-      
-      {/* 🛡️ Header: Profile & Welcome */}
+    <div className="min-h-screen pb-28 px-5 pt-8 bg-[#001f0f] selection:bg-[#d4af37] overflow-x-hidden">
+      <Sidebar isOpen={isSidebarOpen} onClose={() => setSidebarOpen(false)} />
+
+      {/* 🛡️ Header Section */}
       <header className="flex justify-between items-center mb-8">
-        <div>
+        <div className="cursor-pointer" onClick={() => navigate('/')}>
           <p className="text-[10px] uppercase tracking-[0.3em] text-[#d4af37]/60 font-bold">Welcome to</p>
           <h1 className="text-3xl font-black text-[#d4af37] tracking-tighter italic">TEZRO</h1>
         </div>
-        <div 
-          className="relative cursor-pointer" 
-          onClick={() => navigate('/vendor')} // پروفائل یا وینڈر ڈیش بورڈ پر جانے کے لیے
-        >
+        <div className="relative cursor-pointer" onClick={() => setSidebarOpen(true)}>
           <div className="w-12 h-12 rounded-2xl border border-[#d4af37]/30 bg-gradient-to-tr from-[#d4af37]/20 to-transparent flex items-center justify-center overflow-hidden shadow-inner active:scale-95 transition-transform">
             <span className="text-xl">👤</span>
           </div>
@@ -32,62 +30,54 @@ const HomeScreen = () => {
         </div>
       </header>
 
-      {/* 🔍 1. Search Bar - اب یہ پوری ایپ میں سرچ کے لیے فعال ہے */}
-      <div className="mb-8">
+      {/* 🔍 1. Super Search Engine */}
+      <div className="mb-8" onClick={() => navigate('/banking')}>
         <SuperSearchBar />
       </div>
 
-      {/* 💳 2. Wallet Section - فنانس اور بینکنگ سے منسلک */}
-      <section className="mb-10" onClick={() => navigate('/banking')} style={{cursor: 'pointer'}}>
+      {/* 💳 2. Financial Core (Wallet) */}
+      <section className="mb-10 active:scale-[0.98] transition-all cursor-pointer" onClick={() => navigate('/banking')}>
         <WalletDashboard />
       </section>
 
-      {/* 🚀 3. Main Services (Quick Actions) - تمام بٹنز یہاں سے فعال ہوں گے */}
+      {/* 🚀 3. Central Ecosystem (Quick Actions) */}
       <section className="mb-10">
         <div className="flex justify-between items-end mb-5">
           <h2 className="text-xl font-extrabold text-white tracking-tight">Main Services</h2>
-          <span className="text-[10px] font-black text-[#d4af37] uppercase tracking-widest border-b border-[#d4af37]/30 pb-1">Quick Access</span>
+          <span className="text-[10px] font-black text-[#d4af37] uppercase tracking-widest border-b border-[#d4af37]/30 pb-1">Master Access</span>
         </div>
-        <QuickActions /> 
+        <QuickActions />
       </section>
 
-      {/* 📍 4. Live Tracking Map - رائیڈ سسٹم سے منسلک */}
-      <section className="mb-10" onClick={() => navigate('/ride')} style={{cursor: 'pointer'}}>
+      {/* 📍 4. Intelligence Map (Leaflet Active) */}
+      <section className="mb-10 group cursor-pointer" onClick={() => navigate('/ride')}>
          <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-bold text-white">Active Tracking</h3>
-          <span className="text-[10px] text-red-500 font-black animate-pulse">● LIVE SECURE</span>
+          <h3 className="text-lg font-bold text-white tracking-tight">Live Tracking</h3>
+          <span className="text-[10px] text-red-500 font-black animate-pulse uppercase tracking-widest">● Secure Map Active</span>
         </div>
-        <div className="h-48 rounded-[2.5rem] overflow-hidden border border-[#d4af37]/20 shadow-2xl relative group">
+        <div className="h-52 rounded-[2.5rem] overflow-hidden border border-[#d4af37]/30 shadow-[0_20px_50px_rgba(0,0,0,0.5)] relative">
           <MapContainer center={[24.8607, 67.0011]} zoom={13} zoomControl={false} className="h-full w-full">
             <TileLayer
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               attribution='&copy; Tezro'
             />
           </MapContainer>
-          
-          <div className="absolute inset-0 bg-black/20 pointer-events-none group-hover:bg-transparent transition-all"></div>
-          
-          <div className="absolute bottom-4 left-4 z-[1000] bg-black/80 backdrop-blur-md border border-[#d4af37]/40 px-4 py-2 rounded-2xl">
-            <p className="text-[9px] font-black text-[#d4af37] uppercase tracking-[0.2em]">Map Engine Active - Click to Ride</p>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>
+          <div className="absolute bottom-5 left-6 z-[1000] bg-[#d4af37] text-[#001f0f] px-5 py-2 rounded-xl font-black text-[10px] uppercase tracking-tighter">
+            Initialize AI Route
           </div>
         </div>
       </section>
 
-      {/* 🌌 5. Discovery Section - مارکیٹ پلیس سے منسلک */}
+      {/* 🌌 5. Marketplace Discovery */}
       <section className="mb-6">
         <div className="flex justify-between items-center mb-5">
           <h3 className="text-lg font-bold text-white tracking-tight">Explore Universe</h3>
-          <button 
-            onClick={() => navigate('/shop')}
-            className="text-[#d4af37] text-[10px] font-black bg-[#d4af37]/10 px-4 py-1.5 rounded-full border border-[#d4af37]/20"
-          >
-            VIEW ALL
-          </button>
+          <button onClick={() => navigate('/shop')} className="text-[#d4af37] text-[10px] font-black bg-[#d4af37]/10 px-5 py-2 rounded-full border border-[#d4af37]/20 active:bg-[#d4af37]/30">VIEW ALL</button>
         </div>
         <CategorySlider />
       </section>
 
-      {/* 📱 Navigation */}
       <BottomNav />
     </div>
   );
