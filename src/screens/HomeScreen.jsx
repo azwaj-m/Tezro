@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
+// آپ کے اسٹرکچر سے کنکشنز
 import Sidebar from '../components/Sidebar';
 import BottomNav from '../components/BottomNav';
-import { MapContainer, TileLayer, Marker } from 'react-leaflet';
+import SuperSearchBar from '../components/SuperSearchBar';
+import TezroVirtualCard from '../components/TezroVirtualCard';
+import { MapContainer, TileLayer } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 
 const HomeScreen = () => {
@@ -10,95 +14,92 @@ const HomeScreen = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-[#001f0f] text-white font-sans overflow-x-hidden pb-32">
+    <div className="min-h-screen bg-[#001f0f] text-white font-sans overflow-x-hidden pb-32 selection:bg-[#d4af37]/30">
       <Sidebar isOpen={isSidebarOpen} onClose={() => setSidebarOpen(false)} />
 
-      {/* 🟢 پریمیم ہیڈر - لوگو اور سیکیورٹی بیج کے ساتھ */}
-      <header className="flex justify-between items-center px-6 py-6 sticky top-0 bg-[#001f0f]/95 backdrop-blur-xl z-[1000]">
+      {/* 🟢 پریمیم ہیڈر (لوگو اور پروفائل) */}
+      <header className="flex justify-between items-center px-6 py-5 sticky top-0 bg-[#001f0f]/90 backdrop-blur-md z-[1000] border-b border-white/5">
         <div className="flex items-center space-x-3">
-             <div className="w-10 h-10 rounded-full border-2 border-[#d4af37] overflow-hidden">
-                <img src="/assets/profile-placeholder.png" className="w-full h-full object-cover" />
-             </div>
-             <span className="text-[10px] text-[#d4af37] font-bold">Cyber Security ✅</span>
-        </div>
-        
-        <div className="flex flex-col items-center">
-          <img src="/assets/logo.png" alt="Tezro" className="h-9 mb-1 shadow-lg" />
-          <span className="text-[9px] font-black tracking-[0.5em] text-[#d4af37]">TEZRO</span>
+          <div className="relative">
+            <div className="w-10 h-10 rounded-full border-2 border-[#d4af37] p-0.5">
+              <img src="/assets/profile-placeholder.png" className="w-full h-full rounded-full object-cover" alt="User" />
+            </div>
+            <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 border-2 border-[#001f0f] rounded-full"></div>
+          </div>
+          <span className="text-[10px] font-bold text-[#d4af37] tracking-wider uppercase bg-[#d4af37]/10 px-2 py-1 rounded-md border border-[#d4af37]/20">
+             Cyber Security ✅
+          </span>
         </div>
 
-        <button onClick={() => setSidebarOpen(true)} className="p-2">
+        <div className="flex flex-col items-center">
+          <img src="/assets/logo.png" className="h-8 drop-shadow-[0_0_8px_rgba(212,175,55,0.5)]" alt="Tezro" />
+          <span className="text-[9px] font-black tracking-[0.4em] text-[#d4af37] mt-1">TEZRO</span>
+        </div>
+
+        <button onClick={() => setSidebarOpen(true)} className="p-2 active:scale-90 transition-transform">
           <div className="space-y-1.5 flex flex-col items-end">
-            <div className="w-7 h-0.5 bg-[#d4af37]"></div>
-            <div className="w-5 h-0.5 bg-[#d4af37]"></div>
+            <div className="w-7 h-0.5 bg-gradient-to-r from-[#d4af37] to-white"></div>
+            <div className="w-5 h-0.5 bg-gradient-to-r from-[#d4af37] to-white"></div>
           </div>
         </button>
       </header>
 
-      {/* 🔍 سپر سرچ بار (Direct from your SuperSearchBar.jsx concept) */}
-      <div className="px-6 mb-6">
-        <div className="relative group">
-          <input type="text" placeholder="Search Search Bar" className="w-full bg-black/40 border border-[#d4af37]/30 rounded-full py-4 px-12 text-sm outline-none focus:border-[#d4af37] shadow-[0_0_15px_rgba(212,175,55,0.1)]" />
-          <span className="absolute left-5 top-4 text-[#d4af37]">🔍</span>
-          <span className="absolute right-5 top-4 text-[#d4af37] animate-pulse">🎤</span>
-        </div>
+      {/* 🔍 سپر سرچ بار کنکشن */}
+      <div className="px-6 mt-4">
+        <SuperSearchBar />
       </div>
 
-      {/* 💳 ورچوئل کارڈ اور ٹرانزیکشن ویو (Side-by-side as in photo) */}
-      <div className="px-6 mb-8 grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* Main Card */}
-        <div className="h-52 bg-gradient-to-br from-[#1a1a1a] to-[#0a0a0a] rounded-[2rem] p-6 relative border border-[#d4af37]/40 shadow-2xl overflow-hidden">
-            <div className="absolute top-0 right-0 p-4"><img src="/assets/logo.png" className="h-5 opacity-30 brightness-0 invert" /></div>
-            <div className="mt-12 text-xl font-mono tracking-widest text-[#d4af37]">**** **** **** 4028</div>
-            <div className="mt-8 flex justify-between items-end">
-                <div><p className="text-[8px] opacity-50 uppercase">Balance</p><p className="text-xl font-bold">$ 5,358.00</p></div>
-                <div className="flex -space-x-2"><div className="w-8 h-8 rounded-full bg-orange-600 opacity-80"></div><div className="w-8 h-8 rounded-full bg-yellow-500 opacity-80"></div></div>
-            </div>
-            {/* Geometric Pattern */}
-            <div className="absolute inset-0 opacity-10 pointer-events-none" style={{backgroundImage: 'radial-gradient(circle at 2px 2px, #d4af37 1px, transparent 0)', backgroundSize: '20px 20px'}}></div>
-        </div>
+      {/* 💳 ورچوئل کارڈ سیکشن (TezroVirtualCard.jsx کا استعمال) */}
+      <div className="px-6 mt-6">
+        <TezroVirtualCard />
       </div>
 
-      {/* 🗺️ میپ اور اس کے اوپر فلوٹنگ بٹنز (Map with floating UI) */}
-      <div className="px-6 mb-8 relative">
-        <div className="h-48 rounded-[2.5rem] overflow-hidden border border-[#d4af37]/20 relative">
-          <MapContainer center={[24.8607, 67.0011]} zoom={13} className="h-full w-full grayscale brightness-[0.6]">
-            <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+      {/* 🗺️ لیف لیٹ میپ اور فلوٹنگ بٹنز (تصویر کے مطابق) */}
+      <div className="px-6 mt-8 relative group">
+        <div className="h-48 rounded-[2.5rem] overflow-hidden border border-[#d4af37]/30 shadow-2xl relative">
+          <MapContainer center={[24.8607, 67.0011]} zoom={13} zoomControl={false} className="h-full w-full grayscale invert-[0.1] brightness-[0.7]">
+            <TileLayer url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png" />
           </MapContainer>
           
-          {/* Floating UI Buttons over Map */}
-          <div className="absolute right-4 top-4 space-y-2 z-[999]">
-             <div className="bg-[#d4af37] p-2 rounded-xl shadow-lg cursor-pointer">📍</div>
-             <div className="bg-green-600 p-2 rounded-xl shadow-lg cursor-pointer">🚗</div>
+          {/* 📍 میپ فلوٹنگ بٹنز - بالکل تصویر والی پوزیشن */}
+          <div className="absolute right-6 top-6 space-y-3 z-[999]">
+             <div className="w-10 h-10 bg-[#d4af37] rounded-xl flex items-center justify-center shadow-lg cursor-pointer hover:scale-110 transition-all border border-white/20">
+                <span className="text-lg">📍</span>
+             </div>
+             <div className="w-10 h-10 bg-[#00c853] rounded-xl flex items-center justify-center shadow-lg cursor-pointer hover:scale-110 transition-all border border-white/20">
+                <span className="text-lg">🚗</span>
+             </div>
+          </div>
+          <div className="absolute left-6 bottom-6 z-[999]">
+             <div className="bg-black/60 backdrop-blur-md px-3 py-1 rounded-full border border-white/10 text-[10px] font-bold">Live Tracking Active</div>
           </div>
         </div>
       </div>
 
-      {/* 🚀 ایکسپلور یونیورس (Swipeable Cards) */}
-      <div className="px-6 mb-6">
-        <div className="flex justify-between items-end mb-4">
-            <div>
-                <h2 className="text-xl font-black text-[#d4af37] tracking-tighter">Explore Tezro Universe</h2>
-                <p className="text-[10px] opacity-50">Category slider دوگی</p>
-            </div>
-            <span className="text-[10px] font-bold text-[#d4af37] border-b border-[#d4af37]">View All</span>
+      {/* 🚀 ایکسپلور یونیورس (بڑے بٹنز اور ایکٹیو لنکس) */}
+      <div className="px-6 mt-10 mb-4 flex justify-between items-end">
+        <div>
+          <h2 className="text-xl font-black text-[#d4af37] tracking-tighter uppercase">Explore Tezro Universe</h2>
+          <p className="text-[10px] opacity-40 font-bold tracking-widest">Category slider دوگی</p>
         </div>
+        <button onClick={() => navigate('/marketplace')} className="text-[10px] font-black text-[#d4af37] uppercase border-b-2 border-[#d4af37] pb-0.5">View All</button>
+      </div>
 
-        <div className="flex space-x-4 overflow-x-auto no-scrollbar py-2">
-            {[
-                { name: 'Marketplace', path: '/shop', icon: '🏪', file: 'TezroMarivetear.jsx' },
-                { name: 'Food Menu', path: '/food', icon: '🍲', file: 'Food Menu' },
-                { name: 'Ride Options', path: '/ride', icon: '🚗', file: 'Rider Options.jsx' }
-            ].map((item, i) => (
-                <div key={i} onClick={() => navigate(item.path)} className="min-w-[150px] h-60 bg-gradient-to-b from-white/10 to-transparent rounded-[2.5rem] p-1 border border-white/5 flex flex-col relative group cursor-pointer">
-                    <div className="h-40 bg-white/5 rounded-[2.2rem] flex items-center justify-center text-4xl group-hover:scale-110 transition-transform">{item.icon}</div>
-                    <div className="p-4 text-center">
-                        <p className="text-[11px] font-black uppercase tracking-widest">{item.name}</p>
-                        <p className="text-[8px] opacity-30 mt-1">{item.file}</p>
-                    </div>
-                </div>
-            ))}
-        </div>
+      <div className="flex space-x-5 overflow-x-auto px-6 no-scrollbar pb-10">
+        {[
+          { name: 'Marketplace', path: '/shop', img: 'https://images.unsplash.com/photo-1604719312566-8912e9227c6a?w=400', file: 'TezroMarivetear.jsx' },
+          { name: 'Food Menu', path: '/food', img: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400', file: 'Food Menu دوگی' },
+          { name: 'Ride Options', path: '/ride', img: 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=400', file: 'Rider Options.jsx' }
+        ].map((item, idx) => (
+          <div key={idx} onClick={() => navigate(item.path)} className="min-w-[170px] h-64 rounded-[3rem] bg-gradient-to-b from-white/10 to-transparent border border-white/5 overflow-hidden relative group cursor-pointer active:scale-95 transition-all shadow-xl">
+            <img src={item.img} className="w-full h-2/3 object-cover opacity-60 group-hover:opacity-100 transition-opacity" alt={item.name} />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#001f0f] via-transparent to-transparent"></div>
+            <div className="absolute bottom-6 left-0 right-0 text-center px-2">
+              <p className="text-[11px] font-black uppercase tracking-widest leading-none">{item.name}</p>
+              <p className="text-[8px] opacity-30 mt-2 font-mono">{item.file}</p>
+            </div>
+          </div>
+        ))}
       </div>
 
       <BottomNav />
