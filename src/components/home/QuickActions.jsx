@@ -4,31 +4,27 @@ import { useNavigate } from 'react-router-dom';
 const QuickActions = () => {
   const navigate = useNavigate();
 
-  // آپ کے سکرین سٹرکچر کے مطابق تمام سروسز
-  const services = [
-    { id: 1, name: 'Ride', icon: '🚕', path: '/ride', color: 'bg-yellow-500/10' },
-    { id: 2, name: 'Food', icon: '🍔', path: '/food', color: 'bg-orange-500/10' },
-    { id: 3, name: 'Pay', icon: '💸', path: '/pay', color: 'bg-blue-500/10' },
-    { id: 4, name: 'Shop', icon: '🛒', path: '/shop', color: 'bg-purple-500/10' },
-    { id: 5, name: 'Banking', icon: '🏦', path: '/banking', color: 'bg-green-500/10' },
-    { id: 6, name: 'Vendor', icon: '📊', path: '/vendor', color: 'bg-red-500/10' },
+  const actions = [
+    { name: 'Ride', icon: '🚕', path: '/ride', desc: 'Secure Travel' },
+    { name: 'Food', icon: '🍲', path: '/food', desc: 'Premium Dining' },
+    { name: 'Pay', icon: '💳', path: '/pay', desc: 'Fast Transfer' },
+    { name: 'Shop', icon: '🛒', path: '/shop', desc: 'Luxury Goods' },
+    { name: 'Bank', icon: '🏦', path: '/banking', desc: 'Asset Vault' },
+    { name: 'Biz', icon: '📊', path: '/vendor', desc: 'Command Center' },
   ];
 
   return (
     <div className="grid grid-cols-3 gap-4">
-      {services.map((service) => (
-        <button
-          key={service.id}
-          onClick={() => navigate(service.path)}
-          className={`flex flex-col items-center justify-center p-5 rounded-[2rem] border border-white/5 ${service.color} hover:border-[#d4af37]/40 transition-all active:scale-90 group`}
+      {actions.map((action, i) => (
+        <div 
+          key={i} 
+          onClick={() => navigate(action.path)}
+          className="bg-gradient-to-b from-white/10 to-transparent border border-white/5 p-4 rounded-[2.5rem] flex flex-col items-center justify-center cursor-pointer active:scale-90 transition-all hover:border-[#d4af37]/40"
         >
-          <span className="text-3xl mb-2 group-hover:scale-110 transition-transform">
-            {service.icon}
-          </span>
-          <span className="text-[9px] font-black text-white/80 uppercase tracking-tighter">
-            {service.name}
-          </span>
-        </button>
+          <span className="text-3xl mb-3 drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]">{action.icon}</span>
+          <p className="text-[10px] font-black text-white uppercase tracking-tighter">{action.name}</p>
+          <p className="text-[7px] text-[#d4af37]/60 font-bold uppercase mt-1">{action.desc}</p>
+        </div>
       ))}
     </div>
   );
