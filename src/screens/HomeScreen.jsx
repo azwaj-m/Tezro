@@ -1,11 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MapContainer, TileLayer } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
 import Sidebar from '../components/Sidebar';
-import SuperSearchBar from '../components/SuperSearchBar';
-import QuickActions from '../components/home/QuickActions';
-import WalletDashboard from '../components/Wallet/WalletDashboard';
-import CategorySlider from '../components/Marketplace/CategorySlider';
 import BottomNav from '../components/BottomNav';
 
 const HomeScreen = () => {
@@ -13,70 +10,72 @@ const HomeScreen = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="min-h-screen pb-28 px-5 pt-8 bg-[#001f0f] selection:bg-[#d4af37] overflow-x-hidden">
+    <div className="min-h-screen bg-[#001f0f] text-white font-sans overflow-x-hidden pb-24">
       <Sidebar isOpen={isSidebarOpen} onClose={() => setSidebarOpen(false)} />
 
-      {/* 🛡️ Header Section */}
-      <header className="flex justify-between items-center mb-8">
-        <div className="cursor-pointer" onClick={() => navigate('/')}>
-          <p className="text-[10px] uppercase tracking-[0.3em] text-[#d4af37]/60 font-bold">Welcome to</p>
-          <h1 className="text-3xl font-black text-[#d4af37] tracking-tighter italic">TEZRO</h1>
+      {/* Header */}
+      <header className="flex justify-between items-center px-6 py-5 sticky top-0 bg-[#001f0f]/90 backdrop-blur-md z-[1000]">
+        <div className="cursor-pointer text-xl" onClick={() => navigate('/notifications')}>🔔</div>
+        <div className="flex flex-col items-center cursor-pointer" onClick={() => window.location.reload()}>
+          <img src="/assets/logo.png" alt="Tezro Logo" className="h-8 mb-1" />
+          <span className="text-[10px] font-bold tracking-[0.3em] text-[#d4af37]">TEZRO</span>
         </div>
-        <div className="relative cursor-pointer" onClick={() => setSidebarOpen(true)}>
-          <div className="w-12 h-12 rounded-2xl border border-[#d4af37]/30 bg-gradient-to-tr from-[#d4af37]/20 to-transparent flex items-center justify-center overflow-hidden shadow-inner active:scale-95 transition-transform">
-            <span className="text-xl">👤</span>
+        <div className="cursor-pointer" onClick={() => setSidebarOpen(true)}>
+          <div className="space-y-1.5">
+            <div className="w-6 h-0.5 bg-[#d4af37]"></div>
+            <div className="w-6 h-0.5 bg-[#d4af37]"></div>
+            <div className="w-4 h-0.5 bg-[#d4af37]"></div>
           </div>
-          <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 border-2 border-[#001f0f] rounded-full shadow-[0_0_10px_#22c55e]"></div>
         </div>
       </header>
 
-      {/* 🔍 1. Super Search Engine */}
-      <div className="mb-8" onClick={() => navigate('/banking')}>
-        <SuperSearchBar />
+      {/* Search Section */}
+      <div className="px-6 mb-6">
+        <div className="relative">
+          <input type="text" placeholder="Search Services..." className="w-full bg-white/5 border border-[#d4af37]/30 rounded-full py-4 px-12 text-sm outline-none focus:border-[#d4af37]" />
+          <span className="absolute left-5 top-4">🔍</span>
+          <span className="absolute right-5 top-4 text-[#d4af37] cursor-pointer">🎤</span>
+        </div>
       </div>
 
-      {/* 💳 2. Financial Core (Wallet) */}
-      <section className="mb-10 active:scale-[0.98] transition-all cursor-pointer" onClick={() => navigate('/banking')}>
-        <WalletDashboard />
-      </section>
-
-      {/* 🚀 3. Central Ecosystem (Quick Actions) */}
-      <section className="mb-10">
-        <div className="flex justify-between items-end mb-5">
-          <h2 className="text-xl font-extrabold text-white tracking-tight">Main Services</h2>
-          <span className="text-[10px] font-black text-[#d4af37] uppercase tracking-widest border-b border-[#d4af37]/30 pb-1">Master Access</span>
+      {/* Virtual Card */}
+      <div className="px-6 mb-8 flex space-x-4 overflow-x-auto no-scrollbar">
+        <div className="min-w-[280px] h-44 bg-gradient-to-br from-[#d4af37] to-[#8b6508] rounded-[2rem] p-6 shadow-2xl flex flex-col justify-between">
+            <div className="flex justify-between items-start">
+                <img src="/assets/logo.png" className="h-6 brightness-0 invert opacity-50" />
+                <span className="text-[10px] font-black uppercase">Tezro Virtual</span>
+            </div>
+            <div className="text-xl font-mono tracking-widest">**** **** **** 4028</div>
+            <div className="flex justify-between items-end">
+                <div><p className="text-[8px] opacity-60">Balance</p><p className="text-lg font-bold">$ 5,358.00</p></div>
+                <div className="flex -space-x-2"><div className="w-8 h-8 rounded-full bg-red-500/80"></div><div className="w-8 h-8 rounded-full bg-yellow-500/80"></div></div>
+            </div>
         </div>
-        <QuickActions />
-      </section>
+      </div>
 
-      {/* 📍 4. Intelligence Map (Leaflet Active) */}
-      <section className="mb-10 group cursor-pointer" onClick={() => navigate('/ride')}>
-         <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-bold text-white tracking-tight">Live Tracking</h3>
-          <span className="text-[10px] text-red-500 font-black animate-pulse uppercase tracking-widest">● Secure Map Active</span>
-        </div>
-        <div className="h-52 rounded-[2.5rem] overflow-hidden border border-[#d4af37]/30 shadow-[0_20px_50px_rgba(0,0,0,0.5)] relative">
+      {/* Map Section */}
+      <div className="px-6 mb-8">
+        <div className="h-52 rounded-[2.5rem] overflow-hidden border border-[#d4af37]/20 relative z-10">
           <MapContainer center={[24.8607, 67.0011]} zoom={13} zoomControl={false} className="h-full w-full">
-            <TileLayer
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              attribution='&copy; Tezro'
-            />
+            <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+            <Marker position={[24.8607, 67.0011]} />
           </MapContainer>
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>
-          <div className="absolute bottom-5 left-6 z-[1000] bg-[#d4af37] text-[#001f0f] px-5 py-2 rounded-xl font-black text-[10px] uppercase tracking-tighter">
-            Initialize AI Route
-          </div>
         </div>
-      </section>
+      </div>
 
-      {/* 🌌 5. Marketplace Discovery */}
-      <section className="mb-6">
-        <div className="flex justify-between items-center mb-5">
-          <h3 className="text-lg font-bold text-white tracking-tight">Explore Universe</h3>
-          <button onClick={() => navigate('/shop')} className="text-[#d4af37] text-[10px] font-black bg-[#d4af37]/10 px-5 py-2 rounded-full border border-[#d4af37]/20 active:bg-[#d4af37]/30">VIEW ALL</button>
-        </div>
-        <CategorySlider />
-      </section>
+      {/* Service Grid */}
+      <div className="flex space-x-4 overflow-x-auto px-6 no-scrollbar">
+        {[
+          { name: 'Marketplace', icon: '🏪', path: '/shop' },
+          { name: 'Food Menu', icon: '🍲', path: '/food' },
+          { name: 'Ride Options', icon: '🚗', path: '/ride' }
+        ].map((item, idx) => (
+          <div key={idx} onClick={() => navigate(item.path)} className="min-w-[140px] h-48 rounded-[2.5rem] bg-white/5 border border-white/5 flex flex-col items-center justify-center p-4 cursor-pointer">
+            <div className="text-4xl mb-4">{item.icon}</div>
+            <p className="text-[10px] font-black uppercase">{item.name}</p>
+          </div>
+        ))}
+      </div>
 
       <BottomNav />
     </div>
