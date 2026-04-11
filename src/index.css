@@ -2,17 +2,24 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  body {
-    @apply bg-[#001a0f] text-white antialiased;
-    margin: 0;
-    font-family: 'Inter', sans-serif;
-  }
+:root {
+  --tezro-bg: #001a0f;
+  --tezro-gold: #FFD700;
+  --tezro-glass: rgba(0, 43, 26, 0.85);
+}
+
+body {
+  background-color: var(--tezro-bg);
+  color: white;
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.glass {
+  background: var(--tezro-glass);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 215, 0, 0.15);
 }
 
 .no-scrollbar::-webkit-scrollbar { display: none; }
-.glass-effect {
-  background: rgba(0, 43, 26, 0.8);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 215, 0, 0.15);
-}
