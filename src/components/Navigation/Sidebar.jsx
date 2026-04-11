@@ -1,38 +1,36 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { X, Shield, Settings, Wallet, HelpCircle, LogOut } from 'lucide-react';
+import { X, Shield, Wallet, Settings, LogOut } from 'lucide-react';
 
 const Sidebar = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
   if (!isOpen) return null;
 
-  const menuItems = [
-    { label: 'Security Vault', icon: Shield, path: '/notifications' },
-    { label: 'Wallet Settings', icon: Wallet, path: '/profile-settings' },
-    { label: 'System Settings', icon: Settings, path: '/profile-settings' },
-    { label: 'Support Center', icon: HelpCircle, path: '/' },
-  ];
+  const handleNav = (path) => {
+    navigate(path);
+    onClose();
+  };
 
   return (
     <div className="fixed inset-0 z-[100] flex">
-      <div className="fixed inset-0 bg-black/80 backdrop-blur-md" onClick={onClose}></div>
-      <div className="relative w-80 bg-[#001a0f] border-r border-[#FFD700]/20 h-full p-8 shadow-[20px_0_50px_rgba(0,0,0,0.5)] flex flex-col">
-        <div className="flex justify-between items-center mb-12">
-          <span className="shiny-gold text-2xl font-black italic">TEZRO MENU</span>
-          <button onClick={onClose} className="text-[#FFD700]"><X size={30} /></button>
+      <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose}></div>
+      <div className="relative w-72 bg-[#001a0f] border-r border-[#FFD700]/20 h-full p-6 shadow-2xl flex flex-col">
+        <div className="flex justify-between items-center mb-10">
+          <span className="shiny-gold font-black italic">TEZRO MENU</span>
+          <button onClick={onClose} className="text-[#FFD700]"><X size={24} /></button>
         </div>
-
-        <div className="space-y-6 flex-1">
-          {menuItems.map((item, i) => (
-            <div key={i} onClick={() => { navigate(item.path); onClose(); }} className="flex items-center gap-4 text-white/70 hover:text-[#FFD700] cursor-pointer transition-all p-2 rounded-xl hover:bg-[#FFD700]/5">
-              <item.icon size={22} />
-              <span className="text-sm font-bold uppercase tracking-widest">{item.label}</span>
-            </div>
-          ))}
+        <div className="space-y-4">
+          <button onClick={() => handleNav('/vault')} className="w-full flex items-center gap-4 p-4 rounded-2xl hover:bg-[#FFD700]/10 text-white/80">
+            <Wallet size={20} className="text-[#FFD700]" />
+            <span className="font-bold uppercase text-xs tracking-widest">Financial Vault</span>
+          </button>
+          <button onClick={() => handleNav('/vault')} className="w-full flex items-center gap-4 p-4 rounded-2xl hover:bg-[#FFD700]/10 text-white/80">
+            <Shield size={20} className="text-[#FFD700]" />
+            <span className="font-bold uppercase text-xs tracking-widest">Security Audit</span>
+          </button>
         </div>
-
-        <button className="flex items-center gap-4 text-red-500/70 p-4 border-t border-white/5 mt-auto">
-          <LogOut size={20} /> <span className="text-sm font-black uppercase">Secure Logout</span>
+        <button className="mt-auto flex items-center gap-4 p-4 text-red-500/60 font-black uppercase text-xs">
+          <LogOut size={18} /> Secure Exit
         </button>
       </div>
     </div>
