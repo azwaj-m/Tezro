@@ -1,27 +1,17 @@
 import React, { useState } from 'react';
 import Navbar from '../components/Navigation/Navbar';
-import Sidebar from '../components/Navigation/Sidebar';
 import BottomNav from '../components/BottomNav';
-import TezroVirtualCard from '../components/TezroVirtualCard';
-import QuickActions from '../components/home/QuickActions';
-
 const HomeScreen = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-
   return (
-    <div className="flex flex-col h-screen bg-[#001a0f] text-white overflow-hidden">
+    <div className="flex flex-col min-h-screen bg-[#001a0f]">
       <Navbar onOpenSidebar={() => setSidebarOpen(true)} />
-      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-      
-      <main className="flex-1 overflow-y-auto pt-20 pb-24 px-6 space-y-8 no-scrollbar">
-        <TezroVirtualCard />
-        <div className="py-2">
-           <h3 className="text-[#FFD700] text-[10px] font-black uppercase tracking-[4px] mb-6 border-b border-[#FFD700]/10 pb-2">Command Center</h3>
-           <QuickActions />
+      <main className="flex-1 pt-24 px-6 text-center">
+        <div className="p-10 border border-[#FFD700]/20 rounded-[2rem] bg-[#002b1a]">
+          <h2 className="text-[#FFD700] font-black uppercase tracking-widest">System Reset Complete</h2>
+          <p className="text-white/40 text-xs mt-2 font-mono">Clean Architecture Active</p>
         </div>
-        {/* میپ یہاں سے مستقل طور پر حذف کر دیا گیا ہے */}
       </main>
-
       <BottomNav />
     </div>
   );
