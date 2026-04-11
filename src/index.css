@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --tezro-green: #001a0f;
+  --tezro-gold: #FFD700;
+}
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  background-color: var(--tezro-green);
+  color: white;
+  overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* سکیورٹی کے لیے ٹیکسٹ سلیکشن بلاک کریں (آپشنل) */
+::selection {
+  background: var(--tezro-gold);
+  color: black;
+}
