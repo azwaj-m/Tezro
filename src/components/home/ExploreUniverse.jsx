@@ -9,27 +9,27 @@ const categories = [
 
 const ExploreUniverse = () => (
   <div className="mt-8 mb-10 px-1">
-    <div className="flex justify-between items-end mb-6">
+    <div className="flex justify-between items-end mb-6 px-1">
       <div>
         <h3 className="text-xl font-black text-white tracking-tight">Explore Tezro Universe</h3>
         <p className="text-[10px] text-white/40 font-bold uppercase tracking-widest mt-1">Category slider دوکان دیکھیں</p>
       </div>
-      <button className="flex items-center gap-1 text-[#FFD700] text-[10px] font-black uppercase tracking-tighter border-b border-[#FFD700]/30 pb-0.5">
+      <button className="flex items-center gap-1.5 text-[#FFD700] text-[10px] font-black uppercase tracking-widest">
         View All <ArrowRight size={12} />
       </button>
     </div>
 
     <div className="flex gap-5 overflow-x-auto no-scrollbar pb-4 -mx-1 px-1">
       {categories.map((item) => (
-        <div key={item.id} className="min-w-[160px] group">
-          <div className="relative h-48 rounded-[2rem] overflow-hidden border border-white/5 shadow-2xl mb-3 card-dark transition-transform active:scale-95">
+        <div key={item.id} className="min-w-[170px] group transition-transform active:scale-95">
+          <div className="relative h-52 rounded-[2.5rem] overflow-hidden border border-white/5 shadow-2xl card-dark">
             <img src={item.img} className="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity" alt={item.title} />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent p-4 flex flex-col justify-end">
-              <div className="bg-[#FFD700] text-black w-10 h-10 rounded-2xl flex items-center justify-center mb-3 shadow-lg">
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent p-5 flex flex-col justify-end">
+              <div className="bg-[#FFD700] text-black w-10 h-10 rounded-2xl flex items-center justify-center mb-4 shadow-lg">
                 {item.icon}
               </div>
               <h4 className="text-sm font-black text-white uppercase tracking-tighter">{item.title}</h4>
-              <p className="text-[9px] text-white/40 font-medium truncate">{item.sub}</p>
+              <p className="text-[9px] text-white/40 font-medium truncate mt-1">{item.sub}</p>
             </div>
           </div>
         </div>
