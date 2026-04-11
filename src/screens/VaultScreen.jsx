@@ -1,120 +1,100 @@
 import React, { useState } from 'react';
-import { ShieldCheck, Landmark, Receipt, QrCode, X, Search, ChevronRight } from 'lucide-react';
+import { ShieldCheck, Landmark, Receipt, QrCode, ArrowLeft } from 'lucide-react';
+import BankSelector from '../components/vault/BankSelector';
+import ReceiptModal from '../components/vault/ReceiptModal';
+import { calculateFee } from '../utils/feeCalculator';
 
 const VaultScreen = () => {
-  const [showBillType, setShowBillType] = useState(false);
-  const [showCompanySelect, setShowCompanySelect] = useState(false);
-  const [selectedBill, setSelectedBill] = useState('');
-  const [billId, setBillId] = useState('');
+  const [showBankSelect, setShowBankSelect] = useState(false);
+  const [showReceipt, setShowReceipt] = useState(false);
+  const [selectedBank, setSelectedBank] = useState(null);
+  const [amount, setAmount] = useState('');
+  const [isProcessing, setIsProcessing] = useState(false);
 
-  const billTypes = [
-    { name: 'بجلی', icon: '⚡' }, { name: 'پانی', icon: '💧' },
-    { name: 'گیس', icon: '🔥' }, { name: 'انٹرنیٹ', icon: '🌐' },
-    { name: 'ٹیلی فون', icon: '📞' }, { name: 'چالان', icon: '📜' }
-  ];
+  const handlePayment = () => {
+    if(!amount || !selectedBank) return alert("براہ کرم بینک اور رقم درج کریں");
+    
+    setIsProcessing(true);
+    // ملٹری گریڈ انکرپشن اور قلیل سازی کا ڈمی ویٹ
+    setTimeout(() => {
+      setIsProcessing(false);
+      setShowReceipt(true);
+    }, 2000);
+  };
 
-  const companies = ["MEPCO", "SNGPL", "WASA", "PTCL", "FBR"];
+  const fee = calculateFee(amount, selectedBank?.category);
 
   return (
-    <div className="min-h-screen bg-[#001a0f] pt-32 pb-32 px-5 text-right font-sans">
-      {/* Header Summary (Image Inspired) */}
-      <div className="gold-border rounded-[2.5rem] p-6 mb-8 bg-black/40 backdrop-blur-md">
-        <div className="flex justify-between items-center mb-4">
-          <ShieldCheck className="text-green-500" size={20} />
-          <p className="text-white/40 text-[10px] uppercase tracking-widest">موجودہ بیلنس</p>
+    <div className="min-h-screen bg-[#001a0f] pt-32 pb-32 px-5 text-right">
+      <div className="gold-border rounded-[2.5rem] p-6 mb-8 bg-black/40 backdrop-blur-md relative overflow-hidden">
+        <div className="absolute top-0 right-0 p-4 opacity-10">
+            <Landmark size={80} className="text-[#FFD700]" />
         </div>
-        <h2 className="text-3xl font-black shiny-gold tracking-tighter text-left">Rs 125,500.50</h2>
+        <p className="text-white/40 text-[10px] uppercase tracking-widest font-bold">کل اثاثہ جات</p>
+        <h2 className="text-3xl font-black shiny-gold tracking-tighter text-left font-mono mt-2">Rs 125,500.50</h2>
       </div>
 
-      {/* Main Actions Grid */}
-      <div className="grid grid-cols-2 gap-4 mb-8">
-        <button className="glass-iranian p-6 rounded-[2rem] border border-[#FFD700]/20 flex flex-col items-center gap-2 group active:scale-95 transition-all">
-          <div className="bg-[#FFD700]/10 p-3 rounded-xl group-hover:bg-[#FFD700]/20"><Landmark className="text-[#FFD700]" /></div>
-          <span className="text-[11px] text-white font-black">فنڈز ٹرانسفر</span>
-        </button>
+      <div className="space-y-6">
+        {/* بینک کا انتخاب */}
         <button 
-          onClick={() => setShowBillType(true)}
-          className="glass-iranian p-6 rounded-[2rem] border border-[#FFD700]/20 flex flex-col items-center gap-2 group active:scale-95 transition-all"
+          onClick={() => setShowBankSelect(true)}
+          className="w-full glass-iranian p-6 rounded-[2rem] border border-[#FFD700]/20 flex items-center justify-between group active:scale-[0.98] transition-all"
         >
-          <div className="bg-[#FFD700]/10 p-3 rounded-xl group-hover:bg-[#FFD700]/20"><Receipt className="text-[#FFD700]" /></div>
-          <span className="text-[11px] text-white font-black">بلز کی ادائیگی</span>
+          <ChevronLeft className="text-[#FFD700]/40" />
+          <div className="flex items-center gap-4">
+            <div className="text-right">
+              <p className="text-[10px] text-white/40 uppercase font-black">بینک منتخب کریں</p>
+              <p className="text-xs text-[#FFD700] font-black uppercase">{selectedBank ? selectedBank.name : 'انتخاب کریں'}</p>
+            </div>
+            <div className="w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center border border-white/10">
+              {selectedBank ? <img src={selectedBank.logo} className="w-6 h-6 object-contain" /> : <Landmark className="text-[#FFD700]/40" />}
+            </div>
+          </div>
+        </button>
+
+        {/* رقم کا اندراج */}
+        <div className="glass-iranian p-6 rounded-[2rem] border border-[#FFD700]/20">
+          <p className="text-[10px] text-white/40 uppercase font-black mb-4">رقم درج کریں</p>
+          <div className="flex items-center gap-2 border-b border-[#FFD700]/20 pb-2">
+             <span className="text-[#FFD700] font-black">PKR</span>
+             <input 
+               type="number" 
+               value={amount}
+               onChange={(e) => setAmount(e.target.value)}
+               className="bg-transparent text-white text-2xl font-black outline-none w-full text-right"
+               placeholder="0.00"
+             />
+          </div>
+          <div className="flex justify-between mt-4">
+            <span className="text-red-500 font-bold text-[9px]">Rs {fee}</span>
+            <span className="text-white/20 text-[9px] uppercase font-bold">سرکاری ٹیکس و فیس</span>
+          </div>
+        </div>
+
+        <button 
+          onClick={handlePayment}
+          disabled={isProcessing}
+          className="w-full bg-[#FFD700] text-black font-black py-6 rounded-3xl uppercase tracking-[4px] shadow-[0_15px_40px_rgba(255,215,0,0.2)] active:scale-95 transition-all flex items-center justify-center gap-3"
+        >
+          {isProcessing ? 'سیکیورٹی اسکین جاری ہے...' : 'محفوظ ادائیگی کریں'}
         </button>
       </div>
 
-      {/* Bill Type Selection Popup */}
-      {showBillType && (
-        <div className="fixed inset-0 z-[200] flex items-end justify-center">
-          <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => setShowBillType(false)}></div>
-          <div className="relative w-full bg-[#001a0f] border-t-2 border-[#FFD700]/30 rounded-t-[3rem] p-8 animate-slide-up">
-            <h3 className="text-[#FFD700] text-xl font-black mb-6 text-center">بل کی قسم منتخب کریں</h3>
-            <div className="grid grid-cols-3 gap-4">
-              {billTypes.map((type) => (
-                <button 
-                  key={type.name}
-                  onClick={() => { setSelectedBill(type.name); setShowBillType(false); setShowCompanySelect(true); }}
-                  className="flex flex-col items-center gap-2 p-4 rounded-2xl bg-white/5 border border-white/10 active:bg-[#FFD700]/10"
-                >
-                  <span className="text-2xl">{type.icon}</span>
-                  <span className="text-[10px] text-white font-bold">{type.name}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
+      <BankSelector 
+        isOpen={showBankSelect} 
+        onClose={() => setShowBankSelect(false)} 
+        onSelect={(bank) => { setSelectedBank(bank); setShowBankSelect(false); }}
+      />
 
-      {/* Company & ID Entry Popup */}
-      {showCompanySelect && (
-        <div className="fixed inset-0 z-[200] flex items-end justify-center">
-          <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => setShowCompanySelect(false)}></div>
-          <div className="relative w-full bg-[#001a0f] border-t-2 border-[#FFD700]/30 rounded-t-[3rem] p-8 animate-slide-up h-[70vh]">
-            <div className="flex justify-between items-center mb-8">
-              <button onClick={() => setShowCompanySelect(false)}><X className="text-[#FFD700]" /></button>
-              <h3 className="text-[#FFD700] text-xl font-black">{selectedBill} کی ادائیگی</h3>
-            </div>
-            
-            <div className="space-y-6">
-              <div className="bg-white/5 rounded-2xl p-4 border border-white/10">
-                <p className="text-[10px] text-white/40 mb-2">کمپنی منتخب کریں</p>
-                <select className="bg-transparent text-white w-full outline-none font-bold">
-                  {companies.map(c => <option key={c} value={c}>{c}</option>)}
-                </select>
-              </div>
-
-              <div className="bg-white/5 rounded-2xl p-4 border border-white/10 flex items-center gap-3">
-                <input 
-                  type="text" 
-                  placeholder="بل آئی ڈی نمبر درج کریں" 
-                  className="bg-transparent text-white w-full outline-none text-right font-bold"
-                />
-                <QrCode className="text-[#FFD700] cursor-pointer" />
-              </div>
-
-              <button className="w-full bg-[#FFD700] text-black font-black py-5 rounded-2xl uppercase tracking-[3px] shadow-xl active:scale-95 transition-all">
-                بل بھرنے کا عمل مکمل کریں
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Recent Activity (Image 12 Inspiration) */}
-      <div className="mt-10">
-        <h3 className="text-[#FFD700] text-sm font-black mb-4 tracking-widest">حالیہ سرگرمی</h3>
-        <div className="space-y-3">
-          {[1, 2].map(i => (
-            <div key={i} className="flex justify-between items-center bg-white/5 p-4 rounded-2xl border border-white/5">
-              <span className="text-red-500 font-bold text-xs">- Rs 5,800</span>
-              <div className="text-right">
-                <p className="text-white text-xs font-black uppercase">MEPCO Bill</p>
-                <p className="text-white/20 text-[9px]">21-11-2024</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
+      <ReceiptModal 
+        isOpen={showReceipt} 
+        onClose={() => setShowReceipt(false)}
+        transaction={{ amount, bankName: selectedBank?.name }}
+      />
     </div>
   );
 };
+
+const ChevronLeft = ({className}) => <svg className={className} width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>;
 
 export default VaultScreen;

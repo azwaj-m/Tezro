@@ -1,34 +1,22 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Navbar from '../components/Navigation/Navbar';
-import BottomNav from '../components/BottomNav';
-import Sidebar from '../components/Navigation/Sidebar';
 import TezroVirtualCard from '../components/TezroVirtualCard';
-import ExploreUniverse from '../components/home/ExploreUniverse';
 import LiveMap from '../components/home/LiveMap';
+import ExploreUniverse from '../components/home/ExploreUniverse';
+import SecurityStatus from '../components/home/SecurityStatus';
 
 const HomeScreen = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-
   return (
-    <div className="min-h-screen bg-[#001a0f] text-white">
-      <Navbar onOpenSidebar={() => setSidebarOpen(true)} />
-      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-      
-      <main className="pt-52 pb-32 px-6 space-y-12 overflow-y-auto no-scrollbar max-w-md mx-auto">
-        <TezroVirtualCard />
-        
-        <div className="space-y-6">
-          <div className="flex justify-between items-center px-2">
-            <h3 className="text-xl font-black shiny-gold uppercase tracking-tighter">Active Terminals</h3>
-            <span className="text-[10px] text-[#FFD700]/50 font-bold uppercase tracking-widest">Real-time Data</span>
-          </div>
-          <LiveMap />
+    <div className="pt-40 px-4 space-y-4">
+      <TezroVirtualCard />
+      <SecurityStatus />
+      <div className="gold-border rounded-[2.5rem] overflow-hidden h-64 shadow-2xl relative">
+        <div className="absolute top-4 left-4 z-10 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full border border-white/10">
+          <span className="text-[8px] text-[#FFD700] font-black uppercase tracking-widest">Live Security Feed</span>
         </div>
-
-        <ExploreUniverse />
-      </main>
-
-      <BottomNav />
+        <LiveMap />
+      </div>
+      <ExploreUniverse />
     </div>
   );
 };
