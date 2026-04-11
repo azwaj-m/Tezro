@@ -1,27 +1,25 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 
 const QuickActions = () => {
-  const navigate = useNavigate();
   const actions = [
-    { name: 'RIDE', icon: '🚕', path: '/ride', sub: 'Secure Travel' },
-    { name: 'FOOD', icon: '🍲', path: '/food', sub: 'Premium Dining' },
-    { name: 'PAY', icon: '💳', path: '/pay', sub: 'Fast Transfer' },
-    { name: 'SHOP', icon: '🛒', path: '/shop', sub: 'Luxury Goods' },
-    { name: 'BANK', icon: '🏦', path: '/banking', sub: 'Asset Vault' },
-    { name: 'SERVICES', icon: '🛠️', path: '/services', sub: 'Expert Help' },
+    { name: 'RIDE', icon: '🚕', sub: 'Secure' },
+    { name: 'FOOD', icon: '🍲', sub: 'Dining' },
+    { name: 'PAY', icon: '💳', sub: 'Transfer' },
+    { name: 'SHOP', icon: '🛒', sub: 'Luxury' },
+    { name: 'BANK', icon: '🏦', sub: 'Vault' },
+    { name: 'SERVICES', icon: '🛠️', sub: 'Expert' },
   ];
 
   return (
-    <div className="grid grid-cols-3 gap-y-10 gap-x-4 py-6">
+    <div className="grid grid-cols-3 gap-y-8 gap-x-4 py-4 w-full">
       {actions.map((item, index) => (
-        <div key={index} onClick={() => navigate(item.path)} className="flex flex-col items-center group cursor-pointer">
-          <div className="relative w-20 h-20 rounded-full bg-gradient-to-b from-[#1a1a1a] to-[#0a0a0a] border-2 border-[#FFD700]/40 flex items-center justify-center shadow-[0_0_20px_rgba(255,215,0,0.2)]">
-             <span className="text-3xl">{item.icon}</span>
-             <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-transparent via-white/10 to-transparent pointer-events-none"></div>
+        <div key={index} className="flex flex-col items-center group cursor-pointer">
+          <div className="relative w-20 h-20 rounded-full bg-gradient-to-b from-[#003d26] to-[#001a0f] border-2 border-[#FFD700]/50 flex items-center justify-center shadow-[0_10px_20px_rgba(0,0,0,0.4)] group-active:scale-95 transition-all">
+             <span className="text-3xl drop-shadow-md">{item.icon}</span>
+             <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-white/10 to-transparent opacity-30"></div>
           </div>
-          <span className="text-[11px] font-black uppercase text-[#FFD700] mt-4 tracking-tight">{item.name}</span>
-          <span className="text-[8px] text-white/40 uppercase font-medium mt-0.5">{item.sub}</span>
+          <span className="text-[11px] font-black text-[#FFD700] mt-3 uppercase tracking-wider">{item.name}</span>
+          <span className="text-[8px] text-white/40 font-bold uppercase">{item.sub}</span>
         </div>
       ))}
     </div>
