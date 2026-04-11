@@ -1,32 +1,40 @@
 @import "tailwindcss";
 
 :root {
-  --tezro-bg: #001a0f;
-  --tezro-gold: #FFD700;
-  --tezro-card-dark: #121212;
+  --royal-gold: #FFD700;
+  --light-gold: #FFF8E1;
+  --iranian-green: #002b1a;
 }
 
 body {
-  background-color: var(--tezro-bg);
+  background-color: var(--iranian-green);
   color: white;
-  margin: 0;
-  padding: 0;
   font-family: 'Inter', sans-serif;
-  overflow-x: hidden;
-  min-height: 100vh;
-  -webkit-tap-highlight-color: transparent; /* موبائل ٹچ پر نیلا پن ختم کرنے کے لیے */
 }
 
-/* Glass effect components */
-.glass {
-  background: rgba(0, 43, 26, 0.85);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 215, 0, 0.1);
+/* شاہانہ شائنی ایفیکٹ */
+.shiny-gold {
+  background: linear-gradient(135deg, #FFD700 0%, #FFF8E1 50%, #B8860B 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.5));
 }
 
-.card-dark {
-  background-color: var(--tezro-card-dark);
-  border: 1px solid rgba(255, 215, 0, 0.05);
+.gold-border {
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.1);
 }
 
-.no-scrollbar::-webkit-scrollbar { display: none; }
+.glass-iranian {
+  background: rgba(0, 43, 26, 0.7);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 215, 0, 0.2);
+}
+
+/* میپ سائز کنٹرول */
+.leaflet-container {
+  width: 100%;
+  height: 100%;
+  border-radius: 2rem;
+  filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+}
