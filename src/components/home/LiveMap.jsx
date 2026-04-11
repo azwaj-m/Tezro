@@ -1,24 +1,23 @@
 import React from 'react';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import L from 'leaflet';
-
-// میپ آئیکن سیٹ اپ
-import markerIcon from 'leaflet/dist/images/marker-icon.png';
-import markerShadow from 'leaflet/dist/images/marker-shadow.png';
-let DefaultIcon = L.icon({ iconUrl: markerIcon, shadowUrl: markerShadow, iconSize: [25, 41], iconAnchor: [12, 41] });
-L.Marker.prototype.options.icon = DefaultIcon;
+import { MapContainer, TileLayer, CircleMarker, Popup } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
 
 const LiveMap = () => {
+  const position = [31.5204, 74.3587]; // شاہانہ لوکیشن (لاہور)
+  
   return (
-    <div className="w-full h-60 rounded-[2.5rem] overflow-hidden gold-border relative z-0">
-      <MapContainer center={[31.5204, 74.3587]} zoom={13} className="h-full w-full grayscale-[0.8] invert-[100%] hue-rotate(180deg)">
-        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-        <Marker position={[31.5204, 74.3587]}>
-          <Popup>Secure Tezro Terminal <br/> Active Now</Popup>
-        </Marker>
+    <div className="w-full h-64 rounded-[2.5rem] overflow-hidden gold-border relative z-10 group">
+      <MapContainer center={position} zoom={13} className="h-full w-full grayscale invert-[100%] hue-rotate(180deg) brightness(80%)">
+        <TileLayer url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png" />
+        <CircleMarker center={position} radius={12} pathOptions={{ color: '#FFD700', fillColor: '#FFD700', fillOpacity: 0.6 }}>
+          <Popup>Tezro Royal Terminal - Secured</Popup>
+        </CircleMarker>
       </MapContainer>
-      <div className="absolute top-4 left-6 z-10 bg-black/70 backdrop-blur-md px-4 py-1 rounded-full border border-[#FFD700]/30">
-        <span className="text-[10px] text-green-400 font-black uppercase tracking-widest animate-pulse">● Live Security Map</span>
+      <div className="absolute top-5 left-6 z-[1000] bg-black/60 backdrop-blur-md border border-[#FFD700]/20 px-4 py-1.5 rounded-full">
+        <div className="flex items-center gap-2">
+          <span className="w-2 h-2 bg-green-500 rounded-full animate-ping"></span>
+          <span className="text-[9px] text-white font-black uppercase tracking-widest">Live Security Feed</span>
+        </div>
       </div>
     </div>
   );
