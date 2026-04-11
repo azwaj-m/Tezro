@@ -6,7 +6,7 @@ const Navbar = ({ onOpenSidebar }) => {
   const navigate = useNavigate();
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 p-6 bg-gradient-to-b from-[#001a0f] to-transparent">
+    <header className="fixed top-0 left-0 right-0 z-50 p-6 bg-gradient-to-b from-[#FFD700]/10 via-[#001a0f] to-transparent">
       <div className="flex justify-between items-center mb-6">
         <button onClick={onOpenSidebar} className="p-2 text-[#FFD700] active:scale-90 transition-all">
           <Menu size={28} />

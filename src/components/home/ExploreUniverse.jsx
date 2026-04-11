@@ -5,31 +5,34 @@ const services = [
   { id: 1, title: 'Marketplace', path: '/service/marketplace', img: 'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?q=80&w=400' },
   { id: 2, title: 'Food & Dining', path: '/service/food', img: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=400' },
   { id: 3, title: 'Ride & Taxi', path: '/service/ride', img: 'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?q=80&w=400' },
-  { id: 4, title: 'Doctor/Home Visit', path: '/service/doctor', img: 'https://images.unsplash.com/photo-1584515933487-759f38bc894c?q=80&w=400' },
-  { id: 5, title: 'Maintenance/Worker', path: '/service/maintenance', img: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?q=80&w=400' }
+  { id: 4, title: 'Doctor Home', path: '/service/doctor', img: 'https://images.unsplash.com/photo-1584515933487-759f38bc894c?q=80&w=400' }
 ];
 
 const ExploreUniverse = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="mt-10 pb-32 space-y-8 px-1">
-      <div className="flex justify-between items-center px-1">
-        <h3 className="text-xl font-black shiny-gold uppercase tracking-tighter">Premium Services</h3>
-        <span className="text-[9px] text-white/30 font-bold uppercase tracking-[4px]">Verified Providers</span>
+    <div className="mt-10 px-1">
+      <div className="flex justify-between items-center mb-6 px-4">
+        <h3 className="text-lg font-black shiny-gold uppercase tracking-tighter">Premium Services</h3>
+        <span className="text-[8px] text-[#FFD700] font-bold border border-[#FFD700]/30 px-2 py-0.5 rounded-full animate-pulse">SWIPE</span>
       </div>
 
-      <div className="grid grid-cols-1 gap-6">
+      {/* سوئپ کارڈز کنٹینر */}
+      <div className="flex gap-5 overflow-x-auto no-scrollbar snap-x snap-mandatory px-4 pb-8">
         {services.map((service) => (
           <div 
             key={service.id} 
             onClick={() => navigate(service.path)}
-            className="relative h-44 rounded-[2.5rem] overflow-hidden gold-border group cursor-pointer active:scale-[0.98] transition-all"
+            className="min-w-[280px] h-48 rounded-[2.8rem] overflow-hidden gold-border relative snap-center active:scale-95 transition-all shadow-[0_20px_40px_rgba(0,0,0,0.6)]"
           >
-            <img src={service.img} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 opacity-60" />
-            <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/20 to-transparent flex flex-col justify-center p-8">
-              <h4 className="text-xl font-black text-[#FFD700] uppercase tracking-tighter drop-shadow-lg">{service.title}</h4>
-              <p className="text-[9px] text-white/60 font-bold uppercase tracking-[3px] mt-2">Tap to book appointment</p>
+            <img src={service.img} className="w-full h-full object-cover opacity-50 group-hover:opacity-80 transition-opacity" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent p-8 flex flex-col justify-end">
+              <h4 className="text-xl font-black text-white uppercase tracking-tighter">{service.title}</h4>
+              <div className="flex items-center gap-2 mt-2">
+                <span className="w-8 h-0.5 bg-[#FFD700]"></span>
+                <p className="text-[9px] text-[#FFD700] font-black uppercase tracking-[2px]">Book Now</p>
+              </div>
             </div>
           </div>
         ))}
