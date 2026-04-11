@@ -1,41 +1,40 @@
 import React from 'react';
-import { ShoppingBag, Utensils, CarFront, ArrowRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
-const categories = [
-  { id: 1, title: 'Marketplace', sub: 'TezroMarivetear.jsx', icon: <ShoppingBag size={24} />, img: 'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&q=80&w=200' },
-  { id: 2, title: 'Food Menu', sub: 'Food Menu دوکان', icon: <Utensils size={24} />, img: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&q=80&w=200' },
-  { id: 3, title: 'Ride Options', sub: 'Rider Options.jsx', icon: <CarFront size={24} />, img: 'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?auto=format&fit=crop&q=80&w=200' }
+const services = [
+  { id: 1, title: 'Marketplace', path: '/service/marketplace', img: 'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?q=80&w=400' },
+  { id: 2, title: 'Food & Dining', path: '/service/food', img: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=400' },
+  { id: 3, title: 'Ride & Taxi', path: '/service/ride', img: 'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?q=80&w=400' },
+  { id: 4, title: 'Doctor/Home Visit', path: '/service/doctor', img: 'https://images.unsplash.com/photo-1584515933487-759f38bc894c?q=80&w=400' },
+  { id: 5, title: 'Maintenance/Worker', path: '/service/maintenance', img: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?q=80&w=400' }
 ];
 
-const ExploreUniverse = () => (
-  <div className="mt-8 mb-10 px-1">
-    <div className="flex justify-between items-end mb-6 px-1">
-      <div>
-        <h3 className="text-xl font-black text-white tracking-tight">Explore Tezro Universe</h3>
-        <p className="text-[10px] text-white/40 font-bold uppercase tracking-widest mt-1">Category slider دوکان دیکھیں</p>
-      </div>
-      <button className="flex items-center gap-1.5 text-[#FFD700] text-[10px] font-black uppercase tracking-widest">
-        View All <ArrowRight size={12} />
-      </button>
-    </div>
+const ExploreUniverse = () => {
+  const navigate = useNavigate();
 
-    <div className="flex gap-5 overflow-x-auto no-scrollbar pb-4 -mx-1 px-1">
-      {categories.map((item) => (
-        <div key={item.id} className="min-w-[170px] group transition-transform active:scale-95">
-          <div className="relative h-52 rounded-[2.5rem] overflow-hidden border border-white/5 shadow-2xl card-dark">
-            <img src={item.img} className="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity" alt={item.title} />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent p-5 flex flex-col justify-end">
-              <div className="bg-[#FFD700] text-black w-10 h-10 rounded-2xl flex items-center justify-center mb-4 shadow-lg">
-                {item.icon}
-              </div>
-              <h4 className="text-sm font-black text-white uppercase tracking-tighter">{item.title}</h4>
-              <p className="text-[9px] text-white/40 font-medium truncate mt-1">{item.sub}</p>
+  return (
+    <div className="mt-10 pb-32 space-y-8 px-1">
+      <div className="flex justify-between items-center px-1">
+        <h3 className="text-xl font-black shiny-gold uppercase tracking-tighter">Premium Services</h3>
+        <span className="text-[9px] text-white/30 font-bold uppercase tracking-[4px]">Verified Providers</span>
+      </div>
+
+      <div className="grid grid-cols-1 gap-6">
+        {services.map((service) => (
+          <div 
+            key={service.id} 
+            onClick={() => navigate(service.path)}
+            className="relative h-44 rounded-[2.5rem] overflow-hidden gold-border group cursor-pointer active:scale-[0.98] transition-all"
+          >
+            <img src={service.img} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 opacity-60" />
+            <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/20 to-transparent flex flex-col justify-center p-8">
+              <h4 className="text-xl font-black text-[#FFD700] uppercase tracking-tighter drop-shadow-lg">{service.title}</h4>
+              <p className="text-[9px] text-white/60 font-bold uppercase tracking-[3px] mt-2">Tap to book appointment</p>
             </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
-  </div>
-);
-
+  );
+};
 export default ExploreUniverse;

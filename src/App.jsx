@@ -1,29 +1,40 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Navbar from './components/Navigation/Navbar';
+import BottomNav from './components/BottomNav';
+import Sidebar from './components/Navigation/Sidebar';
 import HomeScreen from './screens/HomeScreen';
 
-// سیکیور اور شاہانہ صفحات کے شیلف (Placeholders)
-const SecurePage = ({ title }) => (
-  <div className="min-h-screen bg-[#001a0f] pt-44 px-8 text-center">
-    <h1 className="shiny-gold text-3xl font-black uppercase tracking-tighter">{title}</h1>
-    <div className="mt-6 p-4 rounded-3xl bg-[#FFD700]/5 border border-[#FFD700]/10 text-green-400 text-[10px] font-bold uppercase tracking-[3px]">
-      End-to-End Encrypted Terminal
-    </div>
+// سیکیور سروس پیج ٹیمپلیٹ
+const ServicePage = ({ name }) => (
+  <div className="min-h-screen bg-[#001a0f] pt-48 px-6 text-center">
+    <h1 className="shiny-gold text-4xl font-black uppercase">{name}</h1>
+    <p className="text-white/40 mt-4 tracking-[3px]">Service Availability: Online</p>
   </div>
 );
 
 function App() {
+  const [isSidebarOpen, setSidebarOpen] = useState(false);
+
   return (
     <Router>
-      <Routes>
-        <Route path="/" element={<HomeScreen />} />
-        <Route path="/notifications" element={<SecurePage title="Alert Center" />} />
-        <Route path="/profile-settings" element={<SecurePage title="Profile Settings" />} />
-        <Route path="/transactions" element={<SecurePage title="Vault Transactions" />} />
-        <Route path="/pay" element={<SecurePage title="Payment Gateway" />} />
-        <Route path="/offers" element={<SecurePage title="Royal Offers" />} />
-        <Route path="/history" element={<SecurePage title="Vault History" />} />
-      </Routes>
+      <div className="min-h-screen bg-[#001a0f]">
+        <Navbar onOpenSidebar={() => setSidebarOpen(true)} />
+        <Sidebar isOpen={isSidebarOpen} onClose={() => setSidebarOpen(false)} />
+        
+        <Routes>
+          <Route path="/" element={<HomeScreen />} />
+          <Route path="/service/marketplace" element={<ServicePage name="Marketplace" />} />
+          <Route path="/service/food" element={<ServicePage name="Food Menu" />} />
+          <Route path="/service/ride" element={<ServicePage name="Ride Booking" />} />
+          <Route path="/service/doctor" element={<ServicePage name="Doctor Home Visit" />} />
+          <Route path="/service/maintenance" element={<ServicePage name="Home Maintenance" />} />
+          <Route path="/notifications" element={<ServicePage name="Alert Center" />} />
+          <Route path="/profile-settings" element={<ServicePage name="Settings" />} />
+        </Routes>
+
+        <BottomNav />
+      </div>
     </Router>
   );
 }
