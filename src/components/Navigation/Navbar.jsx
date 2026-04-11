@@ -1,62 +1,30 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Bell, Menu, ShieldCheck } from 'lucide-react';
 
-const Navbar = () => {
-  const navigate = useNavigate();
-
+const Navbar = ({ onOpenSidebar }) => {
   return (
-    <nav style={styles.nav}>
-      <div style={styles.logo} onClick={() => navigate('/')}>
-        <img src="/assists/logo.png" alt="Tezro Logo" style={{height: '35px'}} />
+    <header className="flex justify-between items-center px-4 py-3 sticky top-0 bg-[#002b1a] z-[1000] border-b border-[#FFD700]/30 shadow-lg">
+      <div className="flex items-center gap-2">
+        <div className="relative border-2 border-[#FFD700] rounded-full p-0.5">
+          <img src="/assets/profile-placeholder.png" className="w-8 h-8 rounded-full" alt="User" />
+        </div>
+        <span className="text-[10px] text-[#FFD700] flex items-center gap-1 font-bold bg-black/40 px-2 py-0.5 rounded-full border border-[#FFD700]/20">
+          <ShieldCheck size={10} /> Cyber Security
+        </span>
+      </div>
+      
+      <div className="flex flex-col items-center">
+        <img src="/assets/logo.png" className="h-7 w-auto" alt="Tezro" />
+        <span className="text-[8px] font-black tracking-widest text-[#FFD700]">TEZRO</span>
       </div>
 
-      <div style={styles.links}>
-        <Link style={styles.link} to="/features">Features</Link>
-        <Link style={styles.link} to="/invest">Invest</Link>
-        <Link style={styles.link} to="/ads">Ads</Link>
-        <Link style={styles.link} to="/blog">Blog</Link>
+      <div className="flex items-center gap-3">
+        <Bell className="text-[#FFD700]" size={22} />
+        <button onClick={onOpenSidebar} className="text-[#FFD700]">
+          <Menu size={28} />
+        </button>
       </div>
-
-      <button 
-        onClick={() => navigate('/download-app')} 
-        style={styles.downloadBtn}
-      >
-        Download App
-      </button>
-    </nav>
+    </header>
   );
 };
-
-const styles = {
-  nav: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: '20px 8%',
-    backgroundColor: '#fff',
-    borderBottom: '1px solid #eee',
-    position: 'sticky',
-    top: 0,
-    zIndex: 1000,
-  },
-  logo: { cursor: 'pointer' },
-  links: { display: 'flex', gap: '30px' },
-  link: { 
-    textDecoration: 'none', 
-    color: '#333', 
-    fontWeight: '600', 
-    fontSize: '14px' 
-  },
-  downloadBtn: {
-    backgroundColor: '#D4AF37', // گولڈ کلر
-    color: '#000',
-    border: 'none',
-    padding: '10px 25px',
-    borderRadius: '50px',
-    fontWeight: 'bold',
-    cursor: 'pointer',
-    boxShadow: '0 4px 15px rgba(212,175,55,0.3)'
-  }
-};
-
 export default Navbar;
