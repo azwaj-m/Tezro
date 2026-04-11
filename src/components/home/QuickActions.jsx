@@ -1,63 +1,49 @@
 
 import React from 'react';
 
-import { useNavigate } from 'react-router-dom';
+
+
+const actions = [
+
+  { label: 'RIDE', icon: '🚕', sub: 'SECURE TRAVEL' },
+
+  { label: 'FOOD', icon: '🍲', sub: 'PREMIUM DINING' },
+
+  { label: 'PAY', icon: '💳', sub: 'FAST TRANSFER' },
+
+  { label: 'SHOP', icon: '🛒', sub: 'LUXURY GOODS' },
+
+  { label: 'BANK', icon: '🏦', sub: 'ASSET VAULT' },
+
+  { label: 'SERVICES', icon: '🛠️', sub: 'EXPERT HELP' }
+
+];
 
 
 
 const QuickActions = () => {
 
-  const navigate = useNavigate();
-
-
-
-  const actions = [
-
-    { name: 'Ride', icon: '🚕', path: '/ride', sub: 'Secure Travel' },
-
-    { name: 'Food', icon: '🍲', path: '/food', sub: 'Premium Dining' },
-
-    { name: 'Pay', icon: '💳', path: '/pay', sub: 'Fast Transfer' },
-
-    { name: 'Shop', icon: '🛒', path: '/shop', sub: 'Luxury Goods' },
-
-    { name: 'Bank', icon: '🏦', path: '/banking', sub: 'Asset Vault' },
-
-    { name: 'Services', icon: '🛠️', path: '/services', sub: 'Expert Help' },
-
-  ];
-
-
-
   return (
 
-    <div className="grid grid-cols-3 gap-y-8 gap-x-4 py-4">
+    <div className="grid grid-cols-3 gap-6 py-4">
 
-      {actions.map((item, index) => (
+      {actions.map((act, i) => (
 
-        <div 
+        <div key={i} className="flex flex-col items-center group cursor-pointer">
 
-          key={index} 
+          <div className="w-16 h-16 rounded-full border-2 border-[#FFD700]/30 bg-black flex items-center justify-center relative shadow-[0_0_15px_rgba(255,215,0,0.1)] group-hover:border-[#FFD700] transition-all duration-300">
 
-          onClick={() => navigate(item.path)}
+            <span className="text-2xl drop-shadow-[0_0_8px_rgba(255,215,0,0.3)]">{act.icon}</span>
 
-          className="flex flex-col items-center group cursor-pointer"
+            {/* گولڈن رنگ (Glow) */}
 
-        >
-
-          <div className="relative w-16 h-16 rounded-full bg-gradient-to-b from-[#1a1a1a] to-[#0a0a0a] border border-[#FFD700]/30 flex items-center justify-center shadow-[0_0_15px_rgba(255,215,0,0.1)] group-active:scale-90 transition-all duration-200">
-
-             <span className="text-2xl group-hover:scale-110 transition-transform">{item.icon}</span>
-
-             {/* Glossy Overlay */}
-
-             <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-transparent via-white/5 to-transparent"></div>
+            <div className="absolute inset-0 rounded-full bg-[#FFD700]/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
 
           </div>
 
-          <span className="text-[10px] font-black uppercase text-[#FFD700] mt-3 tracking-tighter">{item.name}</span>
+          <p className="text-[#FFD700] text-[10px] font-black mt-3 tracking-tighter">{act.label}</p>
 
-          <span className="text-[7px] text-white/40 uppercase font-medium">{item.sub}</span>
+          <p className="text-white/30 text-[7px] font-bold uppercase">{act.sub}</p>
 
         </div>
 
@@ -72,6 +58,4 @@ const QuickActions = () => {
 
 
 export default QuickActions;
-
-
 
