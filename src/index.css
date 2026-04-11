@@ -2,24 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --tezro-bg: #001a0f;
-  --tezro-gold: #FFD700;
-  --tezro-glass: rgba(0, 43, 26, 0.85);
-}
-
-body {
-  background-color: var(--tezro-bg);
-  color: white;
-  margin: 0;
-  font-family: 'Inter', sans-serif;
-  -webkit-font-smoothing: antialiased;
-}
-
-.glass {
-  background: var(--tezro-glass);
-  backdrop-filter: blur(15px);
-  border: 1px solid rgba(255, 215, 0, 0.15);
-}
-
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background-color: #001a0f !important; color: white; overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
 .no-scrollbar::-webkit-scrollbar { display: none; }
