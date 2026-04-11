@@ -1,4 +1,25 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-body { margin: 0; background-color: #001a0f; color: white; overflow-x: hidden; }
+
+:root {
+  --tezro-dark: #001a0f;
+  --tezro-gold: #FFD700;
+}
+
+body {
+  margin: 0;
+  background-color: var(--tezro-dark);
+  color: white;
+  font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
+}
+
+/* تصویر جیسا گولڈن کارڈ ایفیکٹ */
+.gold-card-gradient {
+  background: linear-gradient(135deg, #1a1a1a 0%, #002b1a 100%);
+  border: 1px solid rgba(255, 215, 0, 0.3);
+}
+
+/* اسکرول بار چھپانے کے لیے */
+.no-scrollbar::-webkit-scrollbar { display: none; }
