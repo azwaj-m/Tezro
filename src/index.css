@@ -1,40 +1,34 @@
 @import "tailwindcss";
+@import "leaflet/dist/leaflet.css";
 
 :root {
   --royal-gold: #FFD700;
-  --light-gold: #FFF8E1;
-  --iranian-green: #002b1a;
+  --iranian-green: #001a0f;
 }
 
 body {
   background-color: var(--iranian-green);
   color: white;
   font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
 }
 
-/* شاہانہ شائنی ایفیکٹ */
+/* شاہانہ گولڈن شائنی اثر */
 .shiny-gold {
   background: linear-gradient(135deg, #FFD700 0%, #FFF8E1 50%, #B8860B 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.5));
+  filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.4));
 }
 
 .gold-border {
   border: 1px solid rgba(255, 215, 0, 0.3);
-  box-shadow: 0 0 15px rgba(255, 215, 0, 0.1);
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.1);
 }
 
-.glass-iranian {
-  background: rgba(0, 43, 26, 0.7);
-  backdrop-filter: blur(15px);
-  border: 1px solid rgba(255, 215, 0, 0.2);
+.islamic-pattern {
+  background-image: url('https://www.transparenttextures.com/patterns/arabesque.png');
+  opacity: 0.15;
 }
 
-/* میپ سائز کنٹرول */
-.leaflet-container {
-  width: 100%;
-  height: 100%;
-  border-radius: 2rem;
-  filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
-}
+.no-scrollbar::-webkit-scrollbar { display: none; }
