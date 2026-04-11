@@ -1,7 +1,32 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body { background-color: #001a0f !important; color: white; overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
+:root {
+  --tezro-bg: #001a0f;
+  --tezro-gold: #FFD700;
+  --tezro-card-dark: #121212;
+}
+
+body {
+  background-color: var(--tezro-bg);
+  color: white;
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
+  min-height: 100vh;
+  -webkit-tap-highlight-color: transparent; /* موبائل ٹچ پر نیلا پن ختم کرنے کے لیے */
+}
+
+/* Glass effect components */
+.glass {
+  background: rgba(0, 43, 26, 0.85);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 215, 0, 0.1);
+}
+
+.card-dark {
+  background-color: var(--tezro-card-dark);
+  border: 1px solid rgba(255, 215, 0, 0.05);
+}
+
 .no-scrollbar::-webkit-scrollbar { display: none; }
