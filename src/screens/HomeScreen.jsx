@@ -9,15 +9,17 @@ import RideMap from '../components/RideMap';
 const HomeScreen = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   return (
-    <div className="min-h-screen bg-[#001a0f] text-white">
+    <div className="min-h-screen bg-[#050505] text-white">
       <Navbar onOpenSidebar={() => setSidebarOpen(true)} />
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       
-      {/* پیڈنگ ٹاپ اور باٹم ہیڈر فوٹر کی جگہ چھوڑنے کے لیے ضروری ہے */}
-      <main className="pt-20 pb-20 px-4 space-y-8 max-w-md mx-auto">
-        <TezroVirtualCard />
+      <main className="pt-20 pb-24 px-4 space-y-8 max-w-md mx-auto">
+        <div className="bg-[#002b1a] rounded-[2rem] p-4 border border-[#FFD700]/20">
+           <input type="text" placeholder="Search Food..." className="w-full bg-transparent text-white placeholder-white/50 outline-none text-sm" />
+        </div>
         <QuickActions />
-        <div className="h-52 rounded-[2rem] overflow-hidden border border-[#FFD700]/20 shadow-xl bg-black/40">
+        <TezroVirtualCard />
+        <div className="h-52 rounded-[2.5rem] overflow-hidden border border-[#FFD700]/30 shadow-2xl relative bg-black/40">
           <RideMap />
         </div>
       </main>
