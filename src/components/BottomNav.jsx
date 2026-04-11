@@ -9,7 +9,6 @@ const BottomNav = () => {
     { icon: <History size={20} />, label: 'History' },
     { icon: <User size={20} />, label: 'Profile' }
   ];
-
   return (
     <nav className="fixed bottom-0 left-0 right-0 bg-gradient-to-t from-[#001a0f] to-[#00331f] border-t border-[#FFD700]/30 px-6 py-3 flex justify-between items-center z-[1000] rounded-t-[2rem]">
       {navItems.map((item, i) => (
@@ -17,9 +16,7 @@ const BottomNav = () => {
           <div className={item.active ? "text-[#FFD700] bg-white/10 p-2 rounded-xl shadow-[0_0_10px_#FFD700]" : "text-white/60"}>
             {item.icon}
           </div>
-          <span className={"text-[10px] font-bold " + (item.active ? "text-[#FFD700]" : "text-white/60")}>
-            {item.label}
-          </span>
+          <span className={"text-[10px] font-bold " + (item.active ? "text-[#FFD700]" : "text-white/60")}>{item.label}</span>
         </div>
       ))}
     </nav>

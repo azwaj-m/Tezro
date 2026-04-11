@@ -12,12 +12,10 @@ const Navbar = ({ onOpenSidebar }) => {
           <ShieldCheck size={10} /> Cyber Security
         </span>
       </div>
-      
       <div className="flex flex-col items-center">
         <img src="/assets/logo.png" className="h-7 w-auto" alt="Tezro" />
         <span className="text-[8px] font-black tracking-widest text-[#FFD700]">TEZRO</span>
       </div>
-
       <div className="flex items-center gap-3">
         <Bell className="text-[#FFD700]" size={22} />
         <button onClick={onOpenSidebar} className="text-[#FFD700]">

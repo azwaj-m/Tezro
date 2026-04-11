@@ -13,7 +13,7 @@ const HomeScreen = () => {
       <main className="px-4 py-6 pb-24 space-y-6">
         <TezroVirtualCard />
         <QuickActions />
-        <div className="rounded-[2.5rem] overflow-hidden border border-[#FFD700]/30 h-48 shadow-2xl">
+        <div className="rounded-[2.5rem] overflow-hidden border border-[#FFD700]/30 h-48 shadow-2xl relative">
           <RideMap />
         </div>
         <div className="py-4">
@@ -21,11 +21,11 @@ const HomeScreen = () => {
           <div className="grid grid-cols-2 gap-4">
             <div className="h-40 bg-white/5 rounded-3xl border border-white/10 overflow-hidden relative">
                <img src="/assets/market.jpg" className="absolute inset-0 w-full h-full object-cover opacity-50" />
-               <span className="absolute bottom-4 left-4 font-bold text-xs uppercase">Marketplace</span>
+               <span className="absolute bottom-4 left-4 font-bold text-xs uppercase text-[#FFD700]">Marketplace</span>
             </div>
             <div className="h-40 bg-white/5 rounded-3xl border border-white/10 overflow-hidden relative">
                <img src="/assets/food.jpg" className="absolute inset-0 w-full h-full object-cover opacity-50" />
-               <span className="absolute bottom-4 left-4 font-bold text-xs uppercase">Food Menu</span>
+               <span className="absolute bottom-4 left-4 font-bold text-xs uppercase text-[#FFD700]">Food Menu</span>
             </div>
           </div>
         </div>
