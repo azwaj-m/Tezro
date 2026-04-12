@@ -10,8 +10,8 @@ export const billProviders = {
     { id: 'g2', shortName: 'SSGC', name: 'Sui Southern Gas', logo: '/assets/ssgc.png' }
   ],
   "پانی": [
-    { id: 'w1', shortName: 'WASA LHR', name: 'Wasa Lahore', logo: '/assets/wasa lahore.png' },
-    { id: 'w2', shortName: 'WASA MUX', name: 'Wasa Multan', logo: '/assets/wasa multan.png' }
+    { id: 'w1', shortName: 'WASA LHR', name: 'Wasa Lahore', logo: '/assets/wasa%20lahore.png' },
+    { id: 'w2', shortName: 'WASA MUX', name: 'Wasa Multan', logo: '/assets/wasa%20multan.png' }
   ],
   "انٹرنیٹ": [
     { id: 'i1', shortName: 'NAYATEL', name: 'Nayatel', logo: '/assets/nayatel.png' },
@@ -44,8 +44,8 @@ export const banks = [
   { id: 'b10', name: 'Allied Bank', shortName: 'ABL', logo: '/assets/allied.png' },
   { id: 'b11', name: 'Meezan Bank', shortName: 'MEEZAN', logo: '/assets/meezan.png' },
   { id: 'b12', name: 'Bank Alfalah', shortName: 'ALF', logo: '/assets/alfalah.png' },
-  { id: 'b13', name: 'Faysal Bank', shortName: 'FAYSAL', logo: '/assets/faisal bank.png' },
-  { id: 'b14', name: 'Bank Al Habib', shortName: 'BAHL', logo: '/assets/bank alhabeb.png' },
-  { id: 'b15', name: 'Dubai Islamic', shortName: 'DIB', logo: '/assets/bubai Islami.png' },
-  { id: 'b16', name: 'Standard Chartered', shortName: 'SC', logo: '/assets/stendurd charterd.png' }
+  { id: 'b13', name: 'Faysal Bank', shortName: 'FAYSAL', logo: '/assets/faisal%20bank.png' },
+  { id: 'b14', name: 'Bank Al Habib', shortName: 'BAHL', logo: '/assets/bank%20alhabeb.png' },
+  { id: 'b15', name: 'Dubai Islamic', shortName: 'DIB', logo: '/assets/bubai%20Islami.png' },
+  { id: 'b16', name: 'Standard Chartered', shortName: 'SC', logo: '/assets/stendurd%20charterd.png' }
 ];
