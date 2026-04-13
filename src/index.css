@@ -1,34 +1,10 @@
-@import "tailwindcss";
-@import "leaflet/dist/leaflet.css";
-
-:root {
-  --royal-gold: #FFD700;
-  --iranian-green: #001a0f;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 body {
-  background-color: var(--iranian-green);
-  color: white;
-  font-family: 'Inter', sans-serif;
-  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+  background-color: black;
+  color: #FFD700;
 }
-
-/* شاہانہ گولڈن شائنی اثر */
-.shiny-gold {
-  background: linear-gradient(135deg, #FFD700 0%, #FFF8E1 50%, #B8860B 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.4));
-}
-
-.gold-border {
-  border: 1px solid rgba(255, 215, 0, 0.3);
-  box-shadow: 0 0 20px rgba(255, 215, 0, 0.1);
-}
-
-.islamic-pattern {
-  background-image: url('https://www.transparenttextures.com/patterns/arabesque.png');
-  opacity: 0.15;
-}
-
-.no-scrollbar::-webkit-scrollbar { display: none; }
