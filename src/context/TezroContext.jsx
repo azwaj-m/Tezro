@@ -1,21 +1,34 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import React, { createContext, useState, useContext } from 'react';
+import { db, auth } from '../firebaseConfig';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 
 const TezroContext = createContext();
 
 export const TezroProvider = ({ children }) => {
-  const [userRole, setUserRole] = useState(localStorage.getItem('user_role') || 'passenger');
   const [activeRide, setActiveRide] = useState(null);
-  const [rideHistory, setRideHistory] = useState(JSON.parse(localStorage.getItem('ride_history') || '[]'));
 
-  // رائیڈ ہسٹری محفوظ کرنے کا فنکشن
-  const saveRide = (rideData) => {
-    const newHistory = [...rideHistory, { ...rideData, date: new Date().toLocaleString() }];
-    setRideHistory(newHistory);
-    localStorage.setItem('ride_history', JSON.stringify(newHistory));
+  const requestRide = async (rideDetails) => {
+    try {
+      if (!auth.currentUser) throw new Error("لاگ ان ہونا ضروری ہے");
+      
+      const rideData = {
+        ...rideDetails,
+        userId: auth.currentUser.uid,
+        status: 'pending',
+        createdAt: serverTimestamp(),
+      };
+
+      const docRef = await addDoc(collection(db, "rides"), rideData);
+      setActiveRide({ id: docRef.id, ...rideData });
+      return { success: true, id: docRef.id };
+    } catch (error) {
+      console.error("بکنگ میں غلطی:", error);
+      return { success: false, error: error.message };
+    }
   };
 
   return (
-    <TezroContext.Provider value={{ userRole, setUserRole, activeRide, setActiveRide, rideHistory, saveRide }}>
+    <TezroContext.Provider value={{ activeRide, requestRide }}>
       {children}
     </TezroContext.Provider>
   );
