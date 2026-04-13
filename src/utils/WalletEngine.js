@@ -1,34 +1,20 @@
-// Tezro Wallet Engine - Payments & History Logic
+export const fetchBillAmount = (id) => {
+    // انٹرنیشنل اسٹینڈرڈ: یہاں ہم ایک فرضی بل جنریٹ کر رہے ہیں جو 1500 سے 25000 کے درمیان ہوگا
+    return (Math.floor(Math.random() * (25000 - 1500 + 1)) + 1500).toLocaleString();
+};
 
 export const processPayment = (entity, amount, destination) => {
-    // 1. ٹرانزیکشن کی تفصیلات تیار کرنا
     const transaction = {
-        id: "TXN-" + entity.routingCode + "-" + Math.random().toString(36).substr(2, 5).toUpperCase(),
+        id: "TXN-" + Math.random().toString(36).substr(2, 9).toUpperCase(),
         entityName: entity.name,
-        destination: destination, // یہ اکاؤنٹ یا کنزیومر نمبر ہے
+        destination: destination,
         amount: amount,
         date: new Date().toLocaleString(),
         status: "Success",
         routing: entity.routingCode,
         gateway: entity.gateway || "Tezro-Internal"
     };
-
-    // 2. ہسٹری حاصل کرنا (Local Storage سے)
-    const existingHistory = JSON.parse(localStorage.getItem('tezro_transactions') || '[]');
-    
-    // 3. نئی ٹرانزیکشن شامل کرنا
-    const updatedHistory = [transaction, ...existingHistory];
-    
-    // 4. محفوظ کرنا
-    localStorage.setItem('tezro_transactions', JSON.stringify(updatedHistory));
-
+    const history = JSON.parse(localStorage.getItem('tezro_transactions') || '[]');
+    localStorage.setItem('tezro_transactions', JSON.stringify([transaction, ...history]));
     return transaction;
-};
-
-export const getBalance = () => {
-    return localStorage.getItem('tezro_balance') || "50,000";
-};
-
-export const getHistory = () => {
-    return JSON.parse(localStorage.getItem('tezro_transactions') || '[]');
 };
