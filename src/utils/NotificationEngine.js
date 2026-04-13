@@ -1,2 +1,5 @@
-import { db } from '../firebaseConfig'; // یہاں راستہ درست کیا گیا ہے
-// باقی کوڈ جو آپ کا پہلے سے موجود ہے وہ یہاں جاری رہے گا
+import { db } from '../firebaseConfig';
+
+export const sendNotification = async (userId, message) => {
+  console.log("Notification to", userId, ":", message);
+};
