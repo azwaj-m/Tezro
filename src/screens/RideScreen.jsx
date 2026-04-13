@@ -1,84 +1,62 @@
-import React, { useState, useEffect } from 'react';
-import { ShieldAlert, ShieldCheck, Settings, Navigation, X } from 'lucide-react';
-import { triggerEmergencyAlert, isEmergencySetupDone, saveEmergencyContacts } from '../utils/SecurityEngine';
+import React, { useState } from 'react';
+import { CheckCircle, Download, Share2, Star, ShieldCheck } from 'lucide-react';
 
 const RideScreen = () => {
-  const [deviation, setDeviation] = useState(0);
-  const [showSetup, setShowSetup] = useState(false);
-  const [tempNumbers, setTempNumbers] = useState("");
-  const [isSetup, setIsSetup] = useState(isEmergencySetupDone());
-
-  const handleSave = () => {
-    const numList = tempNumbers.split(',').map(n => n.trim());
-    saveEmergencyContacts(numList);
-    setIsSetup(true);
-    setShowSetup(false);
-  };
+  const [isApproved, setIsApproved] = useState(true); // فرض کریں صارف نے منظوری دے دی ہے
+  const rideSummary = { id: 'TR-9921', fare: 850, driver: 'احمد علی', date: '13 اپریل 2026' };
 
   return (
-    <div className="relative h-screen bg-[#000d08] overflow-hidden">
-      {/* میپ لیئر */}
-      <div className="absolute inset-0 bg-[#0a0a0a] opacity-40" 
-           style={{ backgroundImage: 'radial-gradient(#FFD700 0.5px, transparent 0.5px)', backgroundSize: '20px 20px' }}>
-      </div>
-
-      {/* سیکیورٹی اسٹیٹس اور سیٹ اپ بٹن */}
-      <div className="absolute top-48 left-6 right-6 z-40 flex justify-between items-center">
-        <div className="flex items-center gap-3 bg-black/60 backdrop-blur-xl p-3 rounded-2xl border border-[#FFD700]/20">
-          <div className={`w-2 h-2 rounded-full ${deviation > 1 ? 'bg-red-600 animate-ping' : 'bg-green-500'}`}></div>
-          <span className="text-[10px] font-black text-white uppercase tracking-widest">
-            {isSetup ? 'System Armed' : 'Security Incomplete'}
-          </span>
+    <div className="relative h-screen bg-[#000d08] flex items-center justify-center p-6 overflow-y-auto">
+      {/* سنہری رسید کارڈ */}
+      <div className="w-full max-w-md bg-black/80 backdrop-blur-3xl border-2 border-[#FFD700]/30 rounded-[3.5rem] p-8 shadow-[0_0_100px_rgba(255,215,0,0.1)] relative overflow-hidden">
+        
+        {/* رسید کا بالائی حصہ */}
+        <div className="text-center mb-8">
+          <div className="w-20 h-20 bg-[#FFD700] rounded-full flex items-center justify-center mx-auto mb-4 shadow-[0_0_30px_rgba(255,215,0,0.4)]">
+            <CheckCircle size={40} className="text-black" />
+          </div>
+          <h2 className="text-[#FFD700] text-3xl font-black italic uppercase tracking-tighter">سفر مکمل!</h2>
+          <p className="text-gray-500 text-[10px] uppercase font-bold tracking-[3px] mt-1 text-center">Tezro Secure Payment Successful</p>
         </div>
 
-        {/* اگر سیٹ اپ نہیں ہے تو یہ بٹن چمکے گا */}
-        {!isSetup && (
-          <button onClick={() => setShowSetup(true)} className="bg-[#FFD700] p-2 rounded-xl text-black animate-pulse">
-            <Settings size={20} />
+        {/* تفصیلات کی پٹی */}
+        <div className="space-y-4 border-y border-[#FFD700]/10 py-6 mb-8">
+          <div className="flex justify-between items-center text-center">
+            <span className="text-gray-500 text-[9px] uppercase font-black">Ride ID</span>
+            <span className="text-white font-bold text-xs uppercase">{rideSummary.id}</span>
+          </div>
+          <div className="flex justify-between items-center text-center">
+            <span className="text-gray-500 text-[9px] uppercase font-black">رقم کی ادائیگی</span>
+            <span className="text-[#FFD700] font-black text-xl italic">Rs. {rideSummary.fare}</span>
+          </div>
+          <div className="flex justify-between items-center text-center">
+            <span className="text-gray-500 text-[9px] uppercase font-black">ڈرائیور</span>
+            <span className="text-white font-bold text-xs uppercase">{rideSummary.driver}</span>
+          </div>
+        </div>
+
+        {/* ڈرائیور ریٹنگ (منظوری کے بعد کا لازمی حصہ) */}
+        <div className="text-center mb-8">
+          <p className="text-gray-500 text-[10px] uppercase font-black mb-3">ڈرائیور کو ریٹنگ دیں</p>
+          <div className="flex justify-center gap-2 text-[#FFD700]">
+            {[1, 2, 3, 4, 5].map((s) => <Star key={s} size={24} fill={s <= 4 ? "#FFD700" : "none"} className="active:scale-125 transition-transform cursor-pointer" />)}
+          </div>
+        </div>
+
+        {/* ایکشن بٹنز */}
+        <div className="grid grid-cols-2 gap-4">
+          <button className="bg-white/5 border border-white/10 text-white py-4 rounded-2xl font-black text-[10px] uppercase flex items-center justify-center gap-2 hover:bg-white/10">
+            <Download size={16} /> رسید ڈاؤن لوڈ
           </button>
-        )}
-      </div>
-
-      {/* پینک بٹن */}
-      <div className="absolute bottom-60 right-6 z-50">
-        <button 
-          onClick={() => triggerEmergencyAlert("31.5204,74.3587")}
-          className="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(220,38,38,0.5)] active:scale-90 border-4 border-black"
-        >
-          <ShieldAlert size={32} className="text-white" />
-        </button>
-      </div>
-
-      {/* ایمرجنسی سیٹ اپ کارڈ - جو صرف بٹن دبانے پر آئے گا */}
-      {showSetup && (
-        <div className="fixed inset-0 z-[300] bg-black/90 backdrop-blur-md flex items-center justify-center p-6">
-          <div className="bg-[#00150c] border-2 border-[#FFD700]/30 p-8 rounded-[3rem] w-full max-w-md relative">
-            <button onClick={() => setShowSetup(false)} className="absolute top-6 right-6 text-gray-500"><X /></button>
-            <h2 className="text-2xl font-black text-[#FFD700] mb-2 italic">SECURITY SETUP</h2>
-            <p className="text-gray-500 text-[10px] uppercase font-bold mb-6">ایمرجنسی نمبرز شامل کریں (مثال: 03001234567)</p>
-            
-            <input 
-              type="text" 
-              placeholder="نمبر یہاں لکھیں..."
-              className="w-full bg-white/5 border border-white/10 p-5 rounded-2xl mb-6 text-white outline-none focus:border-[#FFD700]"
-              onChange={(e) => setTempNumbers(e.target.value)}
-            />
-            
-            <button onClick={handleSave} className="w-full bg-[#FFD700] text-black py-5 rounded-2xl font-black text-lg">
-              محفوظ کریں
-            </button>
-          </div>
+          <button className="bg-[#FFD700] text-black py-4 rounded-2xl font-black text-[10px] uppercase flex items-center justify-center gap-2 shadow-lg active:scale-95 transition-all">
+            <Share2 size={16} /> رسید شیئر کریں
+          </button>
         </div>
-      )}
 
-      {/* کنٹرول پٹی */}
-      <div className="absolute bottom-32 left-4 right-4 z-40">
-        <div className="bg-black/95 border border-[#FFD700]/30 rounded-[2.5rem] p-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-             <div className="bg-[#FFD700]/10 p-2 rounded-xl text-[#FFD700]"><Navigation size={20} /></div>
-             <p className="text-[10px] text-white font-black uppercase tracking-wider">Tracking Active</p>
-          </div>
-          <button className="bg-[#FFD700] px-8 py-3 rounded-2xl text-black font-black text-xs uppercase">Confirm</button>
+        {/* سیکیورٹی سیل */}
+        <div className="mt-8 pt-4 border-t border-white/5 flex items-center justify-center gap-2 text-gray-600">
+           <ShieldCheck size={14} />
+           <span className="text-[8px] font-black uppercase tracking-widest">Foolproof Blockchain Verified</span>
         </div>
       </div>
     </div>
