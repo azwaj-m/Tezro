@@ -25,11 +25,11 @@ const BottomNav = () => {
               onClick={() => navigate(item.path)}
               className="flex flex-col items-center gap-1.5 transition-all duration-300 group"
             >
-              <item.icon size={26} className={`${isActive ? 'text-[#FFD700] drop-shadow-[0_0_15px_rgba(255,215,0,1)] scale-125' : 'text-gray-700'} transition-all duration-300`} />
-              <span className={`text-[10px] font-black tracking-[2px] ${isActive ? 'text-[#FFD700] drop-shadow-[0_0_5px_#FFD700]' : 'text-gray-700'}`}>
+              <item.icon size={26} className={`${isActive ? 'text-tezro-gold drop-shadow-[0_0_15px_rgba(255,215,0,1)] scale-125' : 'text-gray-700'} transition-all duration-300`} />
+              <span className={`text-[10px] font-black tracking-[2px] ${isActive ? 'text-tezro-gold drop-shadow-[0_0_5px_#FFD700]' : 'text-gray-700'}`}>
                 {item.label}
               </span>
-              {isActive && <div className="absolute -bottom-3 w-2 h-2 bg-[#FFD700] rounded-full shadow-[0_0_12px_#FFD700]"></div>}
+              {isActive && <div className="absolute -bottom-3 w-2 h-2 bg-tezro-gold rounded-full shadow-[0_0_12px_#FFD700]"></div>}
             </button>
           );
         })}
