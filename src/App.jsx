@@ -1,40 +1,105 @@
-import React, { useState } from 'react';
+
+import React from 'react';
+
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import HomeScreen from './screens/HomeScreen';
-import VaultScreen from './screens/VaultScreen';
-import NotificationScreen from './screens/NotificationScreen';
-import Sidebar from './components/Navigation/Sidebar';
+
+import { TezroProvider } from './context/TezroContext';
+
+import { AuthProvider } from './context/AuthContext';
+
+import { WalletProvider } from './context/WalletContext';
+
+
+
+// Pages Import (Corrected Paths)
+
+import HomeScreen from './pages/HomeScreen';
+
+import RideMaster from './pages/RideMaster';
+
+import FinanceHub from './pages/FinanceHub';
+
+import BookingHub from './pages/BookingHub';
+
+import Register from './pages/Register';
+
+import VaultScreen from './pages/VaultScreen';
+
+import NotificationScreen from './pages/NotificationScreen';
+
+
+
+// Components
+
 import Navbar from './components/Navigation/Navbar';
+
 import BottomNav from './components/BottomNav';
 
+import Sidebar from './components/Navigation/Sidebar';
+
+
+
 function App() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
+
     <Router>
-      <div className="min-h-screen bg-[#000d08] text-white">
-        {/* Main Layout */}
-        <div className="flex flex-col h-screen">
-          {/* Header */}
-          <Navbar onOpenSidebar={() => setIsSidebarOpen(true)} />
-          
-          {/* Sidebar */}
-          <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
 
-          {/* Screen Content - Fixed Padding to fit between Header and Footer */}
-          <main className="flex-1 pt-48 pb-28 px-4 overflow-y-auto">
-            <Routes>
-              <Route path="/" element={<HomeScreen />} />
-              <Route path="/vault" element={<VaultScreen />} />
-              <Route path="/notifications" element={<NotificationScreen />} />
-            </Routes>
-          </main>
+      <AuthProvider>
 
-          {/* Footer */}
-          <BottomNav />
-        </div>
-      </div>
+        <TezroProvider>
+
+          <WalletProvider>
+
+            <div className="min-h-screen bg-[#000d08] text-white">
+
+              <Navbar />
+
+              <Sidebar />
+
+              
+
+              <main className="pb-24 pt-20 px-4 max-w-md mx-auto">
+
+                <Routes>
+
+                  <Route path="/" element={<HomeScreen />} />
+
+                  <Route path="/ride" element={<RideMaster />} />
+
+                  <Route path="/finance" element={<FinanceHub />} />
+
+                  <Route path="/bookings" element={<BookingHub />} />
+
+                  <Route path="/register" element={<Register />} />
+
+                  <Route path="/vault" element={<VaultScreen />} />
+
+                  <Route path="/notifications" element={<NotificationScreen />} />
+
+                </Routes>
+
+              </main>
+
+
+
+              <BottomNav />
+
+            </div>
+
+          </WalletProvider>
+
+        </TezroProvider>
+
+      </AuthProvider>
+
     </Router>
+
   );
+
 }
+
+
+
 export default App;
+
