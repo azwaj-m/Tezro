@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext } from 'react';
-import { db, auth } from '../firebaseConfig';
+import { db, auth } from '../firebase';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 
 const TezroContext = createContext();
