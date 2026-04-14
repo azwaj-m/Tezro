@@ -12,3 +12,4 @@ export const listenForRideRequests = (callback) => {
     callback(requests);
   });
 };
+export const listenForRideRequests = (callback) => { return () => {}; };
