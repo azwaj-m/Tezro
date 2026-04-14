@@ -6,10 +6,14 @@ export const sendNotification = async (userId, message) => {
 };
 
 export const listenForRideRequests = (callback) => {
-  const q = query(collection(db, "ride_requests"), where("status", "==", "pending"));
-  return onSnapshot(q, (snapshot) => {
-    const requests = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    callback(requests);
-  });
+  try {
+    const q = query(collection(db, "ride_requests"), where("status", "==", "pending"));
+    return onSnapshot(q, (snapshot) => {
+      const requests = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      callback(requests);
+    });
+  } catch (error) {
+    console.error("Error in listenForRideRequests:", error);
+    return () => {};
+  }
 };
-export const listenForRideRequests = (callback) => { return () => {}; };
