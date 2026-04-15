@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ShieldCheck, History } from 'lucide-react';
 import ReceiptModal from '../components/vault/ReceiptModal';
-import ReceiptModal from '../components/vault/ReceiptModal';
 
 const VaultScreen = () => {
   const [history, setHistory] = useState([]);
