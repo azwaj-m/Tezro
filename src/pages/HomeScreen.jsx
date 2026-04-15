@@ -1,34 +1,36 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Utensils, Hotel, Castle, Car, ShoppingCart, HeartPulse, Receipt, Tool } from 'lucide-react';
+import { Utensils, Hotel, Castle, Car, ShoppingCart, HeartPulse, Receipt, Wrench } from 'lucide-react';
 import ServiceCard from '../components/services/ServiceCard';
 
 const HomeScreen = () => {
   const navigate = useNavigate();
 
   const services = [
-    { title: 'Tezro Ride', icon: <Car />, path: '/ride', desc: 'Premium travel' },
-    { title: 'Tezro Eats', icon: <Utensils />, path: '/food', desc: 'Luxury dining' },
-    { title: 'Tezro Stay', icon: <Hotel />, path: '/hotels', desc: 'Elite hotels' },
-    { title: 'Grand Halls', icon: <Castle />, path: '/halls', desc: 'Event venues' },
-    { title: 'Tezro Mart', icon: <ShoppingCart />, path: '/mart', desc: 'Instant grocery' },
-    { title: 'Health Link', icon: <HeartPulse />, path: '/health', desc: 'Doctor & Lab' },
-    { title: 'Bill Pay', icon: <Receipt />, path: '/bills', desc: 'Utility payments' },
-    { title: 'Pro Help', icon: <Tool />, path: '/pro', desc: 'Home services' },
+    { id: 'food', title: 'Food Delivery', icon: <Utensils />, path: '/food' },
+    { id: 'hotel', title: 'Hotel Booking', icon: <Hotel />, path: '/hotel' },
+    { id: 'hall', title: 'Hall Booking', icon: <Castle />, path: '/hall' },
+    { id: 'ride', title: 'Ride Booking', icon: <Car />, path: '/ride' },
+    { id: 'mart', title: 'Tezro Mart', icon: <ShoppingCart />, path: '/mart' },
+    { id: 'health', title: 'Health', icon: <HeartPulse />, path: '/health' },
+    { id: 'bills', title: 'Utility Bills', icon: <Receipt />, path: '/finance' },
+    { id: 'pro', title: 'Pro Help', icon: <Wrench />, path: '/pro' },
   ];
 
   return (
-    <div className="min-h-screen bg-black text-white px-4 pt-4 pb-24">
-      <div className="mb-6 mt-2 text-center">
-        <h1 className="text-4xl font-black tracking-tighter text-white">
-          TEZRO <span className="text-[#D4AF37]">ULTRA</span>
-        </h1>
-        <div className="h-1 w-20 bg-[#D4AF37] mx-auto mt-1 rounded-full"></div>
+    <div className="min-h-screen bg-black text-white p-6 pb-24">
+      <div className="flex justify-between items-center mb-8 pt-4">
+        <div>
+          <h1 className="text-2xl font-black italic text-[#D4AF37] tracking-tighter">TEZRO <span className="text-white">ULTRA</span></h1>
+          <p className="text-zinc-500 text-[10px] uppercase tracking-[0.3em]">The Future of Services</p>
+        </div>
       </div>
 
       <div className="grid grid-cols-2 gap-4">
-        {services.map((s, i) => (
-          <ServiceCard key={i} title={s.title} icon={s.icon} description={s.desc} onClick={() => navigate(s.path)} />
+        {services.map((service) => (
+          <div key={service.id} onClick={() => navigate(service.path)}>
+            <ServiceCard title={service.title} icon={service.icon} />
+          </div>
         ))}
       </div>
     </div>
