@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ShieldCheck, History } from 'lucide-react';
+import ReceiptModal from '../components/vault/ReceiptModal';
+import ReceiptModal from '../components/vault/ReceiptModal';
 
 const VaultScreen = () => {
   const [history, setHistory] = useState([]);
@@ -17,7 +19,7 @@ const VaultScreen = () => {
         <div className="text-center text-gray-500 mt-20">کوئی ریکارڈ موجود نہیں ہے</div>
       ) : (
         history.map((ride, index) => (
-          <div key={index} className="bg-white/5 p-4 rounded-2xl mb-4 border-l-4 border-[#FFD700]">
+          <div key={index} onClick={() => setSelectedRide(ride)} className="cursor-pointer bg-white/5 p-4 rounded-2xl mb-4 border-l-4 border-[#FFD700]">
             <p className="text-xs text-[#FFD700]">{ride.date}</p>
             <p className="font-bold">Rs. {ride.amount}</p>
           </div>
