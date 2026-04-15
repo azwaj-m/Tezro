@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Briefcase, MapPin, Mic, ShieldCheck } from 'lucide-react';
-import { startSmartVoice } from '../../../utils/AdaptiveEngine';
+import { findJobMatch } from '../../../utils/EmploymentEngine';
 
 const EmploymentScreen = () => {
   const [isSearching, setIsSearching] = useState(false);
@@ -23,7 +23,7 @@ const EmploymentScreen = () => {
         <p className="text-zinc-500 text-xs mt-2 italic">بولیں: "مجھے ڈرائیور کی نوکری چاہیے" یا "Delivery Job"</p>
         
         <button 
-          onClick={() => { setIsSearching(true); startSmartVoice(); }}
+          onClick={() => { setIsSearching(true); findJobMatch(); }}
           className="mt-6 bg-[#D4AF37] text-black font-black px-8 py-3 rounded-2xl active:scale-95 transition-all text-sm uppercase"
         >
           Start Voice Search
