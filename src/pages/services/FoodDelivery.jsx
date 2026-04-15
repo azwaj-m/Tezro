@@ -1,5 +1,6 @@
 import React from 'react';
 import FoodMenu from '../../components/FoodMenu';
+import FoodMenu from '../../components/FoodMenu';
 import { PlusCircle, ShoppingBag } from 'lucide-react';
 
 const FoodDelivery = () => {
