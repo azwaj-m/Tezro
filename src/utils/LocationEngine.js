@@ -1,4 +1,4 @@
-import { db } from '../firebase';
+import { db } from '../firebase.js';
 import { doc, updateDoc, serverTimestamp } from "firebase/firestore";
 
 let locationWatchId = null;

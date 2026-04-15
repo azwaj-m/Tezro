@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
-import LiveTracking from '../../components/ride/LiveTracking';
-import { startGuardianMonitor } from '../../utils/GuardianEngine';
+import LiveTracking from '../../components/home/LiveMap';
+import { startGuardianMonitor } from '../../utils/GuardianEngine.js';
 import { ShieldAlert } from 'lucide-react';
 
 const RideBooking = () => {
