@@ -1,29 +1,19 @@
 import React, { createContext, useContext, useState } from 'react';
 import { placeFoodOrder } from '../utils/LogisticsEngine';
-import { fetchHotels } from '../utils/HotelEngine';
 
 const TezroContext = createContext();
 
 export const TezroProvider = ({ children }) => {
-  const [activeService, setActiveService] = useState(null);
-  const [cart, setCart] = useState([]);
+  const [userStatus, setUserStatus] = useState('active');
 
-  const globalServices = {
-    food: {
-      placeOrder: placeFoodOrder,
-      trackOrder: (id) => console.log("Tracking:", id)
-    },
-    hotels: {
-      search: fetchHotels
-    },
-    appTheme: {
-      primary: '#D4AF37', // Golden
-      bg: '#000000'       // Black
-    }
+  const value = {
+    userStatus,
+    setUserStatus,
+    placeFoodOrder // اب یہ یہاں سے ایکسپورٹ ہوگا
   };
 
   return (
-    <TezroContext.Provider value={{ globalServices, activeService, setActiveService, cart, setCart }}>
+    <TezroContext.Provider value={value}>
       {children}
     </TezroContext.Provider>
   );
