@@ -1,61 +1,30 @@
 import React from 'react';
-import { Menu, Mic, Search } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
-import { startVoiceRecognition } from '../../utils/VoiceEngine';
-import SecurityStatus from '../home/SecurityStatus';
+import { Menu, User, Shield } from 'lucide-react';
 
-const Navbar = ({ onOpenSidebar }) => {
-  const navigate = useNavigate();
-
+const Navbar = ({ onMenuOpen }) => {
   return (
-    <nav className="p-4 bg-black border-b border-zinc-900 flex items-center justify-between sticky top-0 z-40">
-      <div className="flex items-center gap-3">
-        <button onClick={onOpenSidebar} className="text-white p-2 hover:bg-zinc-800 rounded-xl">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-lg border-b border-zinc-900 p-4">
+      <div className="flex justify-between items-center max-w-7xl mx-auto">
+        <button onClick={onMenuOpen} className="p-2 text-zinc-400">
           <Menu size={24} />
         </button>
-        <SecurityStatus />
-      </div>
+        
+        <div className="flex items-center gap-1">
+          <span className="text-[#D4AF37] font-black italic text-xl tracking-tighter">TEZRO</span>
+          <span className="text-white font-light text-xl tracking-tighter">ULTRA</span>
+        </div>
 
-      <div className="flex items-center gap-2">
-        <button 
-          onClick={() => startVoiceRecognition(navigate)}
-          className="p-3 bg-[#D4AF37] text-black rounded-full shadow-lg shadow-yellow-900/20 active:scale-90 transition-all"
-        >
-          <Mic size={20} />
-        </button>
+        <div className="flex items-center gap-4">
+          <div className="bg-zinc-900 p-2 rounded-full border border-zinc-800">
+            <Shield size={18} className="text-[#D4AF37]" />
+          </div>
+          <button className="text-zinc-400">
+            <User size={24} />
+          </button>
+        </div>
       </div>
     </nav>
   );
 };
 
 export default Navbar;
-
-
-
-
-
-lcat <<EOT > src/components/home/SecurityStatus.jsx
-import React, { useEffect, useState } from 'react';
-import { ShieldCheck, Lock, EyeOff } from 'lucide-react';
-
-const SecurityStatus = () => {
-  const [isSecure, setIsSecure] = useState(false);
-
-  useEffect(() => {
-    // مصنوعی سیکیورٹی چیک
-    setTimeout(() => setIsSecure(true), 2000);
-  }, []);
-
-  return (
-    <div className="flex items-center gap-2 px-4 py-2 bg-zinc-900/50 rounded-full border border-zinc-800">
-      <div className={isSecure ? "text-green-500" : "text-yellow-500 animate-pulse"}>
-        {isSecure ? <ShieldCheck size={16} /> : <Lock size={16} />}
-      </div>
-      <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">
-        {isSecure ? "Tezro Encrypted" : "Scanning Connection..."}
-      </span>
-    </div>
-  );
-};
-
-export default SecurityStatus;
