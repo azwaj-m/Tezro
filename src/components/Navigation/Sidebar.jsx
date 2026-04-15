@@ -1,49 +1,39 @@
 import React from 'react';
-import { X, LogOut, User, Settings, ShieldCheck, Map, CreditCard } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { UserPlus, Settings, HelpCircle, LogOut, ShieldCheck } from 'lucide-react';
 
 const Sidebar = ({ isOpen, onClose }) => {
-  const navigate = useNavigate();
-
-  const menuItems = [
-    { icon: User, label: 'پروفائل', path: '/profile' },
-    { icon: CreditCard, label: 'ورچوئل کارڈ', path: '/vault' },
-    { icon: Map, label: 'لائیو میپ', path: '/' },
-    { icon: ShieldCheck, label: 'سیکیورٹی سینٹر', path: '/' },
-    { icon: Settings, label: 'ترتیبات', path: '/settings' },
-  ];
-
   return (
-    <div className={`fixed inset-0 z-[200] transition-all duration-500 ${isOpen ? 'visible opacity-100' : 'invisible opacity-0'}`}>
-      {/* Background Overlay */}
-      <div onClick={onClose} className="absolute inset-0 bg-black/80 backdrop-blur-sm"></div>
-      
-      {/* Sidebar Panel */}
-      <div className={`absolute top-0 left-0 bottom-0 w-80 bg-[#00150c] border-r border-[#FFD700]/30 transition-transform duration-500 transform ${isOpen ? 'translate-x-0' : '-translate-x-full'} shadow-[10px_0_50px_rgba(255,215,0,0.15)]`}>
-        <div className="p-6 border-b border-[#FFD700]/10 flex justify-between items-center">
-          <img src="/assets/logo.png" className="h-10 filter drop-shadow-[0_0_8px_#FFD700]" />
-          <button onClick={onClose} className="p-2 text-[#FFD700] hover:scale-110 transition-transform"><X size={24} /></button>
+    <div className={`fixed inset-0 z-50 transition-transform ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose}></div>
+      <div className="relative w-72 h-full bg-zinc-900 border-r border-zinc-800 p-6 shadow-2xl">
+        <div className="mb-10 pt-4">
+          <h2 className="text-2xl font-black text-[#D4AF37] italic">TEZRO <span className="text-white">MENU</span></h2>
         </div>
 
-        <nav className="p-6 space-y-4">
-          {menuItems.map((item, index) => (
-            <button 
-              key={index}
-              onClick={() => { navigate(item.path); onClose(); }}
-              className="w-full flex items-center gap-4 p-4 rounded-xl text-white/70 hover:bg-[#FFD700]/10 hover:text-[#FFD700] transition-colors"
-            >
-              <item.icon size={22} />
-              <span className="font-bold text-sm uppercase tracking-[1px]">{item.label}</span>
-            </button>
-          ))}
-          
-          <button className="w-full flex items-center gap-4 p-4 mt-10 text-red-500 rounded-xl hover:bg-red-500/10">
-            <LogOut size={22} />
-            <span className="font-black text-xs uppercase tracking-widest">لاگ آؤٹ کریں</span>
-          </button>
+        <nav className="space-y-2">
+          {/* صرف ایک رجسٹریشن لنک جو دوسری ریپو/ویب سائٹ پر لے جائے گا */}
+          <a 
+            href="https://alingosuper.github.io/TezroWeb" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="flex items-center gap-4 p-4 rounded-2xl bg-[#D4AF37]/10 border border-[#D4AF37]/20 text-[#D4AF37] hover:bg-[#D4AF37] hover:text-black transition-all"
+          >
+            <UserPlus size={20} />
+            <span className="font-bold text-sm">Join Tezro Network</span>
+          </a>
+
+          <div className="pt-4 space-y-1">
+             <button className="w-full flex items-center gap-4 p-4 text-zinc-400 hover:bg-zinc-800 rounded-2xl transition-all">
+                <Settings size={20} /> <span className="text-sm">Settings</span>
+             </button>
+             <button className="w-full flex items-center gap-4 p-4 text-zinc-400 hover:bg-zinc-800 rounded-2xl transition-all">
+                <ShieldCheck size={20} /> <span className="text-sm">Privacy Policy</span>
+             </button>
+          </div>
         </nav>
       </div>
     </div>
   );
 };
+
 export default Sidebar;
