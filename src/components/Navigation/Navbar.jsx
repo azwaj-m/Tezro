@@ -1,54 +1,61 @@
-import React, { useState, useEffect } from 'react';
-import { Bell, Menu, Search, Mic } from 'lucide-react';
+import React from 'react';
+import { Menu, Mic, Search } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { listenForRideRequests } from '../../utils/NotificationEngine';
+import { startVoiceRecognition } from '../../utils/VoiceEngine';
+import SecurityStatus from '../home/SecurityStatus';
 
 const Navbar = ({ onOpenSidebar }) => {
   const navigate = useNavigate();
-  const [hasNewRide, setHasNewRide] = useState(false);
-  const driverId = localStorage.getItem('tezro_driver_token');
-
-  useEffect(() => {
-    if (driverId) {
-      // رائیڈ درخواستوں کے لیے لسنر شروع کریں
-      const unsubscribe = listenForRideRequests(driverId, (request) => {
-        setHasNewRide(true);
-        // بیپ کی آواز (اختیاری)
-        const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2358/2358-preview.mp3');
-        audio.play().catch(() => {}); 
-      });
-      return () => unsubscribe();
-    }
-  }, [driverId]);
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-[110] p-6 bg-black/90 backdrop-blur-2xl border-b border-[#FFD700]/30 shadow-[0_4px_30px_rgba(255,215,0,0.15)]">
-      <div className="flex justify-between items-center mb-6">
-        <button onClick={onOpenSidebar} className="p-2 text-[#FFD700] active:scale-90 transition-all">
-          <Menu size={28} />
+    <nav className="p-4 bg-black border-b border-zinc-900 flex items-center justify-between sticky top-0 z-40">
+      <div className="flex items-center gap-3">
+        <button onClick={onOpenSidebar} className="text-white p-2 hover:bg-zinc-800 rounded-xl">
+          <Menu size={24} />
         </button>
-        
-        <img src="/assets/logo.png" className="h-8 filter drop-shadow-[0_0_8px_#FFD700]" alt="Tezro" />
+        <SecurityStatus />
+      </div>
 
+      <div className="flex items-center gap-2">
         <button 
-          onClick={() => { setHasNewRide(false); navigate('/notifications'); }} 
-          className="relative p-2 text-[#FFD700] active:scale-90 transition-all"
+          onClick={() => startVoiceRecognition(navigate)}
+          className="p-3 bg-[#D4AF37] text-black rounded-full shadow-lg shadow-yellow-900/20 active:scale-90 transition-all"
         >
-          <Bell size={26} className={`${hasNewRide ? 'animate-bounce' : ''}`} />
-          {hasNewRide && (
-            <span className="absolute top-2 right-2 w-3.5 h-3.5 bg-red-600 rounded-full border-2 border-black animate-pulse shadow-[0_0_10px_red]"></span>
-          )}
+          <Mic size={20} />
         </button>
       </div>
-
-      {/* سرچ بار */}
-      <div className="bg-[#0b1410] rounded-[2rem] border-2 border-[#FFD700]/40 flex items-center px-6 py-4 shadow-[inset_0_0_20px_rgba(255,215,0,0.15)]">
-        <Search className="text-[#FFD700] opacity-90 mr-3" size={22} />
-        <input type="text" placeholder="Search Banks & Services..." className="bg-transparent border-none outline-none text-sm w-full text-white placeholder:text-[#FFD700]/30 font-black italic tracking-wider" />
-        <Mic className="text-[#FFD700] opacity-90 ml-3" size={22} />
-      </div>
-    </header>
+    </nav>
   );
 };
 
 export default Navbar;
+
+
+
+
+
+lcat <<EOT > src/components/home/SecurityStatus.jsx
+import React, { useEffect, useState } from 'react';
+import { ShieldCheck, Lock, EyeOff } from 'lucide-react';
+
+const SecurityStatus = () => {
+  const [isSecure, setIsSecure] = useState(false);
+
+  useEffect(() => {
+    // مصنوعی سیکیورٹی چیک
+    setTimeout(() => setIsSecure(true), 2000);
+  }, []);
+
+  return (
+    <div className="flex items-center gap-2 px-4 py-2 bg-zinc-900/50 rounded-full border border-zinc-800">
+      <div className={isSecure ? "text-green-500" : "text-yellow-500 animate-pulse"}>
+        {isSecure ? <ShieldCheck size={16} /> : <Lock size={16} />}
+      </div>
+      <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">
+        {isSecure ? "Tezro Encrypted" : "Scanning Connection..."}
+      </span>
+    </div>
+  );
+};
+
+export default SecurityStatus;
