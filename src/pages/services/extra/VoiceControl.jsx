@@ -1,9 +1,12 @@
 import React from 'react';
 import { startGlobalVoice } from '../../../utils/GlobalVoiceEngine';
 import { useNavigate } from 'react-router-dom';
+import { startGlobalVoice } from '../../../utils/GlobalVoiceEngine';
+import { useNavigate } from 'react-router-dom';
 import { Mic, ShieldAlert, Power } from 'lucide-react';
 
 const VoiceControl = () => {
+  const navigate = useNavigate();
   const navigate = useNavigate();
   const handleSystemCommand = (cmd) => {
     // یہاں وہ سسٹم لیول کمانڈز آئیں گی جو موبائل کو انسٹرکشن دیں گی
