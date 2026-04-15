@@ -21,14 +21,13 @@ const HomeScreen = () => {
     <div className="min-h-screen bg-black text-white p-6 pb-24">
       <div className="flex justify-between items-center mb-8 pt-4">
         <div>
-          <h1 className="text-2xl font-black italic text-[#D4AF37] tracking-tighter">TEZRO <span className="text-white">ULTRA</span></h1>
-          <p className="text-zinc-500 text-[10px] uppercase tracking-[0.3em]">The Future of Services</p>
+          <h1 className="text-2xl font-black italic text-[#D4AF37] tracking-tighter text-left">TEZRO <span className="text-white">ULTRA</span></h1>
+          <p className="text-zinc-500 text-[10px] uppercase tracking-[0.3em] text-left">The Future of Services</p>
         </div>
       </div>
-
       <div className="grid grid-cols-2 gap-4">
         {services.map((service) => (
-          <div key={service.id} onClick={() => navigate(service.path)}>
+          <div key={service.id} onClick={() => navigate(service.path)} className="cursor-pointer">
             <ServiceCard title={service.title} icon={service.icon} />
           </div>
         ))}
