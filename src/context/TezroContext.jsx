@@ -1,19 +1,18 @@
 import React, { createContext, useContext, useState } from 'react';
-import { processLogisticsOrder as placeFoodOrder } from "../utils/LogisticsEngine";
+import { processLogisticsOrder } from "../utils/LogisticsEngine";
 
 const TezroContext = createContext();
 
 export const TezroProvider = ({ children }) => {
-  const [userStatus, setUserStatus] = useState('active');
+  const [appState, setAppState] = useState({ theme: 'dark', language: 'ur' });
 
-  const value = {
-    userStatus,
-    setUserStatus,
-    placeFoodOrder // اب یہ یہاں سے ایکسپورٹ ہوگا
+  const placeFoodOrder = async (cart, location) => {
+    // ہم انجن سے نیا فنکشن استعمال کر رہے ہیں
+    return await processLogisticsOrder(cart, location);
   };
 
   return (
-    <TezroContext.Provider value={value}>
+    <TezroContext.Provider value={{ appState, setAppState, placeFoodOrder }}>
       {children}
     </TezroContext.Provider>
   );
