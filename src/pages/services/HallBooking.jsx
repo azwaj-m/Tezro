@@ -1,35 +1,17 @@
 import React from 'react';
-import { Users, Calendar, ShieldCheck } from 'lucide-react';
+import { PlusCircle, Castle } from 'lucide-react';
 
 const HallBooking = () => {
   return (
-    <div className="min-h-screen bg-[#050505] text-white p-5 pb-24">
-      <h1 className="text-2xl font-black text-center mb-2 uppercase tracking-tighter">Event <span className="text-[#D4AF37]">Venues</span></h1>
-      <div className="h-1 w-12 bg-[#D4AF37] mx-auto mb-8"></div>
-
-      <div className="space-y-4">
-        {[1, 2].map((i) => (
-          <div key={i} className="bg-gradient-to-r from-zinc-900 to-black p-1 rounded-2xl border border-zinc-800">
-            <div className="p-4 flex gap-4">
-              <div className="h-24 w-24 bg-zinc-800 rounded-xl flex-shrink-0 border border-zinc-700"></div>
-              <div className="flex-1">
-                <h3 className="font-bold text-[#D4AF37]">Grand Marquee {i}</h3>
-                <div className="flex items-center gap-2 text-[10px] text-zinc-500 mt-1">
-                  <Users size={12} /> Capacity: 500-1000
-                </div>
-                <div className="flex items-center gap-2 text-[10px] text-zinc-500">
-                  <ShieldCheck size={12} /> Fully Insured & Secure
-                </div>
-                <button className="mt-3 text-[10px] font-bold border border-[#D4AF37] text-[#D4AF37] px-4 py-1.5 rounded-full hover:bg-[#D4AF37] hover:text-black transition-all">
-                  Check Availability
-                </button>
-              </div>
-            </div>
-          </div>
-        ))}
+    <div className="min-h-screen bg-black text-white p-5 pb-24">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-black text-[#D4AF37]">Grand <span className="text-white">Halls</span></h1>
+        <a href="https://alingosuper.github.io/TezroWeb" className="flex items-center gap-2 bg-[#D4AF37]/10 text-[#D4AF37] border border-[#D4AF37]/30 px-3 py-1.5 rounded-full text-[10px] font-bold">
+          <PlusCircle size={14} /> LIST HALL
+        </a>
       </div>
+      <div className="text-center text-zinc-600 mt-20 italic">Booking elite venues for your events...</div>
     </div>
   );
 };
-
 export default HallBooking;
