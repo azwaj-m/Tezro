@@ -1,5 +1,5 @@
 // Tezro Smart Logistics & Food Engine
-export const placeFoodOrder = async (cart, location) => {
+export const processLogisticsOrder = async (cart, location) => {
   console.log("Placing order for:", cart, "at", location);
   return {
     success: true,

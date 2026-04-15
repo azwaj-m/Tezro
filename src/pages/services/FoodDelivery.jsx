@@ -1,4 +1,5 @@
 import React from 'react';
+import FoodMenu from '../../components/FoodMenu';
 import { PlusCircle, ShoppingBag } from 'lucide-react';
 
 const FoodDelivery = () => {
@@ -10,7 +11,7 @@ const FoodDelivery = () => {
           <PlusCircle size={14} /> ADD DISH
         </a>
       </div>
-      <div className="text-center text-zinc-600 mt-20 italic">Freshly cooked meals nearby...</div>
+      <FoodMenu />
     </div>
   );
 };

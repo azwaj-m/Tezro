@@ -1,3 +1,16 @@
 import React from 'react';
-const MartScreen = () => <div className="min-h-screen bg-black text-[#D4AF37] p-10 font-bold">Tezro Mart: Fresh Groceries Delivered</div>;
+import FoodMenu from '../../../components/FoodMenu';
+
+const MartScreen = () => {
+  return (
+    <div className="min-h-screen bg-black">
+      <div className="p-6 bg-yellow-500/10 border-b border-yellow-500/20">
+        <h1 className="text-2xl font-black text-yellow-500 italic uppercase">Tezro Mart</h1>
+        <p className="text-[10px] text-gray-500 uppercase tracking-widest">Premium Grocery Delivery</p>
+      </div>
+      <FoodMenu />
+    </div>
+  );
+};
+
 export default MartScreen;
