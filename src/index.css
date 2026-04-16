@@ -4,15 +4,18 @@
 
 body {
   margin: 0;
-  padding: 0;
-  background-color: black;
+  background-color: #000d08;
   color: #FFD700;
+  font-family: sans-serif;
+  overflow-x: hidden;
 }
 
-:root {
-  --tezro-gold: #D4AF37;
+.tezro-card {
+  background: linear-gradient(145deg, #0a110e, #000d08);
+  border: 1px solid rgba(255, 215, 0, 0.1);
+  border-radius: 24px;
 }
 
-.text-tezro-gold {
-  color: #D4AF37 !important;
+button {
+  transition: all 0.3s ease;
 }
