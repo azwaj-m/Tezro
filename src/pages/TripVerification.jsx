@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ShieldCheck, ArrowRight, Lock } from 'lucide-react';
-import { startTrip } from '../utils/RideEngine';
+import { RideEngine } from '../utils/TezroMasterEngine';
 
 const TripVerification = ({ requestId, actualOtp }) => {
   const [otp, setOtp] = useState("");
