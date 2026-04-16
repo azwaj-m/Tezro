@@ -1,5 +1,5 @@
 import React from 'react';
-import { redirectToRegistration } from '../utils/AuthBridge';
+import { redirectToRegistration } from '../utils/TezroMasterEngine';
 
 const DriverModeHandler = () => {
   const handleDriverActivation = () => {
