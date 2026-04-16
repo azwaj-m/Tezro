@@ -4,18 +4,18 @@
 
 body {
   margin: 0;
+  padding: 0;
   background-color: #000d08;
   color: #FFD700;
-  font-family: sans-serif;
-  overflow-x: hidden;
+  font-family: 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
-.tezro-card {
-  background: linear-gradient(145deg, #0a110e, #000d08);
-  border: 1px solid rgba(255, 215, 0, 0.1);
-  border-radius: 24px;
+/* کسٹم کلاسز برائے ڈارک تھیم */
+.tezro-glass {
+  @apply bg-zinc-900/40 backdrop-blur-md border border-zinc-800/50;
 }
 
-button {
-  transition: all 0.3s ease;
+.text-gold {
+  color: #FFD700 !important;
 }
