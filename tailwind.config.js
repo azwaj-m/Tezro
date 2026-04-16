@@ -2,12 +2,12 @@
 export default {
   content: [
     "./index.html",
-    "./src/**/*.{js,ts,jsx,ax}",
+    "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
     extend: {
       colors: {
-        tezro: {
+        'tezro': {
           gold: '#FFD700',
           darkGold: '#B8860B',
           black: '#000d08',
