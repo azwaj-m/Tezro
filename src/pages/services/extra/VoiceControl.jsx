@@ -1,17 +1,14 @@
 import { startGlobalVoice } from '../../../utils/GlobalVoiceEngine';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
 import { Mic, ShieldAlert, Power } from 'lucide-react';
 
 const VoiceControl = () => {
   const navigate = useNavigate();
-  const navigate = useNavigate();
+
   const handleSystemCommand = (cmd) => {
-    // یہاں وہ سسٹم لیول کمانڈز آئیں گی جو موبائل کو انسٹرکشن دیں گی
     if(cmd === 'lock') {
         alert("Tezro Secure: Mobile App Interface Locked!");
-        // یہاں ہم یوزر کو ہوم پیج پر بھیج دیں گے اور اسٹیٹ 'Locked' کر دیں گے
     }
   };
 

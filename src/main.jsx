@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
 import './index.css'
 import { BrowserRouter } from 'react-router-dom'
-import { TezroProvider } from './context/TezroContext' // اگر کنٹیکسٹ کا فولڈر الگ ہے
+import { TezroProvider } from './context/TezroContext.jsx' // اگر کنٹیکسٹ کا فولڈر الگ ہے
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
