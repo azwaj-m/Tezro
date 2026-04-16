@@ -14,11 +14,11 @@ const services = [
 
 const HomeScreen = () => {
   return (
-    <div className="min-h-screen bg-[#000d08] p-6 pb-32 pt-24 space-y-8">
+    <div className="min-h-screen p-6 pb-32 pt-24 space-y-8 persian-pattern">
       {/* سروسز گریڈ - تصویر 3 کے مطابق */}
       <div className="card-dark relative">
-        <div className="absolute top-4 right-4 text-emerald-500 flex items-center gap-1 text-[10px] font-bold">
-            <ShieldCheck size={14} /> Cyber Security Active
+        <div className="absolute top-4 right-4 text-emerald-500 flex items-center gap-1.5 text-[10px] font-bold glow-green">
+            <ShieldCheck size={14} className="animate-pulse"/> Cyber Security Active
         </div>
         <div className="grid grid-cols-4 gap-3 pt-6">
           {services.map((s) => (
@@ -33,10 +33,10 @@ const HomeScreen = () => {
 
       {/* پریمیم سروسز سیکشن */}
       <div className="space-y-4">
-        <h3 className="text-tezro-gold font-bold tracking-[3px] text-xs uppercase">Premium Services</h3>
+        <h3 className="text-tezro-gold font-bold tracking-[3px] text-xs uppercase glow-green">Premium Services</h3>
         <div className="grid grid-cols-2 gap-4">
-            <div className="card-dark h-40 flex items-end p-4 border-tezro-gold/20"><span className="text-white font-bold text-xs uppercase tracking-widest">Marketplace</span></div>
-            <div className="card-dark h-40 flex items-end p-4 border-tezro-gold/20"><span className="text-white font-bold text-xs uppercase tracking-widest">Food & Dining</span></div>
+            <div className="card-dark h-40 flex items-end p-4 border-tezro-gold/20 hover:border-tezro-gold/50 transition-all"><span className="text-white font-bold text-xs uppercase tracking-widest">Marketplace</span></div>
+            <div className="card-dark h-40 flex items-end p-4 border-tezro-gold/20 hover:border-tezro-gold/50 transition-all"><span className="text-white font-bold text-xs uppercase tracking-widest">Food & Dining</span></div>
         </div>
       </div>
     </div>

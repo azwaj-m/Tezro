@@ -10,12 +10,23 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* تصویر 3 جیسے سنہرے بٹنوں کے لیے کسٹم کلاس */
+/* ایرانی اسلامی مدھم ڈیزائن - یہ تصویر 3 جیسا بیک گراؤنڈ نمودار کرے گی */
+.persian-pattern {
+  background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDQwIDQwIj48ZyBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmQ3MDAiIGZpbGwtb3BhY2l0eT0iMC4wMjUiPjxwYXRoIGQ9Ik0wIDBoNHY0SDBWMHptMCA4aDR2NEgwVjh6bTAgOGg0djRIMFYxNnptMCA4aDR2NEgwVjI0em0wIDhoNHY0SDBWMzJ6TTggMGg0djRIOFYwem0wIDhoNHY0SDhWOHptMCA4aDR2NEg4VjE2em0wIDhoNHY0SDhWMjR6TTggMzJoNHY0SDhWMzJ6TTE2IDBoNHY0SDE2VjB6bTAgOGg0djRIMTZWOHptMCA4aDR2NEgxNlYxNnptMCA4aDR2NEgxNlYyNHptMCAzMmguNHY0SDE2VjMyeTTI0IDBoNHY0SDI0VjB6bTI0IDhoNHY0SDI0Vjh6bTI0IDhoNHY0SDI0VjE2em0yNCA4aDR2NEgyNFYyNHptMjQgMzJoNHY0SDI0VjMyeTTMyIDBoNHY0SDMyVjB6bTMyIDhoNHY0SDMyVjh6bTMyIDhoNHY0SDMyVjE2em0zMiA4aDR2NEgzMlYyNHptMzIgMzJoNHY0SDMyVjMyeiIvPjwvZz48L2c+PC9zdmc+');
+  background-size: 40px 40px;
+}
+
+/* تصویر 3 جیسے سنہرے شائنی بٹنوں کے لیے کسٹم کلاس */
 .btn-gold {
-  @apply bg-gradient-to-b from-[#FFD700] to-[#B8860B] text-black font-bold rounded-xl shadow-[0_0_15px_rgba(255,215,0,0.4)] transition-all hover:scale-105;
+  @apply bg-gradient-to-b from-[#FFD700] to-[#B8860B] text-black font-bold rounded-xl shadow-[0_0_20px_rgba(255,215,0,0.5)] transition-all hover:scale-105 hover:shadow-[0_0_30px_#FFD700];
 }
 
 /* تصویر 3 جیسے ڈارک گلاس کارڈز */
 .card-dark {
-  @apply bg-zinc-900/40 backdrop-blur-md border border-zinc-800/50 rounded-[2rem] p-6 shadow-2xl;
+  @apply bg-zinc-900/40 backdrop-blur-md border border-zinc-800/50 rounded-[2.5rem] p-6 shadow-2xl;
+}
+
+/* سبز شائنی (Glowing) ٹیکسٹ برائے Cyber Security */
+.glow-green {
+  text-shadow: 0 0 10px rgba(16, 185, 129, 1), 0 0 20px rgba(16, 185, 129, 0.5);
 }
