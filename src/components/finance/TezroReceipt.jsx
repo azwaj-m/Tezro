@@ -4,7 +4,7 @@ import { ShieldCheck, Download, Share2 } from 'lucide-react';
 const TezroReceipt = ({ data }) => {
   return (
     <div className="max-w-sm mx-auto bg-zinc-900 border border-zinc-800 rounded-[2.5rem] overflow-hidden shadow-2xl mt-4">
-      <div className="bg-[#D4AF37] p-6 text-black text-center">
+      <div className="bg-[#D4AF37] p-6 text-tezro-gold text-center">
         <div className="flex justify-center mb-2"><ShieldCheck size={40} /></div>
         <h2 className="text-xl font-black uppercase italic">Tezro Official</h2>
         <p className="text-[10px] font-bold opacity-70">Verified Transaction</p>

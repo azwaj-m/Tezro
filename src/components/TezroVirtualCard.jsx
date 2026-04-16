@@ -12,7 +12,7 @@ const TezroVirtualCard = () => {
         <img src="https://via.placeholder.com/700x500/121212/FFD700?text=INTEGRATED+SERVICES" className="w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent p-10 flex flex-col justify-center">
           <h2 className="text-2xl font-black text-white leading-tight uppercase tracking-tight">Integrated Services<br/>& Home Returns</h2>
-          <button className="mt-5 bg-[#FFD700] text-black text-[10px] font-black px-8 py-3 rounded-full w-max uppercase shadow-xl hover:scale-105 active:scale-95 transition-all">Shop Now</button>
+          <button className="mt-5 bg-[#FFD700] text-tezro-gold text-[10px] font-black px-8 py-3 rounded-full w-max uppercase shadow-xl hover:scale-105 active:scale-95 transition-all">Shop Now</button>
         </div>
       </div>
 

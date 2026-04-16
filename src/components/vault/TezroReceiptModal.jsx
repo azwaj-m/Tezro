@@ -15,7 +15,7 @@ const TezroReceiptModal = ({ isOpen, onClose, data }) => {
 
       <div className="w-full max-w-sm bg-zinc-900 border border-zinc-800 rounded-[2.5rem] overflow-hidden">
 
-        <div className="bg-[#D4AF37] p-6 text-black text-center relative">
+        <div className="bg-[#D4AF37] p-6 text-tezro-gold text-center relative">
 
           <button onClick={onClose} className="absolute right-4 top-4"><X size={20} /></button>
 

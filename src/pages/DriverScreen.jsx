@@ -34,8 +34,8 @@ const DriverScreen = ({ driverId }) => {
           onClick={toggleStatus}
           className={`w-40 h-40 rounded-full flex flex-col items-center justify-center transition-all duration-500 shadow-2xl ${
             isOnline 
-            ? 'bg-[#FFD700] text-black shadow-[0_0_50px_rgba(255,215,0,0.4)] rotate-12' 
-            : 'bg-white/5 text-gray-600 border-2 border-white/10'
+            ? 'bg-[#FFD700] text-tezro-gold shadow-[0_0_50px_rgba(255,215,0,0.4)] rotate-12' 
+            : 'bg-zinc-900/50/5 text-gray-600 border-2 border-white/10'
           }`}
         >
           <Power size={48} strokeWidth={3} />
@@ -50,7 +50,7 @@ const DriverScreen = ({ driverId }) => {
       <div className="w-full bg-[#FFD700]/5 border border-[#FFD700]/20 p-6 rounded-[2.5rem] mb-10">
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-3">
-            <div className="bg-[#FFD700] p-2 rounded-xl text-black"><Zap size={20} /></div>
+            <div className="bg-[#FFD700] p-2 rounded-xl text-tezro-gold"><Zap size={20} /></div>
             <div>
                <p className="text-[8px] text-gray-500 uppercase font-black">Performance</p>
                <p className="text-xs text-white font-bold tracking-widest italic">100% SECURE</p>

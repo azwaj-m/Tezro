@@ -76,7 +76,7 @@ const FoodMenu = () => {
               <div className="flex justify-end gap-5 mt-3">
                 <button onClick={() => updateCart(item.id, -1)} className="w-10 h-10 rounded-xl border border-zinc-800 flex items-center justify-center hover:bg-zinc-800 transition-colors">-</button>
                 <span className="font-bold text-xl w-4 text-center">{cart[item.id] || 0}</span>
-                <button onClick={() => updateCart(item.id, 1)} className="w-10 h-10 rounded-xl bg-[#D4AF37] text-black flex items-center justify-center shadow-lg shadow-[#D4AF37]/20 transition-transform active:scale-90">+</button>
+                <button onClick={() => updateCart(item.id, 1)} className="w-10 h-10 rounded-xl bg-[#D4AF37] text-tezro-gold flex items-center justify-center shadow-lg shadow-[#D4AF37]/20 transition-transform active:scale-90">+</button>
               </div>
             </div>
           </div>
@@ -88,7 +88,7 @@ const FoodMenu = () => {
           <button
             disabled={isProcessing}
             onClick={handleCheckout}
-            className="w-full bg-[#D4AF37] text-black font-black py-5 rounded-[2rem] shadow-2xl shadow-[#D4AF37]/20 flex justify-center items-center gap-3 active:scale-95 transition-all disabled:bg-zinc-700 uppercase tracking-widest text-xs"
+            className="w-full bg-[#D4AF37] text-tezro-gold font-black py-5 rounded-[2rem] shadow-2xl shadow-[#D4AF37]/20 flex justify-center items-center gap-3 active:scale-95 transition-all disabled:bg-zinc-700 uppercase tracking-widest text-xs"
           >
             {isProcessing ? <Loader2 className="animate-spin" /> : `Complete Order (Rs. ${totalAmount})`}
           </button>

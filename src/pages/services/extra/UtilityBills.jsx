@@ -17,7 +17,7 @@ const UtilityBills = () => {
           <span className="text-[10px] font-bold">Water</span>
         </div>
       </div>
-      <button onClick={() => navigate('/finance')} className="w-full bg-[#D4AF37] text-black py-5 rounded-[2rem] font-black flex items-center justify-center gap-3 shadow-xl">
+      <button onClick={() => navigate('/finance')} className="w-full bg-[#D4AF37] text-tezro-gold py-5 rounded-[2rem] font-black flex items-center justify-center gap-3 shadow-xl">
         <QrCode size={20} /> SCAN TO PAY BILL
       </button>
     </div>

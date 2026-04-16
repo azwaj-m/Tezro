@@ -24,7 +24,7 @@ const EmploymentScreen = () => {
         
         <button 
           onClick={() => { setIsSearching(true); findJobMatch(); }}
-          className="mt-6 bg-[#D4AF37] text-black font-black px-8 py-3 rounded-2xl active:scale-95 transition-all text-sm uppercase"
+          className="mt-6 bg-[#D4AF37] text-tezro-gold font-black px-8 py-3 rounded-2xl active:scale-95 transition-all text-sm uppercase"
         >
           Start Voice Search
         </button>
@@ -40,7 +40,7 @@ const EmploymentScreen = () => {
               <MapPin size={10} /> <span>Multan, Cantt (2.5 km away)</span>
             </div>
           </div>
-          <button className="bg-white/5 border border-white/10 px-4 py-2 rounded-xl text-[10px] font-bold">View</button>
+          <button className="bg-zinc-900/50/5 border border-white/10 px-4 py-2 rounded-xl text-[10px] font-bold">View</button>
         </div>
       </div>
     </div>

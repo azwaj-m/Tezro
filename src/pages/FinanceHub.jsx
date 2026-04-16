@@ -18,7 +18,7 @@ const FinanceHub = () => {
         <>
           <div className="flex justify-between items-center mb-8">
             <h1 className="text-2xl font-black italic text-[#D4AF37]">FINANCE <span className="text-white">HUB</span></h1>
-            <button onClick={() => setIsScannerOpen(true)} className="p-3 bg-[#D4AF37] text-black rounded-2xl shadow-lg">
+            <button onClick={() => setIsScannerOpen(true)} className="p-3 bg-[#D4AF37] text-tezro-gold rounded-2xl shadow-lg">
               <QrCode size={20} />
             </button>
           </div>
@@ -27,7 +27,7 @@ const FinanceHub = () => {
             <CheckCircle className="mx-auto text-[#D4AF37] mb-4" size={40} />
             <h2 className="font-bold text-lg">Utility Bills</h2>
             <p className="text-zinc-500 text-[10px] uppercase mt-1 mb-6">Scan your bill for instant payment</p>
-            <button onClick={() => setIsScannerOpen(true)} className="w-full bg-[#D4AF37] text-black py-4 rounded-2xl font-black text-xs uppercase tracking-widest">
+            <button onClick={() => setIsScannerOpen(true)} className="w-full bg-[#D4AF37] text-tezro-gold py-4 rounded-2xl font-black text-xs uppercase tracking-widest">
               Scan & Pay
             </button>
           </div>

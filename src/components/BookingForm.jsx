@@ -17,7 +17,7 @@ const BookingForm = () => {
   return (
     <button 
       onClick={handleBook}
-      className="bg-yellow-500 text-black font-bold py-3 px-6 rounded-lg w-full shadow-lg active:scale-95 transition-transform"
+      className="bg-yellow-500 text-tezro-gold font-bold py-3 px-6 rounded-lg w-full shadow-lg active:scale-95 transition-transform"
     >
       ابھی رائیڈ بک کریں
     </button>

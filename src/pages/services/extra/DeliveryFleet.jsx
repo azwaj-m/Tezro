@@ -25,7 +25,7 @@ const DeliveryFleet = () => {
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
-                <div className={`p-3 rounded-2xl ${selectedFleet === f.id ? 'bg-[#D4AF37] text-black' : 'bg-zinc-800 text-zinc-400'}`}>
+                <div className={`p-3 rounded-2xl ${selectedFleet === f.id ? 'bg-[#D4AF37] text-tezro-gold' : 'bg-zinc-800 text-zinc-400'}`}>
                   {f.icon}
                 </div>
                 <div>
@@ -39,7 +39,7 @@ const DeliveryFleet = () => {
         ))}
       </div>
 
-      <button className="w-full bg-[#D4AF37] text-black font-black py-5 rounded-[2rem] mt-10 shadow-xl shadow-yellow-900/20 active:scale-95 transition-all">
+      <button className="w-full bg-[#D4AF37] text-tezro-gold font-black py-5 rounded-[2rem] mt-10 shadow-xl shadow-yellow-900/20 active:scale-95 transition-all">
         CONFIRM PICKUP
       </button>
     </div>

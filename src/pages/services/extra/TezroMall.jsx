@@ -6,7 +6,7 @@ const TezroMall = () => {
     <div className="min-h-screen bg-black text-white pb-24">
       <div className="p-5 flex items-center justify-between sticky top-0 bg-black/90 z-20">
         <h1 className="text-2xl font-black italic text-[#D4AF37]">TEZRO <span className="text-white">MALL</span></h1>
-        <a href="https://alingosuper.github.io/TezroWeb" className="flex items-center gap-2 bg-[#D4AF37]/10 text-[#D4AF37] border border-[#D4AF37]/30 px-3 py-1.5 rounded-full text-[10px] font-bold transition-all hover:bg-[#D4AF37] hover:text-black">
+        <a href="https://alingosuper.github.io/TezroWeb" className="flex items-center gap-2 bg-[#D4AF37]/10 text-[#D4AF37] border border-[#D4AF37]/30 px-3 py-1.5 rounded-full text-[10px] font-bold transition-all hover:bg-[#D4AF37] hover:text-tezro-gold">
           <PlusCircle size={14} /> SELL ITEM
         </a>
       </div>

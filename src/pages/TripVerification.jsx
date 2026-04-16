@@ -36,7 +36,7 @@ const TripVerification = ({ requestId, actualOtp }) => {
 
         <button 
           onClick={handleVerify}
-          className="w-full bg-[#FFD700] text-black py-5 rounded-2xl font-black flex items-center justify-center gap-3 active:scale-95 transition-all shadow-[0_10px_20px_rgba(255,215,0,0.2)]"
+          className="w-full bg-[#FFD700] text-tezro-gold py-5 rounded-2xl font-black flex items-center justify-center gap-3 active:scale-95 transition-all shadow-[0_10px_20px_rgba(255,215,0,0.2)]"
         >
           START TRIP <ArrowRight size={20} />
         </button>

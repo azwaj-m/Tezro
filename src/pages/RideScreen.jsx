@@ -23,7 +23,7 @@ const RideScreen = () => {
         <p className="text-gray-500 text-xs uppercase tracking-widest mb-8">Tezro Secure Network is Online</p>
         <button 
           onClick={handleBookRide}
-          className="w-full max-w-xs bg-[#FFD700] text-black py-5 rounded-2xl font-black text-sm uppercase shadow-[0_0_30px_rgba(255,215,0,0.2)] active:scale-95 transition-all"
+          className="w-full max-w-xs bg-[#FFD700] text-tezro-gold py-5 rounded-2xl font-black text-sm uppercase shadow-[0_0_30px_rgba(255,215,0,0.2)] active:scale-95 transition-all"
         >
           رائیڈ بک کریں
         </button>
@@ -46,7 +46,7 @@ const RideScreen = () => {
       <div className="w-full max-w-md bg-black/80 backdrop-blur-3xl border-2 border-[#FFD700]/30 rounded-[3.5rem] p-8 shadow-[0_0_100px_rgba(255,215,0,0.1)] relative overflow-hidden"> 
         <div className="text-center mb-8">
           <div className="w-20 h-20 bg-[#FFD700] rounded-full flex items-center justify-center mx-auto mb-4 shadow-[0_0_30px_rgba(255,215,0,0.4)]">
-            <CheckCircle size={40} className="text-black" />
+            <CheckCircle size={40} className="text-tezro-gold" />
           </div>
           <h2 className="text-[#FFD700] text-3xl font-black italic uppercase tracking-tighter">سفر مکمل!</h2>
           <p className="text-gray-500 text-[10px] uppercase font-bold tracking-[3px] mt-1 text-center">Tezro Secure Payment Successful</p>
@@ -72,10 +72,10 @@ const RideScreen = () => {
           </div>
         </div>
         <div className="grid grid-cols-2 gap-4">
-          <button className="bg-white/5 border border-white/10 text-white py-4 rounded-2xl font-black text-[10px] uppercase flex items-center justify-center gap-2 hover:bg-white/10">
+          <button className="bg-zinc-900/50/5 border border-white/10 text-white py-4 rounded-2xl font-black text-[10px] uppercase flex items-center justify-center gap-2 hover:bg-zinc-900/50/10">
             <Download size={16} /> رسید ڈاؤن لوڈ
           </button>
-          <button className="bg-[#FFD700] text-black py-4 rounded-2xl font-black text-[10px] uppercase flex items-center justify-center gap-2 shadow-lg active:scale-95 transition-all">
+          <button className="bg-[#FFD700] text-tezro-gold py-4 rounded-2xl font-black text-[10px] uppercase flex items-center justify-center gap-2 shadow-lg active:scale-95 transition-all">
             <Share2 size={16} /> رسید شیئر کریں
           </button>
         </div>

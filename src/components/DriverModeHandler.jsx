@@ -13,7 +13,7 @@ const DriverModeHandler = () => {
       <p className="text-[10px] text-gray-500 mb-4">آپ کی لائیو سیلفی اور رجسٹریشن ضروری ہے</p>
       <button 
         onClick={handleDriverActivation}
-        className="bg-[#FFD700] text-black px-8 py-3 rounded-2xl font-black text-xs uppercase"
+        className="bg-[#FFD700] text-tezro-gold px-8 py-3 rounded-2xl font-black text-xs uppercase"
       >
         رجسٹریشن شروع کریں
       </button>
