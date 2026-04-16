@@ -10,13 +10,13 @@ const Navbar = ({ onMenuOpen }) => {
         </button>
         
         <div className="flex items-center gap-1">
-          <span className="text-[#D4AF37] font-black italic text-xl tracking-tighter">TEZRO</span>
+          <span className="text-[FFD700] font-black italic text-xl tracking-tighter">TEZRO</span>
           <span className="text-white font-light text-xl tracking-tighter">ULTRA</span>
         </div>
 
         <div className="flex items-center gap-4">
           <div className="bg-zinc-900 p-2 rounded-full border border-zinc-800">
-            <Shield size={18} className="text-[#D4AF37]" />
+            <Shield size={18} className="text-[FFD700]" />
           </div>
           <button className="text-zinc-400">
             <User size={24} />

@@ -20,7 +20,7 @@ const HomeScreen = () => {
 
       <div className="grid grid-cols-2 gap-4">
         {services.map((s) => (
-          <button key={s.name} className="grid grid-cols-2 gap-4 items-center justify-center p-6 rounded-[2rem] bg-zinc-900/30 border border-zinc-800 hover:border-tezro-gold/40 transition-all group">
+          <button key={s.name} className="flex flex-col items-center justify-center p-6 rounded-[2rem] bg-zinc-900/30 border border-zinc-800 hover:border-tezro-gold/40 transition-all group">
             <s.icon className="text-tezro-gold mb-3 group-hover:scale-110 transition-transform" size={32} />
             <span className="text-tezro-gold text-[10px] font-black tracking-widest uppercase">{s.name}</span>
           </button>
