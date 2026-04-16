@@ -2,16 +2,12 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
 import './index.css'
-import { BrowserRouter } from 'react-router-dom'
-import { TezroProvider } from './context/TezroContext.jsx' // اگر کنٹیکسٹ کا فولڈر الگ ہے
+import { TezroProvider } from './context/TezroContext.jsx'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <TezroProvider>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+      <App />
     </TezroProvider>
   </React.StrictMode>,
 )
-// Build Fix: Thu Apr 16 12:43:45 PKT 2026
