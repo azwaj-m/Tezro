@@ -6,13 +6,12 @@ const TezroContext = createContext();
 export const TezroProvider = ({ children }) => {
   const [appState, setAppState] = useState({ theme: 'dark', language: 'ur' });
 
-  const placeFoodOrder = async (cart, location) => {
-    // ہم انجن سے نیا فنکشن استعمال کر رہے ہیں
+  const executeOrder = async (cart, location) => {
     return await processLogisticsOrder(cart, location);
   };
 
   return (
-    <TezroContext.Provider value={{ appState, setAppState, placeFoodOrder }}>
+    <TezroContext.Provider value={{ appState, setAppState, executeOrder }}>
       {children}
     </TezroContext.Provider>
   );

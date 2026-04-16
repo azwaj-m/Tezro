@@ -8,6 +8,9 @@ export const processLogisticsOrder = async (cart, location) => {
   };
 };
 
+// Vercel build fix: Alias for old name
+export const placeFoodOrder = processLogisticsOrder;
+
 export const calculateDeliveryFee = (distance) => {
   const baseFee = 50;
   return baseFee + (distance * 10);
