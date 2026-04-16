@@ -1,22 +1,28 @@
-// Tezro Ultra Voice Security & Device Command Center
-export const verifyVoiceLock = (navigate, userSecretPhrase) => {
-  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (!SpeechRecognition) return;
+import { GlobalVoiceEngine } from './GlobalVoiceEngine';
 
-  const recognition = new SpeechRecognition();
-  recognition.lang = 'en-US';
+export const VoiceLockEngine = {
+  failedAttempts: 0,
+  maxAttempts: 3,
+  isPermanentlyLocked: false,
 
-  recognition.onresult = (event) => {
-    const spokenText = event.results[0][0].transcript.toLowerCase();
-    
-    // سیکیورٹی چیک: اگر بولی گئی آواز صارف کے خفیہ جملے سے میچ کرے
-    if (spokenText.includes(userSecretPhrase.toLowerCase())) {
-       console.log("Access Granted: Identity Verified via Voice");
-       return true;
+  verifyCodeWord: (input) => {
+    if (VoiceLockEngine.isPermanentlyLocked) return "SYSTEM_DEAD";
+
+    if (input === GlobalVoiceEngine.secretCode) {
+      VoiceLockEngine.failedAttempts = 0;
+      return "ACCESS_GRANTED";
     } else {
-       alert("Security Alert: Voice mismatch. Access Denied.");
-       return false;
+      VoiceLockEngine.failedAttempts++;
+      if (VoiceLockEngine.failedAttempts >= VoiceLockEngine.maxAttempts) {
+        VoiceLockEngine.isPermanentlyLocked = true;
+        return "PERMANENT_LOCK";
+      }
+      return "WRONG_CODE";
     }
-  };
-  recognition.start();
+  },
+
+  updateSecretCode: (newCode) => {
+    GlobalVoiceEngine.secretCode = newCode;
+    return "CODE_UPDATED";
+  }
 };

@@ -1,71 +1,37 @@
+export const GlobalVoiceEngine = {
+  isOffline: !navigator.onLine,
+  lastHeardTime: Date.now(),
+  secretCode: "TEZRO_ALPHA", // ڈیفالٹ کوڈ ورڈ
 
-const languageMap = {
-
-    'ur-PK': { home: 'گھر', ride: 'گاڑی', food: 'کھانا', mall: 'مال', wallet: 'والٹ' },
-
-    'en-US': { home: 'home', ride: 'ride', food: 'food', mall: 'mall', wallet: 'wallet' },
-
-    'ps-PK': { home: 'کور', ride: 'ګاډی', food: 'خوراک', mall: 'مارکیٹ', wallet: 'والٹ' },
-
-    'sd-PK': { home: 'گھر', ride: 'گاڏي', food: 'واڌو', mall: 'مال', wallet: 'بٹوو' },
-
-};
-
-
-
-export const startGlobalVoice = (navigate, selectedLang = 'ur-PK') => {
-
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-
-    if (!SpeechRecognition) return alert("آپ کا براؤزر وائس سروس کو سپورٹ نہیں کرتا");
-
-
-
-    const recognition = new SpeechRecognition();
-
-    recognition.lang = selectedLang;
-
-    recognition.interimResults = false;
-
-
+  startMonitoring: (callback) => {
+    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognition.continuous = true;
+    recognition.lang = 'en-US';
 
     recognition.onresult = (event) => {
+      const transcript = event.results[event.results.length - 1][0].transcript.toLowerCase();
+      GlobalVoiceEngine.lastHeardTime = Date.now();
+      
+      // ایمرجنسی چیک (لڑائی جھگڑا)
+      if (transcript.includes("help") || transcript.includes("bachao") || transcript.includes("stop")) {
+        GlobalVoiceEngine.triggerEmergency();
+      }
 
-        const transcript = event.results[0][0].transcript.toLowerCase();
-
-        const commands = languageMap[selectedLang] || languageMap['en-US'];
-
-
-
-        console.log("Detected Speech:", transcript);
-
-
-
-        if (transcript.includes(commands.food)) navigate('/food');
-
-        else if (transcript.includes(commands.ride)) navigate('/ride');
-
-        else if (transcript.includes(commands.home)) navigate('/');
-
-        else if (transcript.includes(commands.mall)) navigate('/mall');
-
-        else if (transcript.includes(commands.wallet)) navigate('/finance');
-
-        else {
-
-            // اگر کوئی مخصوص جگہ کا نام لیا جائے
-
-            navigate(`/ride?destination=${encodeURIComponent(transcript)}`);
-
-        }
-
+      callback(transcript);
     };
-
-
-
-    recognition.onerror = (err) => console.error("Voice Error:", err);
-
     recognition.start();
+  },
 
+  triggerEmergency: () => {
+    console.log("EMERGENCY: Sending location and SOS to authorities...");
+    // یہاں میسجنگ لاجک آئے گا
+  },
+
+  checkOwnerPresence: () => {
+    const twoHours = 2 * 60 * 60 * 1000;
+    if (Date.now() - GlobalVoiceEngine.lastHeardTime > twoHours) {
+      return "LOCK_TRIGGERED";
+    }
+    return "SAFE";
+  }
 };
-
