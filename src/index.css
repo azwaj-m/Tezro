@@ -8,3 +8,11 @@ body {
   background-color: black;
   color: #FFD700;
 }
+
+:root {
+  --tezro-gold: #D4AF37;
+}
+
+.text-tezro-gold {
+  color: #D4AF37 !important;
+}

@@ -24,7 +24,7 @@ function App() {
   return (
     <Router>
       <div className="bg-black min-h-screen text-white">
-        <Navbar onOpenSidebar={() => setSidebarOpen(true)} />
+        <Navbar onMenuOpen={() => setSidebarOpen(true)} />
         <Sidebar isOpen={isSidebarOpen} onClose={() => setSidebarOpen(false)} />
         
         <main className="container mx-auto max-w-md pb-24">
