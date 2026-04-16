@@ -12,7 +12,6 @@ export const TezroContext = createContext();
 export const TezroProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   
-  // تمام انجنز کو ایک ہی کنٹیکسٹ میں جمع کر دیا گیا ہے
   const value = {
     user,
     setUser,
