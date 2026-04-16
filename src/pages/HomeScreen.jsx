@@ -1,30 +1,43 @@
 import React from 'react';
-import { Utensils, Hotel, Car, ShoppingBag, Heart, Zap, ShieldCheck } from 'lucide-react';
+import { Car, Utensils, CreditCard, ShoppingBag, Truck, UserPlus, Zap, ShieldCheck } from 'lucide-react';
 
 const services = [
-  { name: 'Food', icon: Utensils },
-  { name: 'Hotel', icon: Hotel },
   { name: 'Ride', icon: Car },
-  { name: 'Mart', icon: ShoppingBag },
-  { name: 'Health', icon: Heart },
-  { name: 'Bills', icon: Zap }
+  { name: 'Food', icon: Utensils },
+  { name: 'Pay', icon: CreditCard },
+  { name: 'Shop', icon: ShoppingBag },
+  { name: 'Deliver', icon: Truck },
+  { name: 'Doctor', icon: UserPlus },
+  { name: 'Pharmacy', icon: Zap },
+  { name: 'Services', icon: ShieldCheck }
 ];
 
 const HomeScreen = () => {
   return (
-    <div className="min-h-screen bg-[#000d08] p-6 pb-32 pt-20">
-      <div className="mb-8">
-        <h1 className="text-tezro-gold font-black tracking-[8px] text-2xl">TEZRO ULTRA</h1>
-        <p className="text-zinc-500 text-xs font-bold mt-2 italic">The Future of Services</p>
+    <div className="min-h-screen bg-[#000d08] p-6 pb-32 pt-24 space-y-8">
+      {/* سروسز گریڈ - تصویر 3 کے مطابق */}
+      <div className="card-dark relative">
+        <div className="absolute top-4 right-4 text-emerald-500 flex items-center gap-1 text-[10px] font-bold">
+            <ShieldCheck size={14} /> Cyber Security Active
+        </div>
+        <div className="grid grid-cols-4 gap-3 pt-6">
+          {services.map((s) => (
+            <button key={s.name} className="flex flex-col items-center justify-center p-3 rounded-2xl bg-gradient-to-b from-[#FFD700] to-[#B8860B] aspect-square shadow-lg group transition-all hover:shadow-[0_0_20px_#FFD700]">
+              <s.icon className="text-black mb-1.5" size={24} strokeWidth={2.5} />
+              <span className="text-black text-[9px] font-black tracking-tight uppercase leading-none">{s.name}</span>
+              <span className="text-black/50 text-[7px] lowercase">{s.name}</span>
+            </button>
+          ))}
+        </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
-        {services.map((s) => (
-          <button key={s.name} className="flex flex-col items-center justify-center p-6 rounded-[2rem] bg-zinc-900/30 border border-zinc-800 hover:border-tezro-gold/40 transition-all group">
-            <s.icon className="text-tezro-gold mb-3 group-hover:scale-110 transition-transform" size={32} />
-            <span className="text-tezro-gold text-[10px] font-black tracking-widest uppercase">{s.name}</span>
-          </button>
-        ))}
+      {/* پریمیم سروسز سیکشن */}
+      <div className="space-y-4">
+        <h3 className="text-tezro-gold font-bold tracking-[3px] text-xs uppercase">Premium Services</h3>
+        <div className="grid grid-cols-2 gap-4">
+            <div className="card-dark h-40 flex items-end p-4 border-tezro-gold/20"><span className="text-white font-bold text-xs uppercase tracking-widest">Marketplace</span></div>
+            <div className="card-dark h-40 flex items-end p-4 border-tezro-gold/20"><span className="text-white font-bold text-xs uppercase tracking-widest">Food & Dining</span></div>
+        </div>
       </div>
     </div>
   );

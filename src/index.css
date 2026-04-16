@@ -4,18 +4,18 @@
 
 body {
   margin: 0;
-  padding: 0;
-  background-color: #000d08;
-  color: #FFD700;
+  background-color: #000d08; /* ڈارک بلیک گرین بیک گراؤنڈ */
+  color: #FFD700; /* سنہرا ٹیکسٹ */
   font-family: 'Inter', sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
-/* کسٹم کلاسز برائے ڈارک تھیم */
-.tezro-glass {
-  @apply bg-zinc-900/40 backdrop-blur-md border border-zinc-800/50;
+/* تصویر 3 جیسے سنہرے بٹنوں کے لیے کسٹم کلاس */
+.btn-gold {
+  @apply bg-gradient-to-b from-[#FFD700] to-[#B8860B] text-black font-bold rounded-xl shadow-[0_0_15px_rgba(255,215,0,0.4)] transition-all hover:scale-105;
 }
 
-.text-gold {
-  color: #FFD700 !important;
+/* تصویر 3 جیسے ڈارک گلاس کارڈز */
+.card-dark {
+  @apply bg-zinc-900/40 backdrop-blur-md border border-zinc-800/50 rounded-[2rem] p-6 shadow-2xl;
 }
