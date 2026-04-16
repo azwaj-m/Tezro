@@ -1,7 +1,6 @@
+import { startGlobalVoice } from '../../../utils/GlobalVoiceEngine';
 import React from 'react';
-import { startGlobalVoice } from '../../../utils/GlobalVoiceEngine';
 import { useNavigate } from 'react-router-dom';
-import { startGlobalVoice } from '../../../utils/GlobalVoiceEngine';
 import { useNavigate } from 'react-router-dom';
 import { Mic, ShieldAlert, Power } from 'lucide-react';
 
