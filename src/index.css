@@ -3,21 +3,31 @@
 @theme {
   --color-gold: #FFD700;
   --color-shiny-green: #00ff88;
-  --color-deep-forest: #002211;
 }
 
-.shiny-header-footer {
-  background: linear-gradient(145deg, #00331a, #00ff88);
-  box-shadow: 0 4px 15px rgba(0, 255, 136, 0.3);
-  border-bottom: 1px solid rgba(255, 215, 0, 0.3);
+/* شائنی گولڈن ایفیکٹ */
+.shiny-gold-panel {
+  background: linear-gradient(145deg, #FFD700, #b8860b);
+  box-shadow: 0 8px 32px 0 rgba(184, 134, 11, 0.37), 
+              inset 0 -4px 8px rgba(0,0,0,0.2), 
+              inset 0 4px 8px rgba(255,255,255,0.5);
+  border: 1px solid rgba(255, 215, 0, 0.5);
+  border-radius: 20px;
 }
 
-.map-label-popup {
-  background: rgba(0, 0, 0, 0.8);
-  color: #FFD700;
-  border: 1px solid #FFD700;
-  border-radius: 8px;
-  padding: 5px 10px;
-  font-weight: bold;
-  font-size: 14px;
+/* تھری ڈی ابھرا ہوا بٹن */
+.extra-raised {
+  box-shadow: 0 10px 20px rgba(0,0,0,0.3), inset 0 2px 2px rgba(255,255,255,0.2);
+  transition: all 0.3s ease;
+}
+
+.extra-raised:active {
+  transform: translateY(4px);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.glass-map-ui {
+  background: rgba(0, 13, 8, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--color-shiny-green);
 }

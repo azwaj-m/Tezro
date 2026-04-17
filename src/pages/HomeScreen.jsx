@@ -1,112 +1,166 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { MapContainer, TileLayer } from 'react-leaflet';
+import React, { useState, useEffect } from 'react';
+import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Car, Utensils, CreditCard, ShoppingBag, Truck, UserPlus, Zap, Settings, ShieldCheck, Bell, Menu, Mic, X, Map as MapIcon, Plane } from 'lucide-react';
-import Sidebar from '../components/Navigation/Sidebar';
-
-const services = [
-  { name: 'Ride', icon: Car, path: '/ride' },
-  { name: 'Food', icon: Utensils, path: '/food' },
-  { name: 'Finance', icon: CreditCard, path: '/finance' },
-  { name: 'Mall', icon: ShoppingBag, path: '/mall' },
-  { name: 'Deliver', icon: Truck, path: '/delivery' },
-  { name: 'Health', icon: UserPlus, path: '/health' },
-  { name: 'Bills', icon: Zap, path: '/bills' },
-  { name: 'Hotel', icon: Plane, path: '/hotel' }
-];
-
-const promoCards = [
-  { title: "MARKETPLACE", desc: "Book Now", color: "from-blue-600 to-indigo-900", path: '/mall' },
-  { title: "FOOD & DINING", desc: "50% OFF", color: "from-orange-500 to-red-800", path: '/food' },
-  { title: "SECURE VAULT", desc: "Manage Assets", color: "from-zinc-700 to-black", path: '/vault' }
-];
+import { Search, Menu, Bell, Mic, X, Map as MapIcon, ChevronRight, Home, CreditCard, Gift, History, User } from 'lucide-react';
+import 'leaflet/dist/leaflet.css';
 
 const HomeScreen = () => {
-  const navigate = useNavigate();
-  const [isSidebarOpen, setSidebarOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isMapFull, setIsMapFull] = useState(false);
+  const [isListening, setIsListening] = useState(false);
+  const [searchText, setSearchText] = useState("");
+
+  // وائس انجن
+  const startVoiceSearch = () => {
+    setIsListening(true);
+    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognition.onresult = (event) => {
+      const transcript = event.results[0][0].transcript;
+      setSearchText(transcript);
+      setIsListening(false);
+    };
+    recognition.onspeechend = () => setIsListening(false);
+    recognition.start();
+  };
 
   return (
-    <div className="min-h-screen pb-32 bg-[#000d08] text-gold overflow-x-hidden font-sans">
+    <div className="min-h-screen bg-[#000d08] text-gold font-sans overflow-x-hidden" onClick={() => isSidebarOpen && setIsSidebarOpen(false)}>
       
-      {/* Sidebar Overlay */}
-      <AnimatePresence>
-        {isSidebarOpen && (
-          <>
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSidebarOpen(false)} className="fixed inset-0 bg-black/80 z-[3000]" />
-            <motion.div initial={{ x: '-100%' }} animate={{ x: 0 }} exit={{ x: '-100%' }} transition={{ type: 'spring', damping: 20 }} className="fixed top-0 left-0 h-full w-80 bg-zinc-900 z-[3001] shadow-2xl">
-                <div className="p-6 bg-shiny-green flex justify-between items-center">
-                    <h2 className="text-white font-black italic">TEZRO MENU</h2>
-                    <X onClick={() => setSidebarOpen(false)} className="text-white" />
-                </div>
-                <Sidebar />
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
-
-      {/* Shiny Green Header */}
-      <div className="px-4 py-4 flex justify-between items-center sticky top-0 z-[2000] shiny-header-footer">
-        <Menu size={26} className="text-white" onClick={() => setSidebarOpen(true)} />
-        <div className="flex flex-col items-center">
-             <div className="flex items-center gap-1 bg-black/30 px-3 py-0.5 rounded-full border border-white/20">
-                <ShieldCheck size={12} className="text-green-400 animate-pulse" />
-                <span className="text-[8px] font-bold uppercase tracking-[2px] text-white">Cyber Secure</span>
-             </div>
-             <h1 className="text-xl font-black italic tracking-tighter text-white">TEZRO</h1>
-        </div>
-        <Bell size={26} className="text-white" onClick={() => navigate('/notifications')} />
-      </div>
-
-      {/* Search Bar - Active */}
-      <div className="px-4 mt-6">
+      {/* 1. پریمیم گولڈن ہیڈر */}
+      <header className="fixed top-0 w-full z-[1000] px-4 py-3 shiny-gold-panel flex justify-between items-center rounded-b-3xl">
+        <button onClick={(e) => {e.stopPropagation(); setIsSidebarOpen(true)}}>
+          <Menu size={28} className="text-black" />
+        </button>
+        
+        {/* لوگو جو ہوم بٹن بھی ہے */}
+        <motion.img 
+          src="/assets/logo.png" 
+          alt="Tezro" 
+          className="h-10 w-10 object-contain cursor-pointer" 
+          whileTap={{ scale: 0.9 }}
+          onClick={() => window.location.reload()}
+        />
+        
         <div className="relative">
-          <input type="text" placeholder="Search Banks & Services..." className="w-full bg-zinc-900/50 border-2 border-shiny-green/30 p-4 pl-12 rounded-2xl text-white outline-none focus:border-shiny-green transition-all" />
-          <Search className="absolute left-4 top-4 text-shiny-green" size={20} />
-          <Mic className="absolute right-4 top-4 text-shiny-green" size={20} />
+          <Bell size={28} className="text-black" />
+          <span className="absolute -top-1 -right-1 bg-red-600 text-white text-[10px] px-1 rounded-full border border-white">3</span>
         </div>
-      </div>
+      </header>
 
-      {/* Swipeable Promo Cards */}
-      <div className="mt-8 flex gap-4 overflow-x-auto px-4 no-scrollbar pb-4">
-        {promoCards.map((card, i) => (
-          <motion.div key={i} onClick={() => navigate(card.path)} className={`min-w-[85%] h-44 rounded-[2.5rem] p-6 bg-gradient-to-br ${card.color} border border-white/10 flex flex-col justify-between shadow-2xl`}>
-             <h2 className="text-2xl font-black italic text-white tracking-tighter">{card.title}</h2>
-             <button className="bg-gold text-black text-[10px] font-bold px-4 py-2 rounded-full w-fit uppercase">{card.desc}</button>
-          </motion.div>
-        ))}
-      </div>
-
-      {/* Interactive Map Section */}
-      <div className="px-4 mt-4">
-        <div className="relative h-60 rounded-[2.5rem] border-4 border-shiny-green/20 overflow-hidden group shadow-[0_0_30px_rgba(0,255,136,0.1)]">
-          <MapContainer center={[24.8607, 67.0011]} zoom={15} style={{ height: '100%', width: '100%' }}>
-            <TileLayer url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}" />
-          </MapContainer>
-          <div className="absolute inset-0 bg-black/20 pointer-events-none" />
-          <div className="absolute bottom-4 left-4 right-4 flex justify-between items-center bg-black/60 backdrop-blur-md p-3 rounded-2xl border border-white/10">
-            <span className="text-[10px] font-bold text-white uppercase tracking-widest flex items-center gap-2">
-                <MapIcon size={14} className="text-shiny-green" /> Live Terrain View
-            </span>
-            <button onClick={() => navigate('/ride')} className="bg-shiny-green text-black font-black text-[10px] px-3 py-1 rounded-lg">TRACK</button>
+      <main className="pt-24 pb-32 px-4">
+        {/* 2. اسمارٹ سرچ بار */}
+        <div className="relative mb-6">
+          <div className={`flex items-center bg-zinc-900 border-2 ${isListening ? 'border-red-500 animate-pulse' : 'border-gold/30'} rounded-2xl p-1 shadow-2xl`}>
+            <Search className="ml-3 text-gold/50" size={20} />
+            <input 
+              type="text" 
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
+              placeholder="Search services, products, locations..." 
+              className="w-full bg-transparent p-3 text-white outline-none placeholder:text-zinc-600"
+            />
+            <button 
+              onClick={startVoiceSearch}
+              className={`p-3 rounded-xl ${isListening ? 'bg-red-500 text-white' : 'bg-gold text-black'}`}
+            >
+              <Mic size={20} />
+            </button>
           </div>
         </div>
-      </div>
 
-      {/* Services Grid - Fully Active */}
-      <div className="px-4 mt-8">
-        <p className="text-[10px] font-bold uppercase tracking-[3px] opacity-60 mb-4 px-2">Top Services</p>
-        <div className="grid grid-cols-4 gap-4">
-          {services.map((s, i) => (
-            <motion.button key={i} whileTap={{ scale: 0.9 }} onClick={() => navigate(s.path)} className="flex flex-col items-center gap-2">
-              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-gold to-yellow-600 flex items-center justify-center shadow-[0_10px_15px_rgba(255,215,0,0.2)] border border-white/20">
-                <s.icon className="text-black" size={24} strokeWidth={2.5} />
+        {/* 3. ایڈوانسڈ لیف لیٹ میپ */}
+        <div className={`relative transition-all duration-500 ${isMapFull ? 'fixed inset-0 z-[2000] h-screen' : 'h-64 rounded-[2.5rem] overflow-hidden border-2 border-gold/20'}`}>
+          <MapContainer center={[30.1575, 71.5249]} zoom={13} style={{height: '100%', width: '100%'}}>
+            <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+            {/* یہاں سیٹلائٹ لیئر بھی شامل کی جا سکتی ہے */}
+          </MapContainer>
+          
+          <button 
+            onClick={() => setIsMapFull(!isMapFull)}
+            className="absolute top-4 right-4 z-[2001] bg-black/80 p-3 rounded-full border border-gold shadow-lg"
+          >
+            {isMapFull ? <X size={24} /> : <MapIcon size={24} />}
+          </button>
+        </div>
+
+        {/* 4. ٹاپ 5 سروسز بٹنز */}
+        <div className="grid grid-cols-5 gap-2 mt-8">
+          {['Food', 'Ride', 'Pay', 'Shop', 'More'].map((item) => (
+            <motion.div key={item} whileTap={{ scale: 0.9 }} className="flex flex-col items-center">
+              <div className="w-14 h-14 shiny-gold-panel flex items-center justify-center mb-1 extra-raised">
+                 <div className="text-black font-black text-[10px] uppercase">{item}</div>
               </div>
-              <span className="text-white text-[9px] font-bold uppercase tracking-tighter">{s.name}</span>
-            </motion.button>
+            </motion.div>
           ))}
         </div>
-      </div>
+
+        {/* 5. سوئپ کارڈز (Premium Services) */}
+        <div className="mt-10 overflow-hidden">
+          <h2 className="text-lg font-black mb-4 flex items-center gap-2">
+            <div className="w-2 h-2 bg-shiny-green rounded-full shadow-[0_0_10px_#00ff88]"></div>
+            PREMIUM SERVICES
+          </h2>
+          <div className="flex gap-4 overflow-x-auto pb-6 no-scrollbar snap-x">
+            {[1, 2, 3].map((i) => (
+              <motion.div 
+                key={i} 
+                drag="x" 
+                dragConstraints={{ left: 0, right: 0 }}
+                className="min-w-[85%] h-48 rounded-3xl bg-gradient-to-br from-zinc-800 to-black border border-gold/20 p-4 snap-center relative overflow-hidden"
+              >
+                <div className="absolute top-0 right-0 p-4 bg-gold text-black font-bold rounded-bl-3xl">NEW</div>
+                <div className="mt-20">
+                  <h3 className="text-xl font-bold">Exclusive Service {i}</h3>
+                  <p className="text-xs opacity-60">Tap to explore details</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </main>
+
+      {/* 6. شائنی گرین فوٹر */}
+      <footer className="fixed bottom-0 w-full h-20 bg-gradient-to-t from-[#00331a] to-[#000d08] border-t border-shiny-green/30 px-6 flex justify-between items-center z-[1000]">
+        <Home className="text-shiny-green shadow-sm" size={28} />
+        <CreditCard className="text-gold/50" size={24} />
+        <div className="w-16 h-16 bg-gold rounded-full flex items-center justify-center -translate-y-6 border-4 border-[#000d08] shadow-2xl">
+           <img src="/assets/logo.png" className="w-10" />
+        </div>
+        <History className="text-gold/50" size={24} />
+        <User className="text-gold/50" size={24} />
+      </footer>
+
+      {/* 7. سائیڈ بار (Drawer) */}
+      <AnimatePresence>
+        {isSidebarOpen && (
+          <motion.div 
+            initial={{ x: '-100%' }} animate={{ x: 0 }} exit={{ x: '-100%' }}
+            className="fixed inset-y-0 left-0 w-80 bg-black border-r border-gold/20 z-[3000] p-6"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex flex-col items-center mb-8">
+              <div className="w-24 h-24 rounded-full border-2 border-gold p-1 mb-2 relative">
+                <img src="/assets/logo.png" className="w-full h-full rounded-full object-cover" />
+                <button className="absolute bottom-0 right-0 bg-gold p-1 rounded-full"><Settings size={14} className="text-black" /></button>
+              </div>
+              <h2 className="text-lg font-bold">Tezro User</h2>
+              <div className="bg-gold/10 px-4 py-2 rounded-xl mt-2 border border-gold/20 cursor-pointer">
+                <p className="text-[10px] text-white/50 uppercase">Balance</p>
+                <p className="text-xl font-mono text-gold font-bold">Rs. 15,250.00</p>
+              </div>
+            </div>
+            
+            <div className="space-y-4">
+              {['Ride Booking', 'Food Delivery', 'Bill Payments', 'Vault'].map(item => (
+                <div key={item} className="flex justify-between items-center p-3 hover:bg-gold/5 rounded-xl cursor-pointer border-b border-white/5">
+                  <span>{item}</span>
+                  <ChevronRight size={18} />
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
