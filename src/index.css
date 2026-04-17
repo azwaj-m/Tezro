@@ -1,18 +1,18 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@theme {
+  --color-gold: #FFD700;
+  --color-dark-green: #000d08;
+}
 
 body {
   background-color: #000d08;
+  color: #FFD700;
   margin: 0;
-  overflow-x: hidden;
+  font-family: 'Inter', sans-serif;
 }
 
 .persian-pattern {
-  background-image: radial-gradient(#FFD700 0.4px, transparent 0.4px);
-  background-size: 25px 25px;
-  background-color: #000d08;
+  background-image: radial-gradient(rgba(255, 215, 0, 0.05) 1px, transparent 1px);
+  background-size: 20px 20px;
 }
-
-/* اسکرول بار کو چھپانے کے لیے */
-.no-scrollbar::-webkit-scrollbar { display: none; }
