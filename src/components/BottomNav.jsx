@@ -1,33 +1,37 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Home, CreditCard, Tag, History, User } from 'lucide-react';
+import { Home, Wallet, Gift, History, User } from 'lucide-react';
 
 const BottomNav = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
   const navItems = [
-    { icon: Home, label: 'Home', path: '/' },
-    { icon: CreditCard, label: 'Pay', path: '/vault' },
-    { icon: Tag, label: 'Offers', path: '/' },
-    { icon: History, label: 'History', path: '/vault' },
-    { icon: User, label: 'Profile', path: '/' },
+    { name: 'Home', icon: Home, path: '/' },
+    { name: 'Pay', icon: Wallet, path: '/finance' },
+    { name: 'Offers', icon: Gift, path: '/offers' },
+    { name: 'History', icon: History, path: '/notifications' },
+    { name: 'Profile', icon: User, path: '/vault' },
   ];
 
   return (
-    <nav className="fixed bottom-4 left-4 right-4 z-[999] bg-gradient-to-r from-[#FFD700] via-[#FDE68A] to-[#B8860B] rounded-[2.5rem] py-4 px-6 shadow-[0_15px_40px_rgba(255,215,0,0.4)]">
-      <div className="flex justify-between items-center max-w-lg mx-auto">
-        {navItems.map((item) => {
-          const isActive = location.pathname === item.path;
-          return (
-            <button key={item.label} onClick={() => navigate(item.path)} className="flex flex-col items-center gap-1 group">
-              <item.icon size={24} className={`${isActive ? 'text-black scale-125' : 'text-black/60'} transition-all`} />
-              <span className={`text-[9px] font-black uppercase ${isActive ? 'text-black' : 'text-black/60'}`}>{item.label}</span>
-            </button>
-          );
-        })}
+    <div className="fixed bottom-0 left-0 right-0 bg-black/80 backdrop-blur-2xl border-t border-gold/10 px-6 py-3 z-[3000]">
+      <div className="flex justify-between items-center max-w-md mx-auto">
+        {navItems.map((item) => (
+          <button
+            key={item.name}
+            onClick={() => navigate(item.path)}
+            className={`flex flex-col items-center gap-1 transition-all ${
+              location.pathname === item.path ? 'text-gold scale-110' : 'text-zinc-500'
+            }`}
+          >
+            <item.icon size={20} strokeWidth={location.pathname === item.path ? 2.5 : 2} />
+            <span className="text-[9px] font-medium">{item.name}</span>
+          </button>
+        ))}
       </div>
-    </nav>
+    </div>
   );
 };
+
 export default BottomNav;

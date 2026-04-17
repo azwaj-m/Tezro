@@ -1,29 +1,11 @@
 import React, { createContext, useContext, useState } from 'react';
-import { 
-  RideEngine, 
-  WalletEngine, 
-  LogisticsEngine, 
-  SecurityEngine, 
-  VendorEngine 
-} from '../utils/TezroMasterEngine';
 
-export const TezroContext = createContext();
+const TezroContext = createContext();
 
 export const TezroProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  
-  const value = {
-    user,
-    setUser,
-    ride: RideEngine,
-    wallet: WalletEngine,
-    logistics: LogisticsEngine,
-    security: SecurityEngine,
-    vendor: VendorEngine
-  };
-
+  const [user, setUser] = useState({ name: 'Tezro User', status: 'Premium' });
   return (
-    <TezroContext.Provider value={value}>
+    <TezroContext.Provider value={{ user, setUser }}>
       {children}
     </TezroContext.Provider>
   );
