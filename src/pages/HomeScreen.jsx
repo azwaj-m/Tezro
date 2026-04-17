@@ -1,119 +1,136 @@
 import React, { useState } from 'react';
-import { MapContainer, TileLayer } from 'react-leaflet';
+import { MapContainer, TileLayer, useMap } from 'react-leaflet';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Menu, Bell, Mic, Map as MapIcon, Home, User, CreditCard, History, PlusCircle, Car, Utensils, Zap, HeartPulse } from 'lucide-react';
+import { Search, Menu, Bell, Mic, X, Map as MapIcon, Home, User, CreditCard, History, LayoutGrid } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import 'leaflet/dist/leaflet.css';
+
+// میپ کو اپ ڈیٹ کرنے کے لیے ہیلپر کمپوننٹ
+const ChangeView = ({ center }) => {
+  const map = useMap();
+  map.setView(center, 13);
+  return null;
+};
 
 const HomeScreen = () => {
   const navigate = useNavigate();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isMapFull, setIsMapFull] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
-  // تمام سروسز کے کارڈز - آپ کی پراجیکٹ فائلوں اور اثاثوں سے لنکڈ
-  const [services, setServices] = useState([
-    { id: 1, title: 'Ride Master', img: '/assets/V-vip.JPG', path: '/ride', desc: 'Book Luxury Transport' },
-    { id: 2, title: 'Food Delivery', img: '/assets/Food.jpg', path: '/food', desc: 'Elite Cuisines to Your Door' },
-    { id: 3, title: 'Health Care', img: '/assets/Doctor.jpg', path: '/health', desc: 'Consult Expert Doctors' },
-    { id: 4, title: 'Pro Help', img: '/assets/Mechanic.jpg', path: '/pro-help', desc: 'Professional Home Services' },
-    { id: 5, title: 'Tezro Mall', img: '/assets/Mart.jpg', path: '/mall', desc: 'Premium Shopping Experience' },
+  const mainServices = [
+    { name: 'Ride', path: '/ride', icon: '🚗' },
+    { name: 'Food', path: '/food', icon: '🍔' },
+    { name: 'Bill', path: '/services/extra/UtilityBills', icon: '🧾' },
+    { name: 'Health', path: '/services/extra/HealthScreen', icon: '🏥' }
+  ];
+
+  const [cards, setCards] = useState([
+    { id: 1, title: 'Luxury Ride', img: '/assets/V-vip.JPG', path: '/ride', rot: -5, x: -20 },
+    { id: 2, title: 'Expert Doctor', img: '/assets/Doctor.jpg', path: '/services/extra/HealthScreen', rot: 0, x: 0 },
+    { id: 3, title: 'Pro Mechanic', img: '/assets/Mechanic.jpg', path: '/services/extra/ProHelp', rot: 5, x: 20 },
+    { id: 4, title: 'AC Services', img: '/assets/AC-Technition.jpg', path: '/services/extra/ProHelp', rot: 10, x: 40 },
   ]);
 
   const handleSwipe = () => {
-    setServices((prev) => {
-      const newArr = [...prev];
-      const first = newArr.shift();
-      newArr.push(first);
-      return newArr;
-    });
+    setCards((prev) => [...prev.slice(1), prev[0]]);
   };
 
   return (
-    <div className="min-h-screen bg-[#000d08] text-white">
+    <div className="min-h-screen bg-[#000d08] text-white overflow-x-hidden pb-32 font-sans">
       
-      {/* شاہانہ ہیڈر */}
-      <header className="fixed top-0 w-full z-[1000] px-6 py-5 royal-gold-shiny rounded-b-[40px] flex justify-between items-center shadow-2xl">
-        <button onClick={() => setIsSidebarOpen(true)}><Menu size={30} className="text-[#4b3c00]" /></button>
-        <img src="/assets/logo.png" className="h-12 w-12 object-contain" alt="Logo" />
-        <Bell size={30} className="text-[#4b3c00]" />
+      {/* 1. شاہانہ گولڈن ہیڈر */}
+      <header className="fixed top-0 w-full z-[2000] px-6 py-5 royal-gold-shiny rounded-b-[40px] flex justify-between items-center shadow-2xl">
+        <button onClick={() => setIsSidebarOpen(true)} className="active:scale-90 transition-transform">
+          <Menu size={32} className="text-[#4b3c00]" strokeWidth={2.5} />
+        </button>
+        <img src="/assets/logo.png" className="h-14 w-14 object-contain drop-shadow-md" alt="Tezro" />
+        <Bell size={32} className="text-[#4b3c00]" strokeWidth={2.5} />
       </header>
 
-      <main className="pt-28 px-5 pb-32">
+      <main className="pt-28 px-5">
         
-        {/* سرچ انجن */}
-        <div className="flex items-center bg-white/10 border-2 border-gold/30 rounded-full px-4 py-1 mb-6 backdrop-blur-md">
-          <Search className="text-gold" size={20} />
-          <input type="text" placeholder="Search for anything..." className="flex-1 bg-transparent px-3 py-3 outline-none text-white" />
-          <Mic className="text-gold" size={20} />
+        {/* 2. سرچ انجن (ہیڈر کے نیچے) */}
+        <div className="relative mb-6 z-10">
+          <div className="flex items-center bg-white/10 border-2 border-gold/30 rounded-full px-4 py-2 backdrop-blur-xl shadow-inner">
+            <Search className="text-gold" size={20} />
+            <input 
+              type="text" 
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search for your destination..." 
+              className="flex-1 bg-transparent px-3 py-3 outline-none text-white text-sm"
+            />
+            <Mic className="text-gold cursor-pointer" size={20} />
+          </div>
         </div>
 
-        {/* میپ سیکشن */}
-        <div className="h-52 w-full rounded-[40px] overflow-hidden border-4 border-gold/20 shadow-xl mb-6">
-          <MapContainer center={[30.3753, 69.3451]} zoom={5} style={{height: '100%', width: '100%'}}>
+        {/* 3. میپ سیکشن (فل اسکرین بٹن کے ساتھ) */}
+        <div className={`relative mb-8 transition-all duration-700 ease-in-out ${isMapFull ? 'fixed inset-0 z-[3000] h-screen w-screen rounded-0' : 'h-60 w-full rounded-[45px] overflow-hidden border-4 border-gold/20 shadow-2xl'}`}>
+          <MapContainer center={[30.1575, 71.5249]} zoom={13} style={{height: '100%', width: '100%'}}>
             <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+            <ChangeView center={[30.1575, 71.5249]} />
           </MapContainer>
+          
+          {/* میپ کے اوپر سرچ بٹن اور کلوز بٹن */}
+          <div className="absolute top-6 left-6 right-6 flex justify-between items-center z-[3001]">
+             {isMapFull && (
+               <div className="flex-1 mr-4 bg-white/90 rounded-full px-4 flex items-center shadow-2xl">
+                 <Search className="text-black" size={20} />
+                 <input type="text" placeholder="Where to go?" className="w-full bg-transparent p-4 text-black outline-none font-bold" />
+               </div>
+             )}
+             <button onClick={() => setIsMapFull(!isMapFull)} className="bg-gold p-4 rounded-full text-black shadow-2xl raised-element border-2 border-white/50">
+               {isMapFull ? <X size={30} strokeWidth={3} /> : <MapIcon size={30} />}
+             </button>
+          </div>
         </div>
 
-        {/* میپ کے نیچے 5 اہم بٹنز */}
-        <div className="grid grid-cols-5 gap-3 mb-8">
-          <button onClick={() => navigate('/ride')} className="flex flex-col items-center gap-1 group">
-            <div className="w-14 h-14 royal-gold-shiny rounded-2xl flex items-center justify-center shadow-lg group-active:scale-90 transition-transform">
-              <Car size={24} className="text-[#4b3c00]" />
-            </div>
-            <span className="text-[10px] font-bold text-gold uppercase">Ride</span>
-          </button>
-          <button onClick={() => navigate('/food')} className="flex flex-col items-center gap-1 group">
-            <div className="w-14 h-14 royal-gold-shiny rounded-2xl flex items-center justify-center shadow-lg group-active:scale-90 transition-transform">
-              <Utensils size={24} className="text-[#4b3c00]" />
-            </div>
-            <span className="text-[10px] font-bold text-gold uppercase">Food</span>
-          </button>
-          <button onClick={() => navigate('/bills')} className="flex flex-col items-center gap-1 group">
-            <div className="w-14 h-14 royal-gold-shiny rounded-2xl flex items-center justify-center shadow-lg group-active:scale-90 transition-transform">
-              <Zap size={24} className="text-[#4b3c00]" />
-            </div>
-            <span className="text-[10px] font-bold text-gold uppercase">Bills</span>
-          </button>
-          <button onClick={() => navigate('/health')} className="flex flex-col items-center gap-1 group">
-            <div className="w-14 h-14 royal-gold-shiny rounded-2xl flex items-center justify-center shadow-lg group-active:scale-90 transition-transform">
-              <HeartPulse size={24} className="text-[#4b3c00]" />
-            </div>
-            <span className="text-[10px] font-bold text-gold uppercase">Health</span>
-          </button>
-          {/* بڑا "More" بٹن */}
-          <button onClick={() => setIsSidebarOpen(true)} className="flex flex-col items-center gap-1 group">
-            <div className="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center shadow-lg border-2 border-gold group-active:scale-90 transition-transform">
-              <PlusCircle size={24} className="text-gold" />
-            </div>
-            <span className="text-[10px] font-bold text-white uppercase">More</span>
+        {/* 4. میپ کے نیچے 5 بٹنز (4 چھوٹے، 1 بڑا) */}
+        <div className="flex gap-4 mb-12 h-36">
+          <div className="grid grid-cols-2 grid-rows-2 gap-3 flex-1">
+            {mainServices.map((s, i) => (
+              <button key={i} onClick={() => navigate(s.path)} className="royal-gold-shiny rounded-2xl flex items-center justify-center text-xl shadow-lg active:scale-95 transition-all">
+                {s.icon}
+              </button>
+            ))}
+          </div>
+          <button 
+            onClick={() => setIsSidebarOpen(true)}
+            className="w-1/3 royal-gold-shiny rounded-[30px] flex flex-col items-center justify-center shadow-xl border-b-8 border-gold/50 active:translate-y-1"
+          >
+            <LayoutGrid size={35} className="text-[#4b3c00] mb-2" />
+            <span className="text-[10px] font-black text-[#4b3c00] uppercase">More</span>
           </button>
         </div>
 
-        {/* اسٹیکڈ سوئپ کارڈز (مکمل حالت میں) */}
-        <div className="relative h-[450px] w-full" onClick={handleSwipe}>
-          <AnimatePresence mode="popLayout">
-            {services.map((service, index) => (
+        {/* 5. آڑھے ٹیڑھے سوئپ کارڈز (Stacked & Fanned) */}
+        <div className="relative h-96 w-full flex justify-center items-center mt-10">
+          <AnimatePresence>
+            {cards.map((card, index) => (
               <motion.div
-                key={service.id}
-                initial={{ scale: 0.9, opacity: 0 }}
+                key={card.id}
                 animate={{ 
-                  scale: 1 - index * 0.04, 
-                  y: index * -18, 
-                  zIndex: services.length - index,
-                  opacity: index > 2 ? 0 : 1 
+                  scale: 1 - index * 0.05, 
+                  x: index * 20, // تھوڑا سا سائیڈ پر تاکہ کنارے نظر آئیں
+                  rotate: index * 4, // آڑھا ترچھا ایفیکٹ
+                  zIndex: cards.length - index,
+                  opacity: 1 - index * 0.2
                 }}
-                transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-                className="absolute inset-x-0 h-[420px] rounded-[50px] overflow-hidden bg-zinc-900 border-2 border-gold/40 shadow-[0_20px_50px_rgba(0,0,0,0.6)]"
+                transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                className="absolute w-full h-full rounded-[50px] overflow-hidden border-2 border-gold/40 bg-zinc-900 shadow-[0_30px_60px_rgba(0,0,0,0.8)] cursor-pointer"
+                onClick={handleSwipe}
               >
-                <img src={service.img} className="w-full h-3/5 object-cover" alt={service.title} />
-                <div className="p-8 h-2/5 flex flex-col justify-between bg-gradient-to-b from-black/80 to-black">
+                <img src={card.img} className="w-full h-3/5 object-cover" alt={card.title} />
+                <div className="h-2/5 p-6 bg-gradient-to-t from-black via-zinc-900 to-transparent flex flex-col justify-between">
                   <div>
-                    <h3 className="text-3xl font-black text-gold italic uppercase tracking-tighter">{service.title}</h3>
-                    <p className="text-sm text-gray-400 mt-1">{service.desc}</p>
+                    <h3 className="text-2xl font-black text-gold italic uppercase tracking-tighter">{card.title}</h3>
                   </div>
                   
+                  {/* براہ راست سروس حاصل کرنے کا بٹن */}
                   <button 
-                    onClick={(e) => { e.stopPropagation(); navigate(service.path); }}
-                    className="w-full py-5 royal-gold-shiny rounded-[25px] text-black font-black text-sm uppercase shadow-xl active:scale-95 transition-transform"
+                    onClick={(e) => { e.stopPropagation(); navigate(card.path); }}
+                    className="w-full py-4 royal-gold-shiny rounded-2xl text-black font-black text-sm uppercase shadow-[0_5px_15px_rgba(212,175,55,0.4)]"
                   >
                     براہ راست سروس حاصل کریں
                   </button>
@@ -124,35 +141,16 @@ const HomeScreen = () => {
         </div>
       </main>
 
-      {/* شاہانہ فوٹر */}
-      <footer className="fixed bottom-0 w-full h-24 royal-gold-shiny rounded-t-[50px] flex justify-between items-center px-10 z-[1000]">
+      {/* 6. شاہانہ فوٹر */}
+      <footer className="fixed bottom-0 w-full h-24 royal-gold-shiny rounded-t-[50px] flex justify-between items-center px-10 z-[2000] border-t-2 border-white/20">
         <Home size={32} className="text-[#4b3c00]" />
         <CreditCard size={32} className="text-[#4b3c00]/40" />
-        <div className="w-20 h-20 bg-white rounded-full -translate-y-10 border-[8px] border-[#000d08] p-2 shadow-2xl flex items-center justify-center">
-          <img src="/assets/logo.png" className="w-full h-full object-contain" alt="Logo" />
+        <div className="w-24 h-24 bg-white rounded-full -translate-y-12 border-[10px] border-[#000d08] p-3 shadow-2xl raised-element">
+          <img src="/assets/logo.png" className="w-full h-full object-contain" alt="Home" />
         </div>
         <History size={32} className="text-[#4b3c00]/40" />
         <User size={32} className="text-[#4b3c00]/40" />
       </footer>
-
-      {/* سائیڈ بار مینیو */}
-      <AnimatePresence>
-        {isSidebarOpen && (
-          <>
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setIsSidebarOpen(false)} className="fixed inset-0 bg-black/90 z-[2000] backdrop-blur-md" />
-            <motion.div initial={{ x: '-100%' }} animate={{ x: 0 }} exit={{ x: '-100%' }} className="fixed inset-y-0 left-0 w-80 royal-gold-shiny z-[2001] rounded-r-[50px] p-8 shadow-2xl">
-              <h2 className="text-3xl font-black text-[#4b3c00] mb-8 italic border-b border-[#4b3c00]/20 pb-4 uppercase">All Services</h2>
-              <div className="space-y-4 h-[70vh] overflow-y-auto no-scrollbar">
-                {['AC Technician', 'Auto Electrician', 'Barber', 'Carpenter', 'Gardener', 'Mason', 'Mechanic', 'Plumber', 'Tutor'].map((item) => (
-                  <div key={item} onClick={() => navigate('/pro-help')} className="flex justify-between items-center p-5 bg-black/10 rounded-2xl border border-white/5 text-[#4b3c00] font-black uppercase text-xs tracking-widest cursor-pointer active:bg-gold/20">
-                    {item} <ChevronRight size={18} />
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
     </div>
   );
 };
