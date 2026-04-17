@@ -3,27 +3,16 @@
 @tailwind utilities;
 
 body {
+  background-color: #000d08;
   margin: 0;
-  background-color: #000d08;
-  color: #FFD700;
-  font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
 }
 
-/* ایرانی اسلامی مدھم ڈیزائن */
 .persian-pattern {
+  background-image: radial-gradient(#FFD700 0.4px, transparent 0.4px);
+  background-size: 25px 25px;
   background-color: #000d08;
-  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 30L15 0h30L30 30zM0 15l30 15L0 45V15zm60 0L30 30l30 15V15zM30 30l15 30H15l15-30z' fill='%23ffd700' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E");
 }
 
-/* پریمیم گلاس کارڈ */
-.card-dark {
-  background: rgba(15, 15, 15, 0.6);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 215, 0, 0.1);
-  border-radius: 2.5rem;
-}
-
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
+/* اسکرول بار کو چھپانے کے لیے */
+.no-scrollbar::-webkit-scrollbar { display: none; }
