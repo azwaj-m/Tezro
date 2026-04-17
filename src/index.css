@@ -2,17 +2,22 @@
 
 @theme {
   --color-gold: #FFD700;
-  --color-dark-green: #000d08;
+  --color-shiny-green: #00ff88;
+  --color-deep-forest: #002211;
 }
 
-body {
-  background-color: #000d08;
+.shiny-header-footer {
+  background: linear-gradient(145deg, #00331a, #00ff88);
+  box-shadow: 0 4px 15px rgba(0, 255, 136, 0.3);
+  border-bottom: 1px solid rgba(255, 215, 0, 0.3);
+}
+
+.map-label-popup {
+  background: rgba(0, 0, 0, 0.8);
   color: #FFD700;
-  margin: 0;
-  font-family: 'Inter', sans-serif;
-}
-
-.persian-pattern {
-  background-image: radial-gradient(rgba(255, 215, 0, 0.05) 1px, transparent 1px);
-  background-size: 20px 20px;
+  border: 1px solid #FFD700;
+  border-radius: 8px;
+  padding: 5px 10px;
+  font-weight: bold;
+  font-size: 14px;
 }
