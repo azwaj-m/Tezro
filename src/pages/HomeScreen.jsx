@@ -1,164 +1,151 @@
-import React, { useState, useEffect } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
+import React, { useState } from 'react';
+import { MapContainer, TileLayer } from 'react-leaflet';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Menu, Bell, Mic, X, Map as MapIcon, ChevronRight, Home, CreditCard, Gift, History, User } from 'lucide-react';
+import { Search, Menu, Bell, Mic, X, Map as MapIcon, Home, CreditCard, Gift, History, User, ChevronRight } from 'lucide-react';
 import 'leaflet/dist/leaflet.css';
+
+const services = [
+  { name: 'Food', icon: '🍔', color: 'bg-orange-500' },
+  { name: 'Ride', icon: '🚗', color: 'bg-blue-500' },
+  { name: 'Payment', icon: '💳', color: 'bg-green-500' },
+  { name: 'Shopping', icon: '🛍️', color: 'bg-purple-500' },
+  { name: 'Services', icon: '🛠️', color: 'bg-yellow-600' }
+];
 
 const HomeScreen = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isMapFull, setIsMapFull] = useState(false);
-  const [isListening, setIsListening] = useState(false);
-  const [searchText, setSearchText] = useState("");
+  const [cards, setCards] = useState([
+    { id: 1, title: 'Ride Master', img: 'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=400', desc: 'Book your luxury ride' },
+    { id: 2, title: 'Food Delivery', img: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400', desc: 'Taste the best flavors' },
+    { id: 3, title: 'Tezro Mall', img: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400', desc: 'Shop premium products' },
+  ]);
 
-  // وائس انجن
-  const startVoiceSearch = () => {
-    setIsListening(true);
-    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-    recognition.onresult = (event) => {
-      const transcript = event.results[0][0].transcript;
-      setSearchText(transcript);
-      setIsListening(false);
-    };
-    recognition.onspeechend = () => setIsListening(false);
-    recognition.start();
+  const handleSwipe = () => {
+    setCards((prev) => [...prev.slice(1), prev[0]]); // کارڈز کو پیچھے سے آگے لاتا ہے
   };
 
   return (
-    <div className="min-h-screen bg-[#000d08] text-gold font-sans overflow-x-hidden" onClick={() => isSidebarOpen && setIsSidebarOpen(false)}>
+    <div className="min-h-screen bg-[#000d08] text-gold select-none relative overflow-hidden">
       
-      {/* 1. پریمیم گولڈن ہیڈر */}
-      <header className="fixed top-0 w-full z-[1000] px-4 py-3 shiny-gold-panel flex justify-between items-center rounded-b-3xl">
-        <button onClick={(e) => {e.stopPropagation(); setIsSidebarOpen(true)}}>
-          <Menu size={28} className="text-black" />
+      {/* 1. سنگل شاہانہ ہیڈر */}
+      <header className="fixed top-0 w-full z-[1000] px-5 py-4 royal-shiny-panel flex justify-between items-center rounded-b-[40px] raised-element">
+        <button onClick={() => setIsSidebarOpen(true)}>
+          <Menu size={32} className="text-[#8B4513]" strokeWidth={2.5} />
         </button>
         
-        {/* لوگو جو ہوم بٹن بھی ہے */}
-        <motion.img 
-          src="/assets/logo.png" 
-          alt="Tezro" 
-          className="h-10 w-10 object-contain cursor-pointer" 
-          whileTap={{ scale: 0.9 }}
-          onClick={() => window.location.reload()}
-        />
+        <img src="/assets/logo.png" alt="Tezro" className="h-12 w-12 object-contain" onClick={() => window.location.reload()} />
         
         <div className="relative">
-          <Bell size={28} className="text-black" />
-          <span className="absolute -top-1 -right-1 bg-red-600 text-white text-[10px] px-1 rounded-full border border-white">3</span>
+          <Bell size={32} className="text-[#8B4513]" strokeWidth={2.5} />
+          <span className="absolute top-0 right-0 bg-red-600 w-3 h-3 rounded-full border-2 border-white"></span>
         </div>
       </header>
 
-      <main className="pt-24 pb-32 px-4">
-        {/* 2. اسمارٹ سرچ بار */}
-        <div className="relative mb-6">
-          <div className={`flex items-center bg-zinc-900 border-2 ${isListening ? 'border-red-500 animate-pulse' : 'border-gold/30'} rounded-2xl p-1 shadow-2xl`}>
-            <Search className="ml-3 text-gold/50" size={20} />
-            <input 
-              type="text" 
-              value={searchText}
-              onChange={(e) => setSearchText(e.target.value)}
-              placeholder="Search services, products, locations..." 
-              className="w-full bg-transparent p-3 text-white outline-none placeholder:text-zinc-600"
-            />
-            <button 
-              onClick={startVoiceSearch}
-              className={`p-3 rounded-xl ${isListening ? 'bg-red-500 text-white' : 'bg-gold text-black'}`}
-            >
-              <Mic size={20} />
-            </button>
-          </div>
+      {/* 2. سرچ بار (وائس اور ٹیکسٹ) */}
+      <div className="pt-28 px-5">
+        <div className="flex items-center bg-white/10 backdrop-blur-md border-2 border-gold/40 rounded-3xl p-2 shadow-inner">
+          <Search className="ml-3 text-gold" size={24} />
+          <input type="text" placeholder="Search anything..." className="w-full bg-transparent p-3 text-white outline-none" />
+          <button className="bg-gold p-3 rounded-2xl text-black raised-element">
+            <Mic size={24} />
+          </button>
         </div>
+      </div>
 
-        {/* 3. ایڈوانسڈ لیف لیٹ میپ */}
-        <div className={`relative transition-all duration-500 ${isMapFull ? 'fixed inset-0 z-[2000] h-screen' : 'h-64 rounded-[2.5rem] overflow-hidden border-2 border-gold/20'}`}>
-          <MapContainer center={[30.1575, 71.5249]} zoom={13} style={{height: '100%', width: '100%'}}>
+      {/* 3. ایڈوانسڈ میپ بٹن اور میپ */}
+      <div className={`mt-6 px-5 transition-all duration-500 ${isMapFull ? 'fixed inset-0 z-[2000] px-0 mt-0' : 'h-60'}`}>
+        <div className="relative h-full w-full rounded-[40px] overflow-hidden border-4 border-gold/30 shadow-2xl">
+          <MapContainer center={[30.3753, 69.3451]} zoom={5} style={{height: '100%', width: '100%'}}>
             <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-            {/* یہاں سیٹلائٹ لیئر بھی شامل کی جا سکتی ہے */}
           </MapContainer>
-          
-          <button 
-            onClick={() => setIsMapFull(!isMapFull)}
-            className="absolute top-4 right-4 z-[2001] bg-black/80 p-3 rounded-full border border-gold shadow-lg"
-          >
+          <button onClick={() => setIsMapFull(!isMapFull)} className="absolute top-4 right-4 z-[2001] bg-gold p-4 rounded-full text-black raised-element">
             {isMapFull ? <X size={24} /> : <MapIcon size={24} />}
           </button>
         </div>
+      </div>
 
-        {/* 4. ٹاپ 5 سروسز بٹنز */}
-        <div className="grid grid-cols-5 gap-2 mt-8">
-          {['Food', 'Ride', 'Pay', 'Shop', 'More'].map((item) => (
-            <motion.div key={item} whileTap={{ scale: 0.9 }} className="flex flex-col items-center">
-              <div className="w-14 h-14 shiny-gold-panel flex items-center justify-center mb-1 extra-raised">
-                 <div className="text-black font-black text-[10px] uppercase">{item}</div>
+      {/* 4. سروسز بٹنز (5 بٹنز) */}
+      <div className="grid grid-cols-5 gap-3 px-5 mt-8">
+        {services.map((s, i) => (
+          <motion.div key={i} whileTap={{ scale: 0.9 }} className="flex flex-col items-center">
+            <div className={`w-14 h-14 rounded-2xl royal-shiny-panel flex items-center justify-center text-2xl shadow-lg raised-element`}>
+              {s.icon}
+            </div>
+            <span className="text-[10px] mt-2 font-black text-white/80">{s.name}</span>
+          </motion.div>
+        ))}
+      </div>
+
+      {/* 5. بڑے سوئپ کارڈز (Stack Effect) */}
+      <div className="mt-10 px-5 relative h-64 mb-40">
+        <h2 className="text-xl font-black mb-4 italic">PREMIUM DEALS</h2>
+        <div className="relative w-full h-full flex justify-center items-center" onClick={handleSwipe}>
+          {cards.map((card, index) => (
+            <motion.div 
+              key={card.id}
+              animate={{
+                scale: 1 - index * 0.05,
+                y: index * -20,
+                zIndex: cards.length - index,
+                opacity: 1 - index * 0.2
+              }}
+              className="absolute w-full h-full rounded-[40px] overflow-hidden border-2 border-gold/30 shadow-2xl"
+            >
+              <img src={card.img} className="w-full h-full object-cover" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent p-6 flex flex-col justify-end">
+                <h3 className="text-2xl font-black text-gold">{card.title}</h3>
+                <p className="text-sm text-white">{card.desc}</p>
               </div>
             </motion.div>
           ))}
         </div>
+      </div>
 
-        {/* 5. سوئپ کارڈز (Premium Services) */}
-        <div className="mt-10 overflow-hidden">
-          <h2 className="text-lg font-black mb-4 flex items-center gap-2">
-            <div className="w-2 h-2 bg-shiny-green rounded-full shadow-[0_0_10px_#00ff88]"></div>
-            PREMIUM SERVICES
-          </h2>
-          <div className="flex gap-4 overflow-x-auto pb-6 no-scrollbar snap-x">
-            {[1, 2, 3].map((i) => (
-              <motion.div 
-                key={i} 
-                drag="x" 
-                dragConstraints={{ left: 0, right: 0 }}
-                className="min-w-[85%] h-48 rounded-3xl bg-gradient-to-br from-zinc-800 to-black border border-gold/20 p-4 snap-center relative overflow-hidden"
-              >
-                <div className="absolute top-0 right-0 p-4 bg-gold text-black font-bold rounded-bl-3xl">NEW</div>
-                <div className="mt-20">
-                  <h3 className="text-xl font-bold">Exclusive Service {i}</h3>
-                  <p className="text-xs opacity-60">Tap to explore details</p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
+      {/* 6. شاہانہ فوٹر */}
+      <footer className="fixed bottom-0 w-full h-24 royal-shiny-panel rounded-t-[50px] flex justify-between items-center px-8 z-[1000] raised-element border-t-2 border-gold/50">
+        <Home size={30} className="text-[#8B4513]" />
+        <CreditCard size={30} className="text-[#8B4513]/50" />
+        <div className="w-20 h-20 bg-white rounded-full -translate-y-8 border-8 border-[#000d08] shadow-2xl p-2 raised-element">
+           <img src="/assets/logo.png" className="w-full h-full object-contain" />
         </div>
-      </main>
-
-      {/* 6. شائنی گرین فوٹر */}
-      <footer className="fixed bottom-0 w-full h-20 bg-gradient-to-t from-[#00331a] to-[#000d08] border-t border-shiny-green/30 px-6 flex justify-between items-center z-[1000]">
-        <Home className="text-shiny-green shadow-sm" size={28} />
-        <CreditCard className="text-gold/50" size={24} />
-        <div className="w-16 h-16 bg-gold rounded-full flex items-center justify-center -translate-y-6 border-4 border-[#000d08] shadow-2xl">
-           <img src="/assets/logo.png" className="w-10" />
-        </div>
-        <History className="text-gold/50" size={24} />
-        <User className="text-gold/50" size={24} />
+        <History size={30} className="text-[#8B4513]/50" />
+        <User size={30} className="text-[#8B4513]/50" />
       </footer>
 
-      {/* 7. سائیڈ بار (Drawer) */}
+      {/* 7. اسمارٹ سائیڈ بار (بند ہونے والی خصوصیت کے ساتھ) */}
       <AnimatePresence>
         {isSidebarOpen && (
-          <motion.div 
-            initial={{ x: '-100%' }} animate={{ x: 0 }} exit={{ x: '-100%' }}
-            className="fixed inset-y-0 left-0 w-80 bg-black border-r border-gold/20 z-[3000] p-6"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex flex-col items-center mb-8">
-              <div className="w-24 h-24 rounded-full border-2 border-gold p-1 mb-2 relative">
-                <img src="/assets/logo.png" className="w-full h-full rounded-full object-cover" />
-                <button className="absolute bottom-0 right-0 bg-gold p-1 rounded-full"><Settings size={14} className="text-black" /></button>
-              </div>
-              <h2 className="text-lg font-bold">Tezro User</h2>
-              <div className="bg-gold/10 px-4 py-2 rounded-xl mt-2 border border-gold/20 cursor-pointer">
-                <p className="text-[10px] text-white/50 uppercase">Balance</p>
-                <p className="text-xl font-mono text-gold font-bold">Rs. 15,250.00</p>
-              </div>
-            </div>
-            
-            <div className="space-y-4">
-              {['Ride Booking', 'Food Delivery', 'Bill Payments', 'Vault'].map(item => (
-                <div key={item} className="flex justify-between items-center p-3 hover:bg-gold/5 rounded-xl cursor-pointer border-b border-white/5">
-                  <span>{item}</span>
-                  <ChevronRight size={18} />
+          <>
+            <motion.div 
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[3000]"
+              onClick={() => setIsSidebarOpen(false)} // کہیں بھی ٹچ کرنے پر بند ہو جائے گا
+            />
+            <motion.div 
+              initial={{ x: '-100%' }} animate={{ x: 0 }} exit={{ x: '-100%' }}
+              className="fixed inset-y-0 left-0 w-80 royal-shiny-panel z-[3001] rounded-r-[50px] p-8 overflow-y-auto"
+            >
+              <div className="flex flex-col items-center mb-10">
+                <div className="w-28 h-28 rounded-full border-4 border-[#8B4513] p-1 mb-4 shadow-xl overflow-hidden bg-white">
+                  <img src="/assets/logo.png" className="w-full h-full object-cover" />
                 </div>
-              ))}
-            </div>
-          </motion.div>
+                <h2 className="text-2xl font-black text-[#8B4513]">Account Balance</h2>
+                <div className="mt-2 bg-black/10 px-6 py-3 rounded-2xl border border-[#8B4513]/30">
+                  <p className="text-2xl font-mono font-bold text-[#8B4513]">PKR 25,000</p>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                {['Ride', 'Food', 'Payments', 'Shopping', 'Doctor', 'Plumber', 'Electrician', 'Carpenter'].map((item) => (
+                  <div key={item} className="flex justify-between items-center p-4 bg-white/20 rounded-2xl border border-[#8B4513]/10 text-[#8B4513] font-bold">
+                    <span>{item}</span>
+                    <ChevronRight size={20} />
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
     </div>
