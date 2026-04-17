@@ -1,29 +1,12 @@
 @import "tailwindcss";
 
-@theme {
-  --color-royal-gold: #FFECB3;
-  --color-deep-gold: #D4AF37;
+.royal-gold-shiny {
+  background: linear-gradient(135deg, #FFD700 0%, #FFF8DC 50%, #B8860B 100%);
+  box-shadow: 0 4px 15px rgba(184, 134, 11, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.7);
+  border: 1px solid #DAA520;
 }
 
-/* شاہانہ لائٹ گولڈن شائینی پینل */
-.royal-shiny-panel {
-  background: linear-gradient(135deg, #FFF9C4 0%, #FFECB3 50%, #FFD54F 100%);
-  box-shadow: 0 10px 25px rgba(212, 175, 55, 0.4), 
-              inset 0 4px 6px rgba(255, 255, 255, 0.8),
-              inset 0 -4px 6px rgba(0, 0, 0, 0.1);
-  border: 1.5px solid #FFD700;
-}
-
-/* ابھرا ہوا بٹن ایفیکٹ */
-.raised-element {
-  filter: drop-shadow(0 5px 10px rgba(0,0,0,0.3));
-  transition: transform 0.2s ease;
-}
-
-.raised-element:active {
-  transform: scale(0.95);
-}
-
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
+.raised-card {
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+  border: 2px solid rgba(218, 165, 32, 0.3);
 }
