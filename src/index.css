@@ -1,26 +1,21 @@
-@import "tailwindcss";
-
-.royal-gold-shiny {
-  background: linear-gradient(135deg, #FFD700 0%, #FFF8DC 50%, #B8860B 100%);
-  box-shadow: 0 4px 15px rgba(184, 134, 11, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.7);
-  border: 1px solid #DAA520;
-}
-
-.raised-card {
-  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-  border: 2px solid rgba(218, 165, 32, 0.3);
-}
-
 .dark-gold-shiny {
-  background: linear-gradient(135deg, #4b3c00 0%, #8a6d3b 50%, #4b3c00 100%);
+  background: linear-gradient(180deg, #bf953f 0%, #fcf6ba 25%, #b38728 50%, #fbf5b7 75%, #aa771c 100%);
   background-size: 200% 200%;
-  animation: shine 3s linear infinite;
-  border-bottom: 2px solid #2a2200;
-  color: #f3e5ab; /* لائٹ گولڈن ٹیکسٹ */
+  animation: shine 4s ease infinite;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+  color: #1a1a00 !important;
+  font-weight: 900;
 }
 
 @keyframes shine {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
+}
+
+body {
+  background-color: #000d08;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
 }
