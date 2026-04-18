@@ -8,8 +8,8 @@ export const TezroMasterEngine = {
     console.log(`[Tezro Engine] Processing ${serviceType} request...`);
 
     // سیکیورٹی چیک: کیا بینک گیٹ وے دستیاب ہے؟
-    const bank = banks.find(b => b.id === data.bankId);
-    if (!bank) throw new Error("سیکیورٹی الرٹ: غیر قانونی بینکنگ لنک!");
+    const bank = data.bankId ? banks.find(b => b.id === data.bankId) : {gateway: "INTERNAL"};
+    if (!bank && data.bankId) throw new Error("سیکیورٹی الرٹ: غیر قانونی بینکنگ لنک!");
 
     // ایرر پروف لاجک: ٹرانزیکشن کو تین حصوں میں تقسیم کرنا
     return {

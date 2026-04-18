@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
+import { useWallet } from "../context/WalletContext";
 import { MapContainer, TileLayer } from 'react-leaflet';
+import { useWallet } from "../context/WalletContext";
 import { motion, AnimatePresence } from 'framer-motion';
+import { useWallet } from "../context/WalletContext";
 import { 
   Search, Menu, Bell, Mic, X, Map as MapIcon, Home, 
   User, CreditCard, History, LayoutGrid, LogOut, ChevronRight,
@@ -8,10 +11,12 @@ import {
   PaintRoller, AirVent, Shovel, HardHat, GraduationCap, Car, 
   Utensils, ShoppingBag, ShieldCheck, Wallet
 } from 'lucide-react';
+import { useWallet } from "../context/WalletContext";
 import { useNavigate } from 'react-router-dom';
 import 'leaflet/dist/leaflet.css';
 
 const HomeScreen = () => {
+  const { balance } = useWallet();
   const navigate = useNavigate();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isMapFull, setIsMapFull] = useState(false);
@@ -139,7 +144,7 @@ const HomeScreen = () => {
         </div>
 
         <button onClick={() => navigate('/FinanceHub')} className="flex flex-col items-center opacity-40 active:opacity-100">
-          <Wallet size={28} className="text-[#4b3c00]" /><span className="text-[8px] font-bold text-[#4b3c00]">WALLET</span>
+          <Wallet size={28} className="text-[#4b3c00]" /><span className="text-[8px] font-bold text-[#4b3c00]">WALLET: {balance} PKR</span>
         </button>
         <button onClick={() => navigate('/VaultScreen')} className="flex flex-col items-center">
           <ShieldCheck size={28} className="text-[#4b3c00]" /><span className="text-[8px] font-bold text-[#4b3c00]">VAULT</span>

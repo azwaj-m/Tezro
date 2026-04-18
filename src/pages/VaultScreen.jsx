@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import { useWallet } from "../context/WalletContext";
 import { motion } from 'framer-motion';
+import { useWallet } from "../context/WalletContext";
 import { User, ShieldCheck, Wallet, MapPin, Settings, LogOut, ChevronRight, Camera, Star, Award, Fingerprint } from 'lucide-react';
+import { useWallet } from "../context/WalletContext";
 import { useNavigate } from 'react-router-dom';
 
 const VaultScreen = () => {
+  const { balance } = useWallet();
   const navigate = useNavigate();
   const [isOwner, setIsOwner] = useState(false); // یہ خاموشی سے تبدیل ہوگا
 
@@ -19,7 +23,7 @@ const VaultScreen = () => {
 
   const menuItems = [
     { title: 'Personal Info', icon: <User size={20}/>, desc: 'Name, Email, Phone', hideInGuest: false },
-    { title: 'My Wallet', icon: <Wallet size={20}/>, desc: 'Manage payments & cards', hideInGuest: true },
+    { title: 'My Wallet', icon: <Wallet size={20}/>, desc: `Current Balance: ${balance} PKR`, hideInGuest: true },
     { title: 'Security & Vault', icon: <ShieldCheck size={20}/>, desc: 'Fingerprint & Password', hideInGuest: true },
     { title: 'Saved Addresses', icon: <MapPin size={20}/>, desc: 'Home, Office, Other', hideInGuest: false },
     { title: 'App Settings', icon: <Settings size={20}/>, desc: 'Theme, Language, Voice', hideInGuest: false },
