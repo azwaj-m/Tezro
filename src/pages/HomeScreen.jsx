@@ -1,9 +1,7 @@
+import { useWallet } from "../context/WalletContext";
 import React, { useState } from 'react';
-import { useWallet } from "../context/WalletContext";
 import { MapContainer, TileLayer } from 'react-leaflet';
-import { useWallet } from "../context/WalletContext";
 import { motion, AnimatePresence } from 'framer-motion';
-import { useWallet } from "../context/WalletContext";
 import { 
   Search, Menu, Bell, Mic, X, Map as MapIcon, Home, 
   User, CreditCard, History, LayoutGrid, LogOut, ChevronRight,
@@ -11,12 +9,10 @@ import {
   PaintRoller, AirVent, Shovel, HardHat, GraduationCap, Car, 
   Utensils, ShoppingBag, ShieldCheck, Wallet
 } from 'lucide-react';
-import { useWallet } from "../context/WalletContext";
 import { useNavigate } from 'react-router-dom';
 import 'leaflet/dist/leaflet.css';
 
 const HomeScreen = () => {
-  const { balance } = useWallet();
   const navigate = useNavigate();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isMapFull, setIsMapFull] = useState(false);
@@ -58,7 +54,7 @@ const HomeScreen = () => {
     <div className="min-h-screen pt-24 pb-24 bg-[#000d08] text-white overflow-hidden pb-20">
       
       {/* ہیڈر */}
-      <header className="fixed top-0 left-0 w-full z-[5000] z-[5000] w-full z-[2000] px-6 py-2 dark-gold-shiny rounded-b-[40px] flex justify-between items-center shadow-2xl">
+      <header className="fixed top-0 left-0 w-full z-[5000] w-full z-[2000] px-6 py-2 dark-gold-shiny rounded-b-[40px] flex justify-between items-center shadow-2xl">
         <button onClick={() => setIsSidebarOpen(true)} className="p-2 active:scale-90"><Menu size={32} className="text-[#4b3c00]" /></button>
         <div onClick={() => navigate('/')} className="cursor-pointer active:scale-95">
           <img src="/assets/logo.png" className="h-14 w-14 object-contain" alt="Home" />
@@ -130,7 +126,7 @@ const HomeScreen = () => {
       </main>
 
       {/* فوٹر (5 بٹنز) */}
-      <footer className="fixed bottom-0 left-0 w-full z-[5000] z-[5000] w-full h-16 dark-gold-shiny rounded-t-[50px] flex justify-between items-center px-8 z-[2000] shadow-[0_-10px_30px_rgba(0,0,0,0.5)]">
+      <footer className="fixed bottom-0 left-0 w-full z-[5000] w-full h-16 dark-gold-shiny rounded-t-[50px] flex justify-between items-center px-8 z-[2000] shadow-[0_-10px_30px_rgba(0,0,0,0.5)]">
         <button onClick={() => navigate('/VaultScreen')} className="flex flex-col items-center opacity-40 active:opacity-100">
           <User size={28} className="text-[#4b3c00]" /><span className="text-[8px] font-bold text-[#4b3c00]">PROFILE</span>
         </button>

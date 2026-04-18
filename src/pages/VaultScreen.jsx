@@ -1,13 +1,10 @@
+import { useWallet } from "../context/WalletContext";
 import React, { useState, useEffect } from 'react';
-import { useWallet } from "../context/WalletContext";
 import { motion } from 'framer-motion';
-import { useWallet } from "../context/WalletContext";
 import { User, ShieldCheck, Wallet, MapPin, Settings, LogOut, ChevronRight, Camera, Star, Award, Fingerprint } from 'lucide-react';
-import { useWallet } from "../context/WalletContext";
 import { useNavigate } from 'react-router-dom';
 
 const VaultScreen = () => {
-  const { balance } = useWallet();
   const navigate = useNavigate();
   const [isOwner, setIsOwner] = useState(false); // یہ خاموشی سے تبدیل ہوگا
 
