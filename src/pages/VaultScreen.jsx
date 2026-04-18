@@ -1,132 +1,97 @@
-import React, { useState, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Camera, Lock, ShieldCheck, User, Truck, Stethoscope, Wrench, HardHat, LogOut, Save } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { User, ShieldCheck, Wallet, MapPin, Settings, LogOut, ChevronRight, Camera, Star, Award, Fingerprint } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const VaultScreen = () => {
-  const [step, setStep] = useState('security'); // security -> role -> form -> success
-  const [role, setRole] = useState('');
-  const [isVerifying, setIsVerifying] = useState(false);
+  const navigate = useNavigate();
+  const [isOwner, setIsOwner] = useState(false); // یہ خاموشی سے تبدیل ہوگا
 
-  // سیکیورٹی تصدیق (خفیہ کیمرہ آن ہونا)
-  const startSecurityCheck = () => {
-    setIsVerifying(true);
-    // یہاں اصل ایپ میں کیمرہ تصویر لے کر بیک اینڈ پر بھیجے گا
-    setTimeout(() => {
-      setIsVerifying(false);
-      setStep('role');
-    }, 2500);
-  };
+  // پسِ منظر میں خفیہ شناخت (Invisible Verification)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      // یہاں کیمرہ خاموشی سے مالک کی شناخت کرے گا
+      // ہم فرض کر رہے ہیں کہ مالک کی شناخت ہوگئی
+      setIsOwner(true); 
+    }, 1500);
+    return () => clearTimeout(timer);
+  }, []);
 
-  const renderRegistrationForm = () => {
-    switch (role) {
-      case 'driver':
-        return (
-          <div className="space-y-4 animate-in slide-in-from-bottom">
-            <h3 className="text-gold font-bold">گاڑی اور لائسنس کی تفصیل</h3>
-            <input type="text" placeholder="گاڑی کا نمبر (مثلاً LEC-1234)" className="w-full bg-white/5 p-4 rounded-2xl border border-white/10" />
-            <select className="w-full bg-white/5 p-4 rounded-2xl border border-white/10 text-gray-400">
-              <option>گاڑی کی ملکیت: اپنی ہے</option>
-              <option>رینٹ پر ہے (مالک کا نام اور نمبر دیں)</option>
-            </select>
-            <textarea placeholder="مالک کا پتہ اور رینٹ ایگریمنٹ کی تفصیل" className="w-full bg-white/5 p-4 rounded-2xl border border-white/10 h-24" />
-            <div className="p-4 border border-dashed border-gold/30 rounded-2xl text-[10px] text-center">ڈرائیونگ لائسنس اور گاڑی کے کاغذات کی تصویر اپ لوڈ کریں</div>
-          </div>
-        );
-      case 'doctor':
-        return (
-          <div className="space-y-4 animate-in slide-in-from-bottom">
-            <h3 className="text-gold font-bold">طبی اسناد اور رجسٹریشن</h3>
-            <input type="text" placeholder="تعلیمی اسناد (MBBS / MD)" className="w-full bg-white/5 p-4 rounded-2xl border border-white/10" />
-            <input type="text" placeholder="PMDC / ہاؤس جاب نمبر" className="w-full bg-white/5 p-4 rounded-2xl border border-white/10" />
-            <input type="text" placeholder="کلینک یا ہسپتال کا پتہ" className="w-full bg-white/5 p-4 rounded-2xl border border-white/10" />
-            <div className="p-4 border border-dashed border-gold/30 rounded-2xl text-[10px] text-center">ڈگری اور سرٹیفکیٹس کا اسکین اپ لوڈ کریں</div>
-          </div>
-        );
-      case 'service_provider': // پلمبر، میسن، مکینک
-        return (
-          <div className="space-y-4 animate-in slide-in-from-bottom">
-            <h3 className="text-gold font-bold">پیشہ ورانہ مہارت اور اوزار</h3>
-            <textarea placeholder="اپنے پاس موجود اوزاروں (Tools) کی مکمل لسٹ لکھیں" className="w-full bg-white/5 p-4 rounded-2xl border border-white/10 h-32" />
-            <input type="text" placeholder="ایمرجنسی رابطہ نمبر (والد/بھائی/قریبی عزیز)" className="w-full bg-white/5 p-4 rounded-2xl border border-white/10" />
-            <div className="bg-red-500/10 p-4 rounded-2xl border border-red-500/20">
-              <p className="text-[10px] text-red-400 font-bold">نوٹ: آپ کی آواز کا نمونہ اور تازہ سیلفی سیکیورٹی ریکارڈ کے لیے محفوظ کی جائے گی۔</p>
-            </div>
-            <button className="w-full py-3 bg-white/10 rounded-xl text-xs flex items-center justify-center gap-2">🎤 آواز ریکارڈ کریں</button>
-          </div>
-        );
-      default:
-        return <p className="text-center text-gray-500">براہ کرم اپنی کیٹیگری منتخب کریں</p>;
-    }
-  };
+  const menuItems = [
+    { title: 'Personal Info', icon: <User size={20}/>, desc: 'Name, Email, Phone', hideInGuest: false },
+    { title: 'My Wallet', icon: <Wallet size={20}/>, desc: 'Manage payments & cards', hideInGuest: true },
+    { title: 'Security & Vault', icon: <ShieldCheck size={20}/>, desc: 'Fingerprint & Password', hideInGuest: true },
+    { title: 'Saved Addresses', icon: <MapPin size={20}/>, desc: 'Home, Office, Other', hideInGuest: false },
+    { title: 'App Settings', icon: <Settings size={20}/>, desc: 'Theme, Language, Voice', hideInGuest: false },
+  ];
 
   return (
-    <div className="min-h-screen pt-24 pb-24 bg-[#000d08] text-white p-6 pb-24">
+    <div className="min-h-screen bg-[#000d08] text-white pt-28 pb-24">
       
-      {/* 1. سیکیورٹی اسٹیج */}
-      {step === 'security' && (
-        <div className="flex flex-col items-center justify-center h-[70vh] space-y-8">
-          <div className="relative">
-            <div className={`w-40 h-40 rounded-full border-2 border-gold flex items-center justify-center ${isVerifying ? 'animate-pulse' : ''}`}>
-              <Lock size={60} className="text-gold" />
-            </div>
-            {isVerifying && <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 2 }} className="absolute inset-0 border-t-4 border-gold rounded-full" />}
-          </div>
-          <div className="text-center">
-            <h2 className="text-xl font-black text-gold italic uppercase">Security Verification</h2>
-            <p className="text-[10px] text-gray-500 mt-2 uppercase tracking-widest">Identifying current user via camera...</p>
-          </div>
-          {!isVerifying && (
-            <button onClick={startSecurityCheck} className="dark-gold-shiny px-12 py-5 rounded-full text-black font-black uppercase text-xs">پروفائل سیٹنگز کھولیں</button>
-          )}
+      {/* ہیڈر - ہمیشہ نظر آئے گا */}
+      <div className="mx-6 dark-gold-shiny rounded-[40px] p-8 flex flex-col items-center shadow-2xl relative overflow-hidden">
+        <div className="w-24 h-24 rounded-full border-4 border-black/20 p-1 bg-black flex items-center justify-center">
+          <User size={40} className="text-white/20" />
+        </div>
+        <h1 className="mt-4 text-xl font-black text-black uppercase tracking-tighter">Tezro User</h1>
+        <div className="mt-1 bg-black/20 px-4 py-1 rounded-full border border-black/10">
+          <span className="text-[10px] font-bold text-black uppercase">Standard Profile</span>
+        </div>
+      </div>
+
+      {/* ٹرسٹ کارڈ - صرف مالک کو اصل ویلیو دکھائے گا */}
+      <div className="px-6 mt-6 grid grid-cols-2 gap-4">
+        <div className="bg-zinc-900/50 p-4 rounded-3xl border border-white/5">
+          <p className="text-[8px] text-gray-500 font-black uppercase">Activity Level</p>
+          <h2 className="text-lg font-black italic">{isOwner ? '98%' : 'High'}</h2>
+        </div>
+        <div className="bg-zinc-900/50 p-4 rounded-3xl border border-white/5">
+          <p className="text-[8px] text-gray-500 font-black uppercase">System Status</p>
+          <h2 className="text-lg font-black text-green-500 italic">Secure</h2>
+        </div>
+      </div>
+
+      {/* مینیو لسٹ - انکولی (Adaptive) */}
+      <div className="mt-8 px-6 space-y-3">
+        {menuItems.map((item, index) => {
+          // اگر گیسٹ ہے اور آئٹم حساس ہے تو اسے ڈیزائن میں شامل نہ کریں یا متبادل دکھائیں
+          if (!isOwner && item.hideInGuest) return null;
+
+          return (
+            <motion.div 
+              key={index}
+              whileTap={{ scale: 0.98 }}
+              className="flex items-center justify-between p-5 bg-zinc-900/30 border border-white/5 rounded-[30px] hover:border-gold/30 transition-all"
+            >
+              <div className="flex items-center gap-4">
+                <div className="p-3 bg-white/5 rounded-2xl text-gold">{item.icon}</div>
+                <div>
+                  <h3 className="text-sm font-bold text-gray-200">{item.title}</h3>
+                  <p className="text-[9px] text-gray-500 uppercase">{item.desc}</p>
+                </div>
+              </div>
+              <ChevronRight size={16} className="text-gray-700" />
+            </motion.div>
+          );
+        })}
+      </div>
+
+      {/* اگر گیسٹ ہے تو اسے "بیزار" کرنے کے لیے کچھ ڈمی بٹنز */}
+      {!isOwner && (
+        <div className="mt-4 px-6 opacity-40">
+           <div className="p-5 bg-zinc-900/10 border border-dashed border-white/10 rounded-[30px] flex items-center justify-center">
+              <span className="text-[10px] uppercase font-bold text-gray-600 italic">Syncing more features...</span>
+           </div>
         </div>
       )}
 
-      {/* 2. رول سلیکشن اور فارم اسٹیج */}
-      {step === 'role' && (
-        <div className="space-y-8 animate-in fade-in">
-          <div className="flex justify-between items-center border-b border-gold/20 pb-4">
-            <h1 className="text-2xl font-black text-gold italic uppercase">Complete Profile</h1>
-            <X onClick={() => setStep('security')} className="text-gray-600" />
-          </div>
+      {/* سیشن بٹن */}
+      <div className="mt-10 px-10">
+        <button onClick={() => window.location.reload()} className="w-full py-4 rounded-2xl bg-red-900/5 border border-red-900/10 text-red-900 font-black text-[10px] uppercase tracking-widest">
+          Close Profile
+        </button>
+      </div>
 
-          <div className="space-y-4">
-            <label className="text-[10px] font-bold text-gray-500 uppercase ml-2">صارف کی نوعیت منتخب کریں</label>
-            <div className="grid grid-cols-2 gap-3">
-              {[
-                { id: 'driver', label: 'ڈرائیور / گاڑی', icon: <Truck size={18}/> },
-                { id: 'doctor', label: 'ڈاکٹر / ماہرِ طب', icon: <Stethoscope size={18}/> },
-                { id: 'service_provider', label: 'پلمبر/میسن/مکینک', icon: <Wrench size={18}/> },
-                { id: 'business', label: 'دکاندار/ہال مینیجر', icon: <HardHat size={18}/> },
-              ].map((r) => (
-                <button 
-                  key={r.id} 
-                  onClick={() => setRole(r.id)}
-                  className={`p-4 rounded-2xl border flex flex-col items-center gap-2 transition-all ${role === r.id ? 'border-gold bg-gold text-black font-black' : 'border-white/10 bg-white/5 text-gray-400'}`}
-                >
-                  {r.icon} <span className="text-[10px]">{r.label}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {renderRegistrationForm()}
-
-          <div className="pt-10">
-            <p className="text-[9px] text-gray-600 text-center mb-4 italic uppercase">جمع کرائی گئی معلومات سیکیورٹی ریکارڈ کے لیے محفوظ ہوں گی اور آپ کو نظر نہیں آئیں گی۔</p>
-            <button onClick={() => setStep('success')} className="w-full py-5 dark-gold-shiny rounded-[30px] text-black font-black uppercase tracking-widest">ڈیٹا جمع کرائیں</button>
-          </div>
-        </div>
-      )}
-
-      {/* 3. کامیابی کا پیغام */}
-      {step === 'success' && (
-        <div className="flex flex-col items-center justify-center h-[70vh] text-center space-y-6">
-          <ShieldCheck size={100} className="text-green-500" />
-          <h2 className="text-2xl font-black text-white italic uppercase">Record Verified</h2>
-          <p className="text-sm text-gray-400 px-10">آپ کی تمام معلومات اور دستاویزات سیکیورٹی ریکارڈ میں محفوظ کر لی گئی ہیں۔ آپ کی پروفائل اب ایکٹیو ہے۔</p>
-          <button onClick={() => setStep('security')} className="dark-gold-shiny px-10 py-4 rounded-2xl text-black font-black uppercase text-xs">ہوم پیج پر جائیں</button>
-        </div>
-      )}
     </div>
   );
 };
