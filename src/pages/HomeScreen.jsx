@@ -50,10 +50,10 @@ const HomeScreen = () => {
   const handleSwipe = () => setCardIndex((prev) => (prev + 1) % cards.length);
 
   return (
-    <div className="min-h-screen bg-[#000d08] text-white overflow-hidden pb-10">
+    <div className="min-h-screen bg-[#000d08] text-white overflow-hidden pb-24">
       
       {/* ہیڈر */}
-      <header className="fixed top-0 w-full z-[2000] px-6 py-2 dark-gold-shiny rounded-b-[40px] flex justify-between items-center shadow-2xl">
+      <header className="sticky top-0 z-[5000] w-full z-[2000] px-6 py-2 dark-gold-shiny rounded-b-[40px] flex justify-between items-center shadow-2xl">
         <button onClick={() => setIsSidebarOpen(true)} className="p-2 active:scale-90"><Menu size={32} className="text-[#4b3c00]" /></button>
         <div onClick={() => navigate('/')} className="cursor-pointer active:scale-95">
           <img src="/assets/logo.png" className="h-14 w-14 object-contain" alt="Home" />
@@ -67,7 +67,7 @@ const HomeScreen = () => {
         <div className="relative mb-6">
           <div className="flex items-center bg-white/10 border-2 border-gold/30 rounded-full px-4 py-2 backdrop-blur-md">
             <Search className="text-gold" size={20} />
-            <input type="text" placeholder="Where to go?" className="flex-1 bg-transparent px-3 py-3 outline-none text-white" />
+            <input type="text" placeholder="Where to go?" className="flex-1 bg-[#000d08] px-3 py-3 outline-none text-white" />
             <Mic className="text-gold" size={20} />
           </div>
         </div>
@@ -111,7 +111,7 @@ const HomeScreen = () => {
                   className="absolute w-full h-full rounded-[50px] overflow-hidden border-2 border-gold/40 bg-zinc-900 shadow-2xl"
                 >
                   <img src={cards[index].img} className="w-full h-3/5 object-cover" />
-                  <div className="h-2/5 p-5 flex flex-col justify-between bg-transparent/80">
+                  <div className="h-auto py-6 p-5 flex flex-col justify-between bg-[#000d08]/80">
                     <h3 className="text-2xl font-black text-gold italic uppercase">{cards[index].title}</h3>
                     <button onClick={(e) => { e.stopPropagation(); navigate(cards[index].path); }} className="w-full py-2 dark-gold-shiny rounded-2xl text-black font-black text-sm uppercase">
                       براہ راست سروس حاصل کریں
@@ -125,7 +125,7 @@ const HomeScreen = () => {
       </main>
 
       {/* فوٹر (5 بٹنز) */}
-      <footer className="fixed bottom-0 w-full h-16 dark-gold-shiny rounded-t-[50px] flex justify-between items-center px-8 z-[2000] shadow-[0_-10px_30px_rgba(0,0,0,0.5)]">
+      <footer className="sticky bottom-0 z-[5000] w-full h-16 dark-gold-shiny rounded-t-[50px] flex justify-between items-center px-8 z-[2000] shadow-[0_-10px_30px_rgba(0,0,0,0.5)]">
         <button onClick={() => navigate('/VaultScreen')} className="flex flex-col items-center opacity-40 active:opacity-100">
           <User size={28} className="text-[#4b3c00]" /><span className="text-[8px] font-bold text-[#4b3c00]">PROFILE</span>
         </button>
@@ -150,15 +150,15 @@ const HomeScreen = () => {
       <AnimatePresence>
         {isSidebarOpen && (
           <>
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setIsSidebarOpen(false)} className="fixed inset-0 bg-transparent/90 z-[3000] backdrop-blur-md" />
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setIsSidebarOpen(false)} className="fixed inset-0 bg-[#000d08]/90 z-[3000] backdrop-blur-md" />
             <motion.div initial={{ x: '-100%' }} animate={{ x: 0 }} exit={{ x: '-100%' }} className="fixed inset-y-0 left-0 w-80 dark-gold-shiny z-[3001] rounded-r-[50px] flex flex-col shadow-2xl">
               <div className="p-8 border-b border-[#4b3c00]/20 flex items-center gap-4">
-                <div className="w-16 h-16 bg-transparent/10 rounded-full border-2 border-[#4b3c00] flex items-center justify-center"><User size={32} className="text-[#4b3c00]" /></div>
+                <div className="w-16 h-16 bg-[#000d08]/10 rounded-full border-2 border-[#4b3c00] flex items-center justify-center"><User size={32} className="text-[#4b3c00]" /></div>
                 <div><h2 className="text-xl font-black text-[#4b3c00]">Tezro Services</h2><p className="text-[9px] text-[#4b3c00]/60 uppercase">Professional Solutions</p></div>
               </div>
               <div className="flex-1 overflow-y-auto p-6 space-y-3 no-scrollbar">
                 {professionalServices.map((service, i) => (
-                  <div key={i} onClick={() => { navigate(service.path); setIsSidebarOpen(false); }} className="flex justify-between items-center p-4 bg-transparent/5 rounded-2xl border border-white/10 text-[#4b3c00] font-bold active:bg-gold/20 transition-all cursor-pointer">
+                  <div key={i} onClick={() => { navigate(service.path); setIsSidebarOpen(false); }} className="flex justify-between items-center p-4 bg-[#000d08]/5 rounded-2xl border border-white/10 text-[#4b3c00] font-bold active:bg-gold/20 transition-all cursor-pointer">
                     <div className="flex items-center gap-3">{service.icon} <span className="text-xs uppercase tracking-tighter">{service.name}</span></div>
                     <ChevronRight size={18} />
                   </div>

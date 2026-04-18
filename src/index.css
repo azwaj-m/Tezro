@@ -1,13 +1,16 @@
+@import "tailwindcss";
+
 .dark-gold-shiny {
-  background: linear-gradient(180deg, #bf953f 0%, #fcf6ba 25%, #b38728 50%, #fbf5b7 75%, #aa771c 100%);
-  background-size: 200% 200%;
-  animation: shine 4s ease infinite;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-  color: #1a1a00 !important;
+  background: linear-gradient(145deg, #1a1500 0%, #bf953f 50%, #fcf6ba 55%, #b38728 60%, #1a1500 100%);
+  background-size: 300% 300%;
+  animation: metallic-shine 5s ease infinite;
+  border: 1px solid #4b3c00;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.8), inset 0 2px 5px rgba(255,255,255,0.2);
+  color: #000 !important;
   font-weight: 900;
 }
 
-@keyframes shine {
+@keyframes metallic-shine {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
@@ -17,5 +20,5 @@ body {
   background-color: #000d08;
   margin: 0;
   padding: 0;
-  overflow-x: hidden;
+  color: white;
 }
