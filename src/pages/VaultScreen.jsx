@@ -60,7 +60,7 @@ const VaultScreen = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#000d08] text-white p-6 pb-24">
+    <div className="min-h-screen pt-24 pb-24 bg-[#000d08] text-white p-6 pb-24">
       
       {/* 1. سیکیورٹی اسٹیج */}
       {step === 'security' && (
