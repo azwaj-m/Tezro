@@ -12,7 +12,7 @@ const foodItems = [
 const FoodMenu = () => {
   const [cart, setCart] = useState({});
   const [isProcessing, setIsProcessing] = useState(false);
-  const { balance, makePayment } = useWallet();
+  const { balance, executePayment } = useWallet();
   const { placeFoodOrder } = useFood();
 
   const updateCart = (id, delta) => {
@@ -32,7 +32,7 @@ const FoodMenu = () => {
     }
     setIsProcessing(true);
     try {
-      const payment = await makePayment(totalAmount, 'food', 'Food Order Payment');
+      const payment = await executePayment(totalAmount, 'food', 'Food Order Payment');
       if (payment.success) {
         const selectedItems = foodItems.filter(i => cart[i.id] > 0).map(i => ({...i, qty: cart[i.id]}));
         const order = await placeFoodOrder(selectedItems, totalAmount, { address: "Current Location", lat: 24.86, lng: 67.00 });
