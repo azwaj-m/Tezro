@@ -1,43 +1,28 @@
 @import "tailwindcss";
 
-/* 1. بیس سیٹنگز */
 body {
-  @apply bg-[#000d08] text-white m-0 p-0;
-  font-family: system-ui, -apple-system, sans-serif;
+  background-color: #000d08;
+  color: white;
+  margin: 0;
 }
 
-/* 2. اینیمیشنز */
-@keyframes metallic-shine {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-/* 3. کسٹم شائنی کلاسز */
 @layer components {
-  /* پریمیم ڈارک گولڈ افیکٹ */
   .dark-gold-shiny {
     background: linear-gradient(145deg, #1a1500 0%, #bf953f 50%, #fcf6ba 55%, #b38728 60%, #1a1500 100%);
     background-size: 300% 300%;
     animation: metallic-shine 5s ease infinite;
-    border: 1px solid #4b3c00;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.8), inset 0 2px 5px rgba(255,255,255,0.2);
-    color: #000 !important;
-    font-weight: 900;
+    color: black !important;
   }
 
-  /* رائل گولڈ افیکٹ (بٹنز کے لیے بہترین) */
   .royal-gold-shiny {
-    background: linear-gradient(90deg, #b8860b 0%, #ffd700 50%, #b8860b 100%);
-    background-size: 200% auto;
-    transition: 0.5s;
+    background: linear-gradient(90deg, #b8860b, #ffd700, #b8860b);
     color: black !important;
     font-weight: 900;
-    text-transform: uppercase;
   }
+}
 
-  .royal-gold-shiny:hover {
-    background-position: right center;
-    box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
-  }
+@keyframes metallic-shine {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
