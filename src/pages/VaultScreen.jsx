@@ -76,7 +76,7 @@ const VaultScreen = () => {
             <p className="text-[10px] text-gray-500 mt-2 uppercase tracking-widest">Identifying current user via camera...</p>
           </div>
           {!isVerifying && (
-            <button onClick={startSecurityCheck} className="royal-gold-shiny px-12 py-5 rounded-full text-black font-black uppercase text-xs">پروفائل سیٹنگز کھولیں</button>
+            <button onClick={startSecurityCheck} className="dark-gold-shiny px-12 py-5 rounded-full text-black font-black uppercase text-xs">پروفائل سیٹنگز کھولیں</button>
           )}
         </div>
       )}
@@ -113,7 +113,7 @@ const VaultScreen = () => {
 
           <div className="pt-10">
             <p className="text-[9px] text-gray-600 text-center mb-4 italic uppercase">جمع کرائی گئی معلومات سیکیورٹی ریکارڈ کے لیے محفوظ ہوں گی اور آپ کو نظر نہیں آئیں گی۔</p>
-            <button onClick={() => setStep('success')} className="w-full py-5 royal-gold-shiny rounded-[30px] text-black font-black uppercase tracking-widest">ڈیٹا جمع کرائیں</button>
+            <button onClick={() => setStep('success')} className="w-full py-5 dark-gold-shiny rounded-[30px] text-black font-black uppercase tracking-widest">ڈیٹا جمع کرائیں</button>
           </div>
         </div>
       )}
@@ -124,7 +124,7 @@ const VaultScreen = () => {
           <ShieldCheck size={100} className="text-green-500" />
           <h2 className="text-2xl font-black text-white italic uppercase">Record Verified</h2>
           <p className="text-sm text-gray-400 px-10">آپ کی تمام معلومات اور دستاویزات سیکیورٹی ریکارڈ میں محفوظ کر لی گئی ہیں۔ آپ کی پروفائل اب ایکٹیو ہے۔</p>
-          <button onClick={() => setStep('security')} className="royal-gold-shiny px-10 py-4 rounded-2xl text-black font-black uppercase text-xs">ہوم پیج پر جائیں</button>
+          <button onClick={() => setStep('security')} className="dark-gold-shiny px-10 py-4 rounded-2xl text-black font-black uppercase text-xs">ہوم پیج پر جائیں</button>
         </div>
       )}
     </div>

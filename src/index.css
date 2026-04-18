@@ -10,3 +10,17 @@
   box-shadow: 0 20px 40px rgba(0,0,0,0.4);
   border: 2px solid rgba(218, 165, 32, 0.3);
 }
+
+.dark-gold-shiny {
+  background: linear-gradient(135deg, #4b3c00 0%, #8a6d3b 50%, #4b3c00 100%);
+  background-size: 200% 200%;
+  animation: shine 3s linear infinite;
+  border-bottom: 2px solid #2a2200;
+  color: #f3e5ab; /* لائٹ گولڈن ٹیکسٹ */
+}
+
+@keyframes shine {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}

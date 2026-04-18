@@ -53,7 +53,7 @@ const HomeScreen = () => {
     <div className="min-h-screen bg-[#000d08] text-white overflow-hidden pb-32">
       
       {/* ہیڈر */}
-      <header className="fixed top-0 w-full z-[2000] px-6 py-4 royal-gold-shiny rounded-b-[40px] flex justify-between items-center shadow-2xl">
+      <header className="fixed top-0 w-full z-[2000] px-6 py-2 dark-gold-shiny rounded-b-[40px] flex justify-between items-center shadow-2xl">
         <button onClick={() => setIsSidebarOpen(true)} className="p-2 active:scale-90"><Menu size={32} className="text-[#4b3c00]" /></button>
         <div onClick={() => navigate('/')} className="cursor-pointer active:scale-95">
           <img src="/assets/logo.png" className="h-14 w-14 object-contain" alt="Home" />
@@ -61,7 +61,7 @@ const HomeScreen = () => {
         <button onClick={() => navigate('/NotificationScreen')} className="p-2 active:scale-90"><Bell size={32} className="text-[#4b3c00]" /></button>
       </header>
 
-      <main className="pt-28 px-5 h-screen overflow-y-auto no-scrollbar">
+      <main className="pt-20 px-5 h-screen overflow-y-auto no-scrollbar">
         
         {/* سرچ انجن */}
         <div className="relative mb-6">
@@ -86,14 +86,14 @@ const HomeScreen = () => {
         <div className="flex gap-4 mb-10 h-40">
           <div className="grid grid-cols-2 grid-rows-2 gap-3 flex-1">
             {quickServices.map((s, i) => (
-              <button key={i} onClick={() => navigate(s.path)} className="royal-gold-shiny rounded-2xl flex flex-col items-center justify-center shadow-lg active:scale-95 transition-all">
+              <button key={i} onClick={() => navigate(s.path)} className="dark-gold-shiny rounded-2xl flex flex-col items-center justify-center shadow-lg active:scale-95 transition-all">
                 <span className="text-[#4b3c00]">{s.icon}</span>
                 <span className="text-[10px] font-bold text-[#4b3c00] mt-1 uppercase">{s.name}</span>
               </button>
             ))}
           </div>
           {/* بڑا "More Services" بٹن */}
-          <button onClick={() => setIsSidebarOpen(true)} className="w-1/3 royal-gold-shiny rounded-[35px] flex flex-col items-center justify-center shadow-2xl border-b-4 border-gold/50 active:translate-y-1">
+          <button onClick={() => setIsSidebarOpen(true)} className="w-1/3 dark-gold-shiny rounded-[35px] flex flex-col items-center justify-center shadow-2xl border-b-4 border-gold/50 active:translate-y-1">
             <LayoutGrid size={40} className="text-[#4b3c00] mb-2" />
             <span className="text-[11px] font-black text-[#4b3c00] tracking-tighter uppercase">Services</span>
           </button>
@@ -113,7 +113,7 @@ const HomeScreen = () => {
                   <img src={cards[index].img} className="w-full h-3/5 object-cover" />
                   <div className="h-2/5 p-5 flex flex-col justify-between bg-black/80">
                     <h3 className="text-2xl font-black text-gold italic uppercase">{cards[index].title}</h3>
-                    <button onClick={(e) => { e.stopPropagation(); navigate(cards[index].path); }} className="w-full py-4 royal-gold-shiny rounded-2xl text-black font-black text-sm uppercase">
+                    <button onClick={(e) => { e.stopPropagation(); navigate(cards[index].path); }} className="w-full py-2 dark-gold-shiny rounded-2xl text-black font-black text-sm uppercase">
                       براہ راست سروس حاصل کریں
                     </button>
                   </div>
@@ -125,7 +125,7 @@ const HomeScreen = () => {
       </main>
 
       {/* فوٹر (5 بٹنز) */}
-      <footer className="fixed bottom-0 w-full h-24 royal-gold-shiny rounded-t-[50px] flex justify-between items-center px-8 z-[2000] shadow-[0_-10px_30px_rgba(0,0,0,0.5)]">
+      <footer className="fixed bottom-0 w-full h-16 dark-gold-shiny rounded-t-[50px] flex justify-between items-center px-8 z-[2000] shadow-[0_-10px_30px_rgba(0,0,0,0.5)]">
         <button onClick={() => navigate('/VaultScreen')} className="flex flex-col items-center opacity-40 active:opacity-100">
           <User size={28} className="text-[#4b3c00]" /><span className="text-[8px] font-bold text-[#4b3c00]">PROFILE</span>
         </button>
@@ -134,7 +134,7 @@ const HomeScreen = () => {
         </button>
         
         {/* بڑا ہوم بٹن */}
-        <div onClick={() => navigate('/')} className="w-24 h-24 bg-white rounded-full -translate-y-12 border-[10px] border-[#000d08] p-3 shadow-2xl active:scale-90 transition-all cursor-pointer">
+        <div onClick={() => navigate('/')} className="w-24 h-16 bg-white rounded-full -translate-y-8 border-[10px] border-[#000d08] p-3 shadow-2xl active:scale-90 transition-all cursor-pointer">
           <img src="/assets/logo.png" className="w-full h-full object-contain" alt="Home" />
         </div>
 
@@ -151,7 +151,7 @@ const HomeScreen = () => {
         {isSidebarOpen && (
           <>
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setIsSidebarOpen(false)} className="fixed inset-0 bg-black/90 z-[3000] backdrop-blur-md" />
-            <motion.div initial={{ x: '-100%' }} animate={{ x: 0 }} exit={{ x: '-100%' }} className="fixed inset-y-0 left-0 w-80 royal-gold-shiny z-[3001] rounded-r-[50px] flex flex-col shadow-2xl">
+            <motion.div initial={{ x: '-100%' }} animate={{ x: 0 }} exit={{ x: '-100%' }} className="fixed inset-y-0 left-0 w-80 dark-gold-shiny z-[3001] rounded-r-[50px] flex flex-col shadow-2xl">
               <div className="p-8 border-b border-[#4b3c00]/20 flex items-center gap-4">
                 <div className="w-16 h-16 bg-black/10 rounded-full border-2 border-[#4b3c00] flex items-center justify-center"><User size={32} className="text-[#4b3c00]" /></div>
                 <div><h2 className="text-xl font-black text-[#4b3c00]">Tezro Services</h2><p className="text-[9px] text-[#4b3c00]/60 uppercase">Professional Solutions</p></div>
