@@ -1,31 +1,31 @@
 import { banks, billProviders } from './bankData';
 
+// انفرادی ایکسپورٹ جو EmploymentScreen ڈھونڈ رہا ہے
+export const findJobMatch = async (skills) => {
+  console.log("[Tezro Engine] Matching skills...");
+  return { status: "Searching", matches: ["Tezro Agent", "Delivery Partner"] };
+};
+
 export const TezroMasterEngine = {
-  // 1. سروس کی نوعیت کے حساب سے پیمنٹ کا راستہ متعین کرنا
   initiateTransaction: async (data) => {
-    const { amount, serviceType, providerId, userId } = data;
-    
-    console.log(`[Tezro Engine] Processing ${serviceType} request...`);
-
-    // سیکیورٹی چیک: کیا بینک گیٹ وے دستیاب ہے؟
+    const { amount, serviceType } = data;
     const bank = data.bankId ? banks.find(b => b.id === data.bankId) : {gateway: "INTERNAL"};
-    if (!bank && data.bankId) throw new Error("سیکیورٹی الرٹ: غیر قانونی بینکنگ لنک!");
-
-    // ایرر پروف لاجک: ٹرانزیکشن کو تین حصوں میں تقسیم کرنا
+    
     return {
       transactionId: `TXN-${Math.random().toString(36).toUpperCase().substring(2, 12)}`,
-      gateway: bank.gateway, // 1LINK یا MNET
-      status: 'Escrow_Hold', // پیسے ابھی کمپنی کے پاس محفوظ ہیں
+      gateway: bank.gateway,
+      status: 'Escrow_Hold',
       split: {
-        providerShare: amount * 0.85, // 85% سروس فراہم کرنے والے کے لیے
-        tezroFee: amount * 0.15      // 15% آپ کا کمیشن
+        providerShare: amount * 0.85,
+        tezroFee: amount * 0.15
       }
     };
   },
 
-  // 2. سروس مکمل ہونے پر پیسے ریلیز کرنا
   releaseFunds: (txnId) => {
-    // یہاں کیمرہ یا OTP ویریفکیشن کے بعد پیسے ٹرانسفر ہوں گے
     return { status: 'Settled', message: 'رقم کامیابی سے منتقل کر دی گئی ہے' };
-  }
+  },
+  
+  // یہاں بھی فنکشن کا حوالہ دے دیں تاکہ دونوں طرح سے کام کرے
+  findJobMatch: findJobMatch
 };
