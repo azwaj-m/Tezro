@@ -1,26 +1,38 @@
 import React from 'react';
-import { Zap, Droplets, Wrench, Paintbrush, ShieldCheck } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Wrench, Stethoscope, Scissors, HardHat, Droplets, Zap, Truck, UserCheck } from 'lucide-react';
+
+const proServices = [
+  { id: 'dr', name: 'ڈاکٹر', icon: <Stethoscope />, img: '/assets/Doctor.jpg' },
+  { id: 'pl', name: 'پلمبر', icon: <Droplets />, img: '/assets/Plumber.jpeg' },
+  { id: 'ms', name: 'میسن (مستری)', icon: <HardHat />, img: '/assets/Mason.jpeg' },
+  { id: 'el', name: 'الیکٹریشن', icon: <Zap />, img: '/assets/Electric.jpeg' },
+  { id: 'mc', name: 'مکینک', icon: <Wrench />, img: '/assets/Mechanic.jpg' },
+  { id: 'br', name: 'حجام / بیوٹیشن', icon: <Scissors />, img: '/assets/Buticion barber.jpeg' },
+  { id: 'cp', name: 'ترکھان (Carpenter)', icon: <UserCheck />, img: '/assets/Carpenter.jpeg' },
+  { id: 'lg', name: 'لاجسٹک / لوڈر', icon: <Truck />, img: '/assets/Bus1.JPG' },
+];
 
 const ProHelp = () => {
-  const categories = [
-    { id: 1, title: 'Electrician', icon: <Zap className="text-yellow-500" />, desc: 'Power fixes' },
-    { id: 2, title: 'Plumber', icon: <Droplets className="text-blue-500" />, desc: 'Pipes & Leaks' },
-    { id: 3, title: 'Mechanic', icon: <Wrench className="text-zinc-400" />, desc: 'Vehicle help' },
-    { id: 4, title: 'Painter', icon: <Paintbrush className="text-pink-500" />, desc: 'Home decor' },
-  ];
-
   return (
-    <div className="min-h-screen bg-black text-white p-6 pb-24">
-      <h1 className="text-2xl font-black italic text-[#D4AF37] mb-8 text-left uppercase">Pro Help</h1>
-      <div className="space-y-4">
-        {categories.map((cat) => (
-          <div key={cat.id} className="bg-zinc-900 border border-zinc-800 p-5 rounded-[2rem] flex items-center gap-4">
-            <div className="p-3 bg-black rounded-xl">{cat.icon}</div>
-            <div className="flex-1 text-left">
-              <h3 className="font-bold text-sm">{cat.title}</h3>
-              <p className="text-[10px] text-zinc-500">{cat.desc}</p>
+    <div className="min-h-screen bg-[#000d08] text-white p-6 pt-28">
+      <h1 className="text-2xl font-black text-gold italic mb-8 uppercase">Pro Service Hub</h1>
+      
+      <div className="grid grid-cols-2 gap-4">
+        {proServices.map((service) => (
+          <motion.div 
+            whileTap={{ scale: 0.95 }}
+            key={service.id}
+            className="relative h-48 rounded-[30px] overflow-hidden border border-white/10 group"
+          >
+            <img src={service.img} className="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:opacity-60 transition-opacity" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
+            <div className="absolute bottom-4 left-4 right-4">
+              <div className="text-gold mb-1">{service.icon}</div>
+              <h3 className="text-sm font-black uppercase tracking-tighter">{service.name}</h3>
+              <button className="mt-2 w-full py-2 bg-gold/10 backdrop-blur-md border border-gold/20 rounded-xl text-[10px] font-bold text-gold uppercase">بکنگ کریں</button>
             </div>
-          </div>
+          </motion.div>
         ))}
       </div>
     </div>

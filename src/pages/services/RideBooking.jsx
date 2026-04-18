@@ -21,7 +21,7 @@ const RideBooking = () => {
 
       <LiveTracking />
 
-      <div className="mt-8 bg-zinc-900/50 p-6 rounded-[2rem] border border-zinc-800">
+      <div className="mt-8 bg-[#000d08]/50 p-6 rounded-[2rem] border border-zinc-800">
         <h3 className="text-sm font-bold mb-2">Security Note:</h3>
         <p className="text-[11px] text-zinc-500 leading-relaxed">
           آپ کی سواری Tezro Guardian AI کے زیر اثر ہے۔ کسی بھی ناخوشگوار آواز یا بحث کی صورت میں سسٹم خود بخود آپ کی لوکیشن قریبی تھانے اور ایمرجنسی نمبرز پر بھیج دے گا۔
