@@ -1,53 +1,34 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { db, auth } from '../firebase';
-import { doc, onSnapshot, updateDoc, increment, collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import React, { createContext, useContext, useState } from 'react';
+import { banks } from '../utils/bankData';
+import { TezroMasterEngine } from '../utils/TezroMasterEngine';
 
 const WalletContext = createContext();
 
 export const WalletProvider = ({ children }) => {
-  const [balance, setBalance] = useState(0);
+  const [balance, setBalance] = useState(25000); // ڈیفالٹ بیلنس
   const [transactions, setTransactions] = useState([]);
 
-  useEffect(() => {
-    if (!auth.currentUser) return;
-
-    // لائیو بیلنس اپ ڈیٹ
-    const unsubscribe = onSnapshot(doc(db, "users", auth.currentUser.uid), (doc) => {
-      setBalance(doc.data()?.balance || 0);
-    });
-
-    return unsubscribe;
-  }, []);
-
-  const makePayment = async (amount, serviceType, description) => {
+  // سیکیورٹی پروف پیمنٹ فنکشن
+  const executePayment = async (amount, service) => {
     try {
-      const userRef = doc(db, "users", auth.currentUser.uid);
+      // ماسٹر انجن سے سیکیورٹی چیک
+      const result = await TezroMasterEngine.initiateTransaction({ amount, serviceType: service });
       
-      // بیلنس چیک کریں
-      if (balance < amount) throw new Error("بیلنس کافی نہیں ہے");
-
-      // بیلنس کم کریں اور ٹرانزیکشن ہسٹری میں ڈالیں
-      await updateDoc(userRef, {
-        balance: increment(-amount)
-      });
-
-      await addDoc(collection(db, "transactions"), {
-        userId: auth.currentUser.uid,
-        amount,
-        type: 'debit',
-        service: serviceType, // e.g., 'food', 'ride', 'bill'
-        description,
-        timestamp: serverTimestamp()
-      });
-
-      return { success: true };
+      if (balance >= amount) {
+        setBalance(prev => prev - amount);
+        setTransactions(prev => [result, ...prev]);
+        return { success: true, txnId: result.transactionId };
+      } else {
+        alert("والٹ میں رقم کم ہے!");
+        return { success: false };
+      }
     } catch (error) {
-      return { success: false, error: error.message };
+      console.error("Payment Failed:", error);
     }
   };
 
   return (
-    <WalletContext.Provider value={{ balance, makePayment }}>
+    <WalletContext.Provider value={{ balance, transactions, executePayment }}>
       {children}
     </WalletContext.Provider>
   );
