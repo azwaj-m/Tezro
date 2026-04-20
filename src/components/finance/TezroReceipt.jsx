@@ -12,11 +12,11 @@ const TezroReceipt = ({ data }) => {
       <div className="p-8 space-y-4">
         <div className="flex justify-between border-b border-zinc-800 pb-2 text-[10px]">
           <span className="text-zinc-500 uppercase font-bold">Transaction ID</span>
-          <span className="text-white font-mono">#TZR-V772</span>
+          <span className="text-white font-mono">{data?.txnId || "N/A"}</span>
         </div>
         <div className="border-t-2 border-dashed border-zinc-800 pt-4 flex justify-between items-center">
           <span className="text-[#D4AF37] font-black text-lg">TOTAL</span>
-          <span className="text-white font-black text-lg text-right">₨ 1,250</span>
+          <span className="text-white font-black text-lg text-right">{data?.amount || "0"}</span>
         </div>
       </div>
       <div className="px-8 pb-8 flex gap-2">

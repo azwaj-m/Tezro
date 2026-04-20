@@ -27,9 +27,9 @@ function App() {
           <Route path="/" element={<HomeScreen />} />
           <Route path="/ride" element={<RideBooking />} />
           <Route path="/food" element={<FoodDelivery />} />
-          <Route path="/FinanceHub" element={<FinanceHub />} />
-          <Route path="/VaultScreen" element={<VaultScreen />} />
-          <Route path="/NotificationScreen" element={<NotificationScreen />} />
+          <Route path="/finance" element={<FinanceHub />} />
+          <Route path="/vault" element={<VaultScreen />} />
+          <Route path="/notifications" element={<NotificationScreen />} />
 
           {/* Service Routes - Make sure these match the paths in HomeScreen */}
           <Route path="/health" element={<HealthScreen />} />
