@@ -13,7 +13,7 @@ const FoodMenu = () => {
   const [cart, setCart] = useState({});
   const [isProcessing, setIsProcessing] = useState(false);
   const { balance, executePayment } = useWallet();
-  const { placeFoodOrder } = useFood();
+  const { placeFoodOrder = () => console.error('Food Provider missing') } = useFood() || {};
 
   const updateCart = (id, delta) => {
     setCart(prev => {
