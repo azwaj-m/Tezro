@@ -5,6 +5,7 @@ import TezroScanner from '../components/utils/TezroScanner';
 import TezroReceipt from '../components/finance/TezroReceipt';
 
 const FinanceHub = () => { const { executePayment } = useWallet();
+  const { balance } = useWallet();
   const [isScannerOpen, setIsScannerOpen] = useState(false);
   const [showReceipt, setShowReceipt] = useState(false);
 

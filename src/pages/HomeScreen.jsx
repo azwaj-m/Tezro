@@ -13,6 +13,7 @@ import { useNavigate } from 'react-router-dom';
 import 'leaflet/dist/leaflet.css';
 
 const HomeScreen = () => {
+  const { balance } = useWallet();
   const navigate = useNavigate();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isMapFull, setIsMapFull] = useState(false);

@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState } from 'react';
 import { banks } from '../utils/bankData';
 import { TezroMasterEngine } from '../utils/TezroMasterEngine';
 
-const WalletContext = createContext();
+const WalletContext = createContext({ balance: 0 });
 
 export const WalletProvider = ({ children }) => {
   const [balance, setBalance] = useState(25000); // ڈیفالٹ بیلنس
