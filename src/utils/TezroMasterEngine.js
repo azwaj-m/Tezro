@@ -1,17 +1,14 @@
 export const TezroMasterEngine = {
-  initiateTransaction: async (data) => {
-    return {
-      transactionId: `TZ-${Math.random().toString(36).toUpperCase().substring(2, 12)}`,
-      timestamp: new Date().toLocaleString(),
-      status: 'Escrow_Hold',
-      amount: data.amount, fee: data.amount * 0.01,
-      service: data.serviceType,
-      hash: `0x${Math.random().toString(16).substring(2, 42)}` // Blockchain Hash
-    };
+  calculateFare: (distance, type) => {
+    const rates = { mini: 40, bolan: 35, prime: 65 };
+    const base = rates[type.toLowerCase()] || 40;
+    return Math.floor(distance * base);
   },
-  
-  releaseEscrow: (txnId) => {
-    // یہ فنکشن تب چلے گا جب سروس مکمل ہو جائے گی
-    return { status: 'Settled', message: 'رقم منتقل کر دی گئی ہے' };
+  initiateTransaction: async (amount, service) => {
+    return {
+      txnId: `TZ-${Math.random().toString(36).toUpperCase().substring(2, 10)}`,
+      status: 'Escrow_Hold',
+      hash: `0x${Math.random().toString(16).substring(2, 20)}`
+    };
   }
 };
