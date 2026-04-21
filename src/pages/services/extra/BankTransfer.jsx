@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { banks } from '../../utils/bankData';
+import { banks } from '../../../utils/bankData';
 import { ShieldCheck, ArrowRightLeft } from 'lucide-react';
-import { useWallet } from '../../context/WalletContext'; // والٹ ہک کا اضافہ
+import { useWallet } from '../../../context/WalletContext'; // والٹ ہک کا اضافہ
 
 const BankTransfer = () => {
   const [selectedBank, setSelectedBank] = useState(null);
