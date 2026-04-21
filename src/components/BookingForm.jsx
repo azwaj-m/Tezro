@@ -21,7 +21,7 @@ const BookingForm = ({ serviceName, baseFare }) => {
         alert(`${serviceName} بکنگ موصول ہو گئی ہے۔ قریبی پروفیشنل سے رابطہ کیا جا رہا ہے۔`);
       }
     } catch (err) {
-      console.error("Booking Failed", err);
+      console.error("Booking Failed", err); alert("بکنگ میں خرابی: " + err.message);
     } finally {
       setLoading(false);
     }

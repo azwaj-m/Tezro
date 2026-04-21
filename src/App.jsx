@@ -18,9 +18,15 @@ import TezroMall from './pages/services/extra/TezroMall';
 import EmploymentScreen from './pages/services/extra/EmploymentScreen';
 import DeliveryFleet from './pages/services/extra/DeliveryFleet';
 
+export const TezroProvider = ({ children }) => import { WalletProvider } from './context/WalletContext';
+import { TezroProvider } from './context/TezroContext';
+<WalletProvider><TezroProvider><Router>{children}</Router></TezroProvider></WalletProvider>;
+
 function App() {
   return (
-    <Router>
+    import { WalletProvider } from './context/WalletContext';
+import { TezroProvider } from './context/TezroContext';
+<WalletProvider><TezroProvider><Router>
       <div className="min-h-screen bg-[#000d08]">
         <Routes>
           <Route path="/" element={<HomeScreen />} />
@@ -38,7 +44,7 @@ function App() {
           <Route path="/delivery" element={<DeliveryFleet />} />
         </Routes>
       </div>
-    </Router>
+    </Router></TezroProvider></WalletProvider>
   );
 }
 

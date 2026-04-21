@@ -9,7 +9,9 @@ export const FoodProvider = ({ children }) => {
 
   const placeFoodOrder = async (cartItems, totalAmount, deliveryLocation) => {
     try {
-      if (!auth.currentUser) throw new Error("آرڈر کے لیے لاگ ان ضروری ہے");
+      if (!auth.currentUser) if (!auth.currentUser) {
+        return { success: false, error: "براہ کرم پہلے لاگ ان کریں" };
+      };
 
       const orderData = {
         userId: auth.currentUser.uid,
