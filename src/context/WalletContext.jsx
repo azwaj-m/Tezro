@@ -16,7 +16,7 @@ export const WalletProvider = ({ children }) => {
       
       if (balance >= amount) {
         setBalance(prev => prev - amount);
-        setTransactions(prev => [result, ...prev]);
+        setTransactions(prev => [{...result, status: 'Escrow_Hold', service: service}, ...prev]);
         return { success: true, txnId: result.transactionId };
       } else {
         alert("والٹ میں رقم کم ہے!");

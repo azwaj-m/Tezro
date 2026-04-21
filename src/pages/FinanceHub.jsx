@@ -1,9 +1,10 @@
+import { useWallet } from '../context/WalletContext';
 import React, { useState } from 'react';
 import { Wallet, QrCode, ShieldCheck, CheckCircle } from 'lucide-react';
 import TezroScanner from '../components/utils/TezroScanner';
 import TezroReceipt from '../components/finance/TezroReceipt';
 
-const FinanceHub = () => {
+const FinanceHub = () => { const { executePayment } = useWallet();
   const [isScannerOpen, setIsScannerOpen] = useState(false);
   const [showReceipt, setShowReceipt] = useState(false);
 
@@ -44,7 +45,7 @@ const FinanceHub = () => {
         </div>
       )}
 
-      <TezroScanner isOpen={isScannerOpen} onClose={() => setIsScannerOpen(false)} onScanResult={handlePaymentComplete} />
+      <TezroScanner isOpen={isScannerOpen} onClose={() => setIsScannerOpen(false)} onScanResult={(data) => { executePayment(data.amount || 1500, 'Utility Bill'); handlePaymentComplete(); }} />
     </div>
   );
 };
