@@ -1,65 +1,50 @@
-import React, { useState, useEffect } from 'react';
-import { Power, MapPin, ShieldCheck, Zap } from 'lucide-react';
-import { startLocationTracking, stopLocationTracking } from '../utils/LocationEngine';
+import React, { useState } from 'react';
+import { ShieldCheck, MapPin, Phone, X, Check } from 'lucide-react';
 
-const DriverScreen = ({ driverId }) => {
-  const [isOnline, setIsOnline] = useState(false);
+const DriverScreen = () => {
+  const [request, setRequest] = useState({
+    passenger: "حمزہ خان",
+    pickup: "گلگشت کالونی",
+    drop: "کینٹ سٹیشن",
+    fare: "Rs. 450",
+    active: true
+  });
 
-  const toggleStatus = () => {
-    if (!isOnline) {
-      startLocationTracking(driverId);
-      setIsOnline(true);
-    } else {
-      stopLocationTracking();
-      setIsOnline(false);
-    }
-  };
+  if (!request.active) return (
+    <div className="h-screen bg-black flex items-center justify-center text-zinc-500 font-black uppercase text-[10px] tracking-widest">
+      Searching for requests...
+    </div>
+  );
 
   return (
-    <div className="relative h-screen bg-[#000d08] p-6 flex flex-col items-center justify-between">
-      {/* ٹاپ اسٹیٹس بار */}
-      <div className="w-full flex justify-between items-center bg-black/40 p-4 rounded-3xl border border-[#FFD700]/10">
-        <div className="flex items-center gap-2">
-          <div className={`w-2 h-2 rounded-full ${isOnline ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`}></div>
-          <span className="text-[10px] font-black text-white uppercase tracking-widest">
-            {isOnline ? 'Active on Map' : 'Offline'}
-          </span>
+    <div className="h-screen bg-[#000d08] p-6 flex flex-col justify-end pb-24">
+      <div className="bg-zinc-900/90 backdrop-blur-xl border border-[#FFD700]/20 rounded-[3rem] p-8 w-full animate-in fade-in slide-in-from-bottom-10">
+        <div className="flex justify-between items-start mb-6">
+          <div>
+            <span className="bg-[#FFD700] text-black text-[8px] font-black px-2 py-1 rounded-full uppercase">New Request</span>
+            <h2 className="text-white text-2xl font-black mt-2">{request.passenger}</h2>
+          </div>
+          <div className="text-[#FFD700] font-black text-xl italic">{request.fare}</div>
         </div>
-        <ShieldCheck className="text-[#FFD700]" size={20} />
-      </div>
 
-      {/* سنٹرل اسٹیٹس کنٹرول */}
-      <div className="flex flex-col items-center gap-6">
-        <button 
-          onClick={toggleStatus}
-          className={`w-40 h-40 rounded-full flex flex-col items-center justify-center transition-all duration-500 shadow-2xl ${
-            isOnline 
-            ? 'bg-[#FFD700] text-tezro-gold shadow-[0_0_50px_rgba(255,215,0,0.4)] rotate-12' 
-            : 'bg-zinc-900/50/5 text-gray-600 border-2 border-white/10'
-          }`}
-        >
-          <Power size={48} strokeWidth={3} />
-          <span className="text-[10px] font-black mt-2 uppercase">{isOnline ? 'Go Offline' : 'Go Online'}</span>
-        </button>
-        <p className="text-gray-500 text-[10px] uppercase font-bold tracking-[3px]">
-          {isOnline ? 'آپ کی لوکیشن سواریوں کو نظر آ رہی ہے' : 'سسٹم فی الحال ڈس کنیکٹ ہے'}
-        </p>
-      </div>
-
-      {/* باٹم انفو کارڈ */}
-      <div className="w-full bg-[#FFD700]/5 border border-[#FFD700]/20 p-6 rounded-[2.5rem] mb-10">
-        <div className="flex justify-between items-center">
+        <div className="space-y-4 mb-8">
           <div className="flex items-center gap-3">
-            <div className="bg-[#FFD700] p-2 rounded-xl text-tezro-gold"><Zap size={20} /></div>
-            <div>
-               <p className="text-[8px] text-gray-500 uppercase font-black">Performance</p>
-               <p className="text-xs text-white font-bold tracking-widest italic">100% SECURE</p>
-            </div>
+            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+            <p className="text-zinc-400 text-xs font-bold">{request.pickup}</p>
           </div>
-          <div className="text-right">
-             <p className="text-[8px] text-gray-500 uppercase font-black">Earnings</p>
-             <p className="text-xs text-[#FFD700] font-black italic">Rs. 0.00</p>
+          <div className="flex items-center gap-3">
+            <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+            <p className="text-zinc-400 text-xs font-bold">{request.drop}</p>
           </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <button onClick={() => setRequest({...request, active: false})} className="bg-zinc-800 text-white py-5 rounded-2xl flex items-center justify-center border border-white/5">
+            <X size={24} />
+          </button>
+          <button onClick={() => alert("Ride Accepted!")} className="bg-[#FFD700] text-black py-5 rounded-2xl flex items-center justify-center shadow-lg">
+            <Check size={24} />
+          </button>
         </div>
       </div>
     </div>
