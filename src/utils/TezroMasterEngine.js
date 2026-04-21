@@ -4,7 +4,7 @@ export const TezroMasterEngine = {
       transactionId: `TZ-${Math.random().toString(36).toUpperCase().substring(2, 12)}`,
       timestamp: new Date().toLocaleString(),
       status: 'Escrow_Hold',
-      amount: data.amount,
+      amount: data.amount, fee: data.amount * 0.01,
       service: data.serviceType,
       hash: `0x${Math.random().toString(16).substring(2, 42)}` // Blockchain Hash
     };

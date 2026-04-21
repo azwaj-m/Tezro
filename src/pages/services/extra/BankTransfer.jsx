@@ -57,14 +57,14 @@ const BankTransfer = () => {
         {selectedBank && (
           <div className="mt-8 space-y-4 animate-in fade-in slide-in-from-bottom-4">
             <input 
-              type="number" 
+              type="text" 
               value={account}
               onChange={(e) => setAccount(e.target.value)}
               placeholder="اکاؤنٹ نمبر یا IBAN" 
               className="w-full bg-white/5 p-5 rounded-3xl border border-white/10 outline-none focus:border-gold" 
             />
             <input 
-              type="number" 
+              type="text" 
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
               placeholder="رقم (PKR)" 
@@ -90,7 +90,7 @@ const BankTransfer = () => {
                     <p className="text-[10px] font-bold text-[#D4AF37] uppercase">{txn.status}</p>
                     <p className="text-[8px] text-white/40">{txn.transactionId}</p>
                   </div>
-                  <p className="font-black text-sm">Rs. {txn.split.providerShare + txn.split.tezroFee}</p>
+                  <p className="font-black text-sm">Rs. {txn.amount}</p>
                 </div>
               ))
             ) : (

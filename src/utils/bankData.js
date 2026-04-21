@@ -105,7 +105,7 @@ export const banks = [
 
   { id: 'b11', name: 'Allied Bank', shortName: 'ABL', logo: '/assets/abl.jpg', gateway: '1LINK' },
 
-  { id: 'b12', name: 'Meezan Bank', shortName: 'MEEZAN', logo: '/assets/meezan.png', gateway: '1LINK' },
+  { id: 'b12', name: 'Meezan Bank', shortName: 'MEEZAN', logo: '/assets/mreezan.jpg', gateway: '1LINK' },
 
   { id: 'b13', name: 'BankIslami', shortName: 'BISL', logo: '/assets/bank Islami.jpg', gateway: '1LINK' },
 
@@ -121,7 +121,7 @@ export const banks = [
 
   { id: 'b19', name: 'Bank Al Habib', shortName: 'BAHL', logo: '/assets/AL Habeeb.jpg', gateway: '1LINK' },
 
-  { id: 'b20', name: 'Standard Chartered', shortName: 'SC', logo: '/assets/stendurd charterd.png', gateway: '1LINK' },
+  { id: 'b20', name: 'Standard Chartered', shortName: 'SC', logo: '/assets/stendurd_charterd.png', gateway: '1LINK' },
 
   { id: 'b21', name: 'Soneri Bank', shortName: 'SNB', logo: '/assets/soneri.jpg', gateway: '1LINK' },
 
