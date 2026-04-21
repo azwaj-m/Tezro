@@ -1,4 +1,3 @@
-import { useWallet } from '../context/WalletContext';
 import { useWallet } from "../context/WalletContext";
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
