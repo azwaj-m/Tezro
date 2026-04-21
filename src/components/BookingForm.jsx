@@ -1,25 +1,40 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTezro } from '../context/TezroContext';
+import { Loader2, ShieldCheck } from 'lucide-react';
 
-const BookingForm = () => {
+const BookingForm = ({ serviceName, baseFare }) => {
   const { requestRide } = useTezro();
+  const [loading, setLoading] = useState(false);
 
   const handleBook = async () => {
-    const details = { pickup: "Current Loc", drop: "Destination", fare: 500 };
-    const result = await requestRide(details);
-    if (result.success) {
-      alert("رائیڈ کامیابی سے بک ہو گئی ہے!");
-    } else {
-      alert("غلطی: " + result.error);
+    setLoading(true);
+    const details = { 
+      type: serviceName, 
+      pickup: "Current Verified Location", 
+      fare: baseFare || 500,
+      timestamp: new Date().toISOString()
+    };
+    
+    try {
+      const result = await requestRide(details);
+      if (result.success) {
+        alert(`${serviceName} بکنگ موصول ہو گئی ہے۔ قریبی پروفیشنل سے رابطہ کیا جا رہا ہے۔`);
+      }
+    } catch (err) {
+      console.error("Booking Failed", err);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <button 
+    <button
       onClick={handleBook}
-      className="bg-yellow-500 text-tezro-gold font-bold py-3 px-6 rounded-lg w-full shadow-lg active:scale-95 transition-transform"
+      disabled={loading}
+      className="bg-[#FFD700] text-black font-black py-5 px-6 rounded-[2rem] w-full shadow-2xl active:scale-95 transition-all flex items-center justify-center gap-3 disabled:opacity-50"
     >
-      ابھی رائیڈ بک کریں
+      {loading ? <Loader2 className="animate-spin" size={20} /> : <ShieldCheck size={20} />}
+      <span className="uppercase text-xs tracking-tighter">Confirm & Secure Booking</span>
     </button>
   );
 };
