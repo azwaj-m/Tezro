@@ -16,7 +16,7 @@ const LiveMap = ({ customPosition }) => {
           <Popup>Tezro Live Point</Popup>
         </CircleMarker>
       </MapContainer>
-      
+
       <div className="absolute top-5 left-6 z-[1000] bg-black/80 backdrop-blur-md px-4 py-1.5 rounded-full border border-gold/10">
         <div className="flex items-center gap-2">
           <span className="w-2 h-2 bg-green-500 rounded-full animate-ping"></span>

@@ -1,3 +1,4 @@
+      window.speechSynthesis.speak(new SpeechSynthesisUtterance("Opening requested service"));
 export const startGlobalVoice = (navigate) => {
   const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (!Recognition) return alert("آواز کا نظام اس براؤزر پر دستیاب نہیں ہے۔");
@@ -11,11 +12,14 @@ export const startGlobalVoice = (navigate) => {
     const transcript = event.results[0][0].transcript.toLowerCase();
     console.log("Heard:", transcript);
 
-    if (transcript.includes("ride") || transcript.includes("gari") || transcript.includes("taxi") || transcript.includes("taxi")) {
+    if (transcript.includes("ride") || transcript.includes("gari") || transcript.includes("taxi")) {
+      window.speechSynthesis.speak(new SpeechSynthesisUtterance("Opening requested service"));
       navigate('/services/RideBooking');
     } else if (transcript.includes("food") || transcript.includes("khana") || transcript.includes("eat")) {
+      window.speechSynthesis.speak(new SpeechSynthesisUtterance("Opening requested service"));
       navigate('/services/FoodDelivery');
     } else if (transcript.includes("finance") || transcript.includes("paisa") || transcript.includes("money")) {
+      window.speechSynthesis.speak(new SpeechSynthesisUtterance("Opening requested service"));
       navigate('/FinanceHub');
     } else if (transcript.includes("help") || transcript.includes("emergency")) {
       alert("EMERGENCY SOS: Sending location to authorities!");
