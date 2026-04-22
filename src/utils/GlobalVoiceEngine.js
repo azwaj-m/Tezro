@@ -1,37 +1,31 @@
+export const startGlobalVoice = (navigate) => {
+  const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!Recognition) return alert("آواز کا نظام اس براؤزر پر دستیاب نہیں ہے۔");
+
+  const recognition = new Recognition();
+  recognition.lang = 'en-US';
+
+  recognition.onstart = () => console.log("Tezro Voice Active...");
+  
+  recognition.onresult = (event) => {
+    const transcript = event.results[0][0].transcript.toLowerCase();
+    console.log("Heard:", transcript);
+
+    if (transcript.includes("ride") || transcript.includes("taxi")) {
+      navigate('/ride');
+    } else if (transcript.includes("food") || transcript.includes("eat")) {
+      navigate('/food');
+    } else if (transcript.includes("finance") || transcript.includes("money")) {
+      navigate('/finance');
+    } else if (transcript.includes("help") || transcript.includes("emergency")) {
+      alert("EMERGENCY SOS: Sending location to authorities!");
+    }
+  };
+
+  recognition.start();
+};
+
 export const GlobalVoiceEngine = {
   isOffline: !navigator.onLine,
-  lastHeardTime: Date.now(),
-  secretCode: "TEZRO_ALPHA", // ڈیفالٹ کوڈ ورڈ
-
-  startMonitoring: (callback) => {
-    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-    recognition.continuous = true;
-    recognition.lang = 'en-US';
-
-    recognition.onresult = (event) => {
-      const transcript = event.results[event.results.length - 1][0].transcript.toLowerCase();
-      GlobalVoiceEngine.lastHeardTime = Date.now();
-      
-      // ایمرجنسی چیک (لڑائی جھگڑا)
-      if (transcript.includes("help") || transcript.includes("bachao") || transcript.includes("stop")) {
-        GlobalVoiceEngine.triggerEmergency();
-      }
-
-      callback(transcript);
-    };
-    recognition.start();
-  },
-
-  triggerEmergency: () => {
-    console.log("EMERGENCY: Sending location and SOS to authorities...");
-    // یہاں میسجنگ لاجک آئے گا
-  },
-
-  checkOwnerPresence: () => {
-    const twoHours = 2 * 60 * 60 * 1000;
-    if (Date.now() - GlobalVoiceEngine.lastHeardTime > twoHours) {
-      return "LOCK_TRIGGERED";
-    }
-    return "SAFE";
-  }
+  triggerEmergency: () => console.log("SOS Triggered")
 };
