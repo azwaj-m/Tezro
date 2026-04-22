@@ -9,7 +9,7 @@ const LiveMap = ({ customPosition }) => {
 
   return (
     <div className="w-full h-64 rounded-[2.5rem] overflow-hidden border-2 border-[#FFD700]/20 relative z-10">
-      <MapContainer center={pos} zoom={13} className="h-full w-full grayscale invert-[100%] hue-rotate(180deg) brightness(80%)">
+      <MapContainer center={pos} zoom={pos[0] === 31.5204 ? 13 : 15} className="h-full w-full grayscale invert-[100%] hue-rotate(180deg) brightness(80%)">
         <Recenter c={pos} />
         <TileLayer url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png" />
         <CircleMarker center={pos} radius={12} pathOptions={{ color: '#FFD700', fillColor: '#FFD700', fillOpacity: 0.6 }}>

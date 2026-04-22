@@ -11,11 +11,11 @@ export const startGlobalVoice = (navigate) => {
     const transcript = event.results[0][0].transcript.toLowerCase();
     console.log("Heard:", transcript);
 
-    if (transcript.includes("ride") || transcript.includes("taxi")) {
+    if (transcript.includes("ride") || transcript.includes("gari") || transcript.includes("taxi") || transcript.includes("taxi")) {
       navigate('/services/RideBooking');
-    } else if (transcript.includes("food") || transcript.includes("eat")) {
+    } else if (transcript.includes("food") || transcript.includes("khana") || transcript.includes("eat")) {
       navigate('/services/FoodDelivery');
-    } else if (transcript.includes("finance") || transcript.includes("money")) {
+    } else if (transcript.includes("finance") || transcript.includes("paisa") || transcript.includes("money")) {
       navigate('/FinanceHub');
     } else if (transcript.includes("help") || transcript.includes("emergency")) {
       alert("EMERGENCY SOS: Sending location to authorities!");
