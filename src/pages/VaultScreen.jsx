@@ -13,7 +13,7 @@ const VaultScreen = () => { const { balance } = useWallet();
     const timer = setTimeout(() => {
       // یہاں کیمرہ خاموشی سے مالک کی شناخت کرے گا
       // ہم فرض کر رہے ہیں کہ مالک کی شناخت ہوگئی
-      setIsOwner(true); 
+      setIsOwner(true);
     }, 1500);
     return () => clearTimeout(timer);
   }, []);
@@ -28,7 +28,7 @@ const VaultScreen = () => { const { balance } = useWallet();
 
   return (
     <div className="min-h-screen bg-[#000d08] text-white pt-28 pb-24">
-      
+
       {/* ہیڈر - ہمیشہ نظر آئے گا */}
       <div className="mx-6 dark-gold-shiny rounded-[40px] p-8 flex flex-col items-center shadow-2xl relative overflow-hidden">
         <div className="w-24 h-24 rounded-full border-4 border-black/20 p-1 bg-black flex items-center justify-center">
@@ -59,7 +59,7 @@ const VaultScreen = () => { const { balance } = useWallet();
           if (!isOwner && item.hideInGuest) return null;
 
           return (
-            <motion.div 
+            <motion.div
               key={index}
               whileTap={{ scale: 0.98 }}
               className="flex items-center justify-between p-5 bg-zinc-900/30 border border-white/5 rounded-[30px] hover:border-gold/30 transition-all"

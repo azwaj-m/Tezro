@@ -9,7 +9,7 @@ const TezroReceipt = ({ data }) => {
         <h2 className="text-2xl font-black uppercase italic italic leading-none">Tezro Ledger</h2>
         <p className="text-[8px] font-black uppercase tracking-[0.2em] mt-2">Verified Blockchain Node</p>
       </div>
-      
+
       <div className="p-8 space-y-6">
         <div className="flex justify-between items-center">
           <span className="text-[9px] text-zinc-500 font-black uppercase">Status</span>

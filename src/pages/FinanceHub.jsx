@@ -37,7 +37,7 @@ const FinanceHub = () => { const { executePayment } = useWallet();
       ) : (
         <div className="animate-in fade-in zoom-in duration-500">
           <TezroReceipt />
-          <button 
+          <button
             onClick={() => setShowReceipt(false)}
             className="w-full mt-6 py-4 text-zinc-500 font-bold text-xs uppercase tracking-[0.3em]"
           >

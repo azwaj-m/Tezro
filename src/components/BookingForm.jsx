@@ -8,13 +8,13 @@ const BookingForm = ({ serviceName, baseFare }) => {
 
   const handleBook = async () => {
     setLoading(true);
-    const details = { 
-      type: serviceName, 
-      pickup: "Current Verified Location", 
+    const details = {
+      type: serviceName,
+      pickup: "Current Verified Location",
       fare: baseFare || 500,
       timestamp: new Date().toISOString()
     };
-    
+
     try {
       const result = await requestRide(details);
       if (result.success) {

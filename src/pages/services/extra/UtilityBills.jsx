@@ -61,12 +61,12 @@ const UtilityBills = () => {
               <h3 className="font-black">{selectedProvider.name}</h3>
               <div className="mt-8 space-y-4 text-left">
                 <label className="text-[9px] font-black text-zinc-500 uppercase ml-2">Consumer ID</label>
-                <input 
-                  type="number" 
+                <input
+                  type="number"
                   value={consumerId}
                   onChange={(e) => setConsumerId(e.target.value)}
                   placeholder="Enter 14-digit ID"
-                  className="w-full bg-black/50 border border-white/10 p-5 rounded-2xl outline-none focus:border-[#D4AF37]" 
+                  className="w-full bg-black/50 border border-white/10 p-5 rounded-2xl outline-none focus:border-[#D4AF37]"
                 />
                 <button onClick={handleBillPay} className="w-full py-5 bg-[#D4AF37] text-black font-black rounded-2xl uppercase tracking-widest flex items-center justify-center gap-2">
                   <ShieldCheck size={18}/> Pay Now

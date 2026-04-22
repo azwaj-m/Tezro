@@ -13,7 +13,7 @@ export const WalletProvider = ({ children }) => {
     try {
       // ماسٹر انجن سے سیکیورٹی چیک
       const result = await TezroMasterEngine.initiateTransaction({ amount, serviceType: service });
-      
+
       if (balance >= amount) {
         setBalance(prev => prev - amount);
         setTransactions(prev => [{...result, status: 'Escrow_Hold', service: service}, ...prev]);

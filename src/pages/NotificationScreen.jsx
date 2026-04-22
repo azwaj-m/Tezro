@@ -27,7 +27,7 @@ const NotificationScreen = () => {
           </div>
         ))}
       </div>
-      
+
       <div className="mt-10 p-6 bg-[#D4AF37]/5 border border-[#D4AF37]/10 rounded-[2.5rem] text-center">
         <p className="text-[10px] text-[#D4AF37] font-black uppercase tracking-widest">Quantum Encryption Enabled</p>
       </div>

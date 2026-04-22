@@ -31,7 +31,7 @@ const RideBooking = () => {
   return (
     <div className="min-h-screen bg-[#000d08] text-white p-6 font-sans">
       <h1 className="text-2xl font-black italic text-[#D4AF37] mt-10 mb-6 uppercase">Tezro Ride</h1>
-      
+
       <div className="bg-zinc-900/50 p-6 rounded-[2.5rem] border border-white/5 mb-6">
         <div className="flex items-center gap-4 border-b border-white/5 pb-4 mb-4">
           <div className="w-3 h-3 rounded-full bg-green-500 shadow-[0_0_10px_green]"></div>
@@ -39,8 +39,8 @@ const RideBooking = () => {
         </div>
         <div className="flex items-center gap-4">
           <Navigation size={18} className="text-[#D4AF37]" />
-          <input 
-            type="text" placeholder="کہاں جانا ہے؟" 
+          <input
+            type="text" placeholder="کہاں جانا ہے؟"
             className="bg-transparent outline-none text-sm w-full"
             value={destination} onChange={(e) => setDestination(e.target.value)}
           />
@@ -49,7 +49,7 @@ const RideBooking = () => {
 
       <div className="space-y-3 mb-32">
         {initialRides.map((ride) => (
-          <div 
+          <div
             key={ride.id} onClick={() => setSelectedRide(ride.id)}
             className={`p-4 rounded-[2rem] border transition-all flex items-center justify-between ${selectedRide === ride.id ? 'border-[#D4AF37] bg-[#D4AF37]/10' : 'border-white/5 bg-zinc-900/30'}`}
           >

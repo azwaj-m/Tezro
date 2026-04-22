@@ -21,8 +21,8 @@ const ExploreUniverse = () => {
       {/* سوئپ کارڈز کنٹینر */}
       <div className="flex gap-5 overflow-x-auto no-scrollbar snap-x snap-mandatory px-4 pb-8">
         {services.map((service) => (
-          <div 
-            key={service.id} 
+          <div
+            key={service.id}
             onClick={() => navigate(service.path)}
             className="min-w-[280px] h-48 rounded-[2.8rem] overflow-hidden gold-border relative snap-center active:scale-95 transition-all shadow-[0_20px_40px_rgba(0,0,0,0.6)]"
           >

@@ -17,10 +17,10 @@ const ProHelp = () => {
   return (
     <div className="min-h-screen bg-[#000d08] text-white p-6 pt-28">
       <h1 className="text-2xl font-black text-gold italic mb-8 uppercase">Pro Service Hub</h1>
-      
+
       <div className="grid grid-cols-2 gap-4">
         {proServices.map((service) => (
-          <motion.div 
+          <motion.div
             whileTap={{ scale: 0.95 }}
             key={service.id}
             className="relative h-48 rounded-[30px] overflow-hidden border border-white/10 group"

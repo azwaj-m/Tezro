@@ -32,7 +32,7 @@ const DeliveryFleet = () => {
       {/* ٹریکنگ کارڈ */}
       <div className="bg-zinc-900/50 rounded-[2.5rem] border border-white/5 p-8 relative overflow-hidden">
         <div className="absolute left-10 top-20 bottom-20 w-[2px] bg-zinc-800"></div>
-        
+
         <div className="space-y-12 relative">
           {steps.map((step, index) => (
             <div key={index} className={`flex items-start gap-6 transition-all duration-500 ${index <= status ? 'opacity-100' : 'opacity-30'}`}>

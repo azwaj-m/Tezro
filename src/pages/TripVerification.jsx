@@ -23,18 +23,18 @@ const TripVerification = ({ requestId, actualOtp }) => {
         </div>
         <h3 className="text-[#FFD700] font-black italic text-xl uppercase tracking-tighter">Security Verification</h3>
         <p className="text-gray-400 text-[10px] uppercase font-bold">سواری سے 4 ہندسوں کا کوڈ پوچھیں</p>
-        
-        <input 
-          type="number" 
+
+        <input
+          type="number"
           value={otp}
           onChange={(e) => setOtp(e.target.value)}
           placeholder="0 0 0 0"
           className="bg-transparent border-b-4 border-[#FFD700] text-[#FFD700] text-4xl font-black text-center w-40 outline-none py-2 tracking-[10px]"
         />
-        
+
         {error && <p className="text-red-500 text-[10px] font-black uppercase">{error}</p>}
 
-        <button 
+        <button
           onClick={handleVerify}
           className="w-full bg-[#FFD700] text-tezro-gold py-5 rounded-2xl font-black flex items-center justify-center gap-3 active:scale-95 transition-all shadow-[0_10px_20px_rgba(255,215,0,0.2)]"
         >

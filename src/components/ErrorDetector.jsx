@@ -26,7 +26,7 @@ class ErrorDetector extends React.Component {
                 {this.state.error && this.state.error.toString()}
               </p>
             </div>
-            <button 
+            <button
               onClick={() => window.location.reload()}
               className="w-full bg-red-500 text-white py-4 rounded-xl font-bold uppercase tracking-widest active:scale-95"
             >

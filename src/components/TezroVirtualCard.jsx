@@ -19,7 +19,7 @@ const TezroVirtualCard = () => {
       {/* Row: Master Card & Balance Box */}
       <div className="grid grid-cols-2 gap-4">
         {/* Iranian Islamic Master Card */}
-        <div 
+        <div
           onClick={() => navigate('/transactions')}
           className="relative h-44 rounded-[2.2rem] p-6 overflow-hidden border border-[#FFD700]/25 shadow-2xl bg-gradient-to-br from-[#1c1c1c] to-black cursor-pointer transform active:scale-[0.98] transition-all"
         >

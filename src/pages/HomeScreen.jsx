@@ -2,9 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Menu, Bell, Mic, Search, X, Maximize2, 
-  Car, Utensils, Wallet, ShoppingBag, 
+import {
+  Menu, Bell, Mic, Search, X, Maximize2,
+  Car, Utensils, Wallet, ShoppingBag,
   LayoutGrid, Home, Gift, History, User,
   ChevronRight, Camera, CreditCard, Star
 } from 'lucide-react';
@@ -55,13 +55,13 @@ const HomeScreen = () => {
 
   return (
     <div className="min-h-screen bg-[#000d08] text-white overflow-hidden font-sans">
-      
+
       {/* --- 1. ہیڈر (Light Golden Shiny & Embossed) --- */}
       <header className="fixed top-0 left-0 w-full z-[4000] px-6 py-3 light-gold-shiny shadow-[0_8px_20px_rgba(212,175,55,0.4)] flex justify-between items-center rounded-b-[35px] border-b border-gold/30">
         <button onClick={() => setIsSidebarOpen(true)} className="p-2 active:scale-90 transition-transform">
           <Menu size={30} className="text-[#4b3c00]" />
         </button>
-        
+
         <div onClick={() => navigate('/')} className="flex flex-col items-center cursor-pointer active:scale-95 transition-all">
           <img src="/assets/logo.png" className="h-12 w-12 object-contain drop-shadow-[0_4px_4px_rgba(0,0,0,0.5)]" alt="Tezro" />
         </div>
@@ -74,19 +74,19 @@ const HomeScreen = () => {
 
       {/* --- مین کنٹینٹ --- */}
       <main className="pt-24 pb-24 h-screen overflow-y-auto no-scrollbar px-4 space-y-6">
-        
+
         {/* --- 2. خوبصورت سرچ بار --- */}
         <div className="relative mt-2">
           <div className="flex items-center bg-gradient-to-r from-white/10 to-white/5 border-2 border-gold/20 rounded-[25px] px-4 py-1 backdrop-blur-md shadow-inner">
             <Search className="text-gold/60" size={20} />
-            <input 
-              type="text" 
+            <input
+              type="text"
               value={searchText}
               onChange={(e) => setSearchText(e.target.value)}
-              placeholder="Search services, products..." 
-              className="flex-1 bg-transparent px-3 py-3 outline-none text-sm placeholder:text-gray-500" 
+              placeholder="Search services, products..."
+              className="flex-1 bg-transparent px-3 py-3 outline-none text-sm placeholder:text-gray-500"
             />
-            <button 
+            <button
               onClick={startVoiceSearch}
               className={`p-2 rounded-full transition-all ${isListening ? 'bg-red-500 animate-pulse' : 'text-gold'}`}
             >
@@ -100,9 +100,9 @@ const HomeScreen = () => {
           <MapContainer center={[30.1575, 71.5249]} zoom={13} style={{height: '100%', width: '100%'}}>
             <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
           </MapContainer>
-          
-          <button 
-            onClick={() => setIsMapFull(!isMapFull)} 
+
+          <button
+            onClick={() => setIsMapFull(!isMapFull)}
             className="absolute top-6 right-6 z-[5001] bg-gold p-4 rounded-full text-black shadow-2xl hover:scale-110 active:scale-90"
           >
             {isMapFull ? <X size={28} /> : <Search size={28} />}
@@ -184,7 +184,7 @@ const HomeScreen = () => {
           <>
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setIsSidebarOpen(false)} className="fixed inset-0 bg-[#000d08]/90 z-[5002] backdrop-blur-md" />
             <motion.div initial={{ x: '-100%' }} animate={{ x: 0 }} exit={{ x: '-100%' }} className="fixed inset-y-0 left-0 w-80 light-gold-shiny z-[5003] rounded-r-[50px] shadow-2xl flex flex-col">
-              
+
               <div className="p-8 border-b border-[#4b3c00]/10 flex flex-col items-center">
                 <div className="relative group cursor-pointer active:scale-95 transition-all">
                   <div className="w-28 h-28 bg-[#000d08] rounded-full border-4 border-[#4b3c00] overflow-hidden flex items-center justify-center shadow-xl">

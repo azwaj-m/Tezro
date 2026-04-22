@@ -4,7 +4,7 @@ import 'leaflet/dist/leaflet.css';
 
 const LiveMap = () => {
   const position = [31.5204, 74.3587]; // شاہانہ لوکیشن (لاہور)
-  
+
   return (
     <div className="w-full h-64 rounded-[2.5rem] overflow-hidden gold-border relative z-10 group">
       <MapContainer center={position} zoom={13} className="h-full w-full grayscale invert-[100%] hue-rotate(180deg) brightness(80%)">

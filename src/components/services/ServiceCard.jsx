@@ -5,8 +5,8 @@ import { Car, ChevronRight } from 'lucide-react';
 const ServiceCard = ({ title }) => {
   const navigate = useNavigate();
   return (
-    <div 
-      onClick={() => navigate('/ride')} 
+    <div
+      onClick={() => navigate('/ride')}
       className="p-5 bg-zinc-900/50 border border-white/5 rounded-[2.5rem] flex items-center justify-between group active:scale-95 transition-all cursor-pointer"
     >
       <div className="flex items-center gap-4">

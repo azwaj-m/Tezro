@@ -86,7 +86,7 @@ const TezroMall = () => {
             <h2 className="text-xl font-black uppercase">Your Bag</h2>
             <button onClick={() => setShowCart(false)} className="text-zinc-500 font-bold uppercase text-xs">Close</button>
           </div>
-          
+
           <div className="space-y-4 max-h-[60vh] overflow-y-auto pr-2">
             {cart.map((item, idx) => (
               <div key={idx} className="flex items-center justify-between bg-white/5 p-4 rounded-2xl border border-white/10">

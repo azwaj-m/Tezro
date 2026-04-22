@@ -19,12 +19,12 @@ const SecurityScan = ({ isActive, onComplete }) => {
   return (
     <div className="fixed inset-0 z-[500] flex items-center justify-center bg-black/90 backdrop-blur-2xl">
       <div className="text-center space-y-8 animate-in zoom-in duration-300">
-        
+
         {/* Holographic Scanner Circle */}
         <div className="relative w-48 h-48 mx-auto flex items-center justify-center">
           <div className="absolute inset-0 border-2 border-[#FFD700]/20 rounded-full animate-ping"></div>
           <div className="absolute inset-4 border border-[#FFD700]/40 rounded-full animate-pulse"></div>
-          
+
           <div className="relative z-10 text-[#FFD700]">
             {status === 'scanning' && <Fingerprint size={80} className="animate-pulse" />}
             {status === 'verifying' && <Loader2 size={80} className="animate-spin" />}

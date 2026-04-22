@@ -7,7 +7,7 @@ const BankTransfer = () => {
   const [selectedBank, setSelectedBank] = useState(null);
   const [amount, setAmount] = useState('');
   const [account, setAccount] = useState('');
-  
+
   // والٹ کانٹیکسٹ سے ڈیٹا حاصل کریں
   const { transactions, executePayment } = useWallet();
 
@@ -16,7 +16,7 @@ const BankTransfer = () => {
       alert("براہ کرم اکاؤنٹ نمبر اور رقم درج کریں");
       return;
     }
-    
+
     const res = await executePayment(Number(amount), 'Bank Transfer');
     if (res?.success) {
       alert(`منتقلی کامیاب! آئی ڈی: ${res.txnId}`);
@@ -38,11 +38,11 @@ const BankTransfer = () => {
 
       <div className="space-y-4">
         <label className="text-[10px] font-bold text-gray-500 uppercase ml-2">بینک منتخب کریں</label>
-        
+
         {/* بینک گرڈ */}
         <div className="grid grid-cols-4 gap-3">
           {banks.slice(0, 12).map((bank) => (
-            <button 
+            <button
               key={bank.id}
               onClick={() => setSelectedBank(bank)}
               className={`p-2 rounded-2xl border flex flex-col items-center gap-2 transition-all ${selectedBank?.id === bank.id ? 'border-gold bg-gold/10' : 'border-white/5 bg-white/5'}`}
@@ -52,25 +52,25 @@ const BankTransfer = () => {
             </button>
           ))}
         </div>
-        
+
         {/* ان پٹ فیلڈز (صرف بینک سلیکٹ ہونے پر) */}
         {selectedBank && (
           <div className="mt-8 space-y-4 animate-in fade-in slide-in-from-bottom-4">
-            <input 
-              type="text" 
+            <input
+              type="text"
               value={account}
               onChange={(e) => setAccount(e.target.value)}
-              placeholder="اکاؤنٹ نمبر یا IBAN" 
-              className="w-full bg-white/5 p-5 rounded-3xl border border-white/10 outline-none focus:border-gold" 
+              placeholder="اکاؤنٹ نمبر یا IBAN"
+              className="w-full bg-white/5 p-5 rounded-3xl border border-white/10 outline-none focus:border-gold"
             />
-            <input 
-              type="text" 
+            <input
+              type="text"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
-              placeholder="رقم (PKR)" 
-              className="w-full bg-white/5 p-5 rounded-3xl border border-white/10 outline-none focus:border-gold" 
+              placeholder="رقم (PKR)"
+              className="w-full bg-white/5 p-5 rounded-3xl border border-white/10 outline-none focus:border-gold"
             />
-            <button 
+            <button
               onClick={handleTransfer}
               className="w-full py-5 royal-gold-shiny rounded-[30px] text-black font-black uppercase tracking-widest flex items-center justify-center gap-3 active:scale-95 transition-transform"
             >
