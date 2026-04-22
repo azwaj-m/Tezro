@@ -24,7 +24,7 @@ const VoiceControl = () => {
 
       <div className="space-y-4">
         <button onClick={() => handleSystemCommand('lock')} className="w-full bg-zinc-900 border border-zinc-800 p-5 rounded-3xl flex items-center justify-between">
-           <div className="flex items-center gap-4">
+           <div className="flex items-center gap-4 py-2">
               <ShieldAlert className="text-[#D4AF37]" />
               <span className="font-bold text-sm">Activate Voice Lock</span>
            </div>
