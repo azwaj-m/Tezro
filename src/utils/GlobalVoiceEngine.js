@@ -12,11 +12,11 @@ export const startGlobalVoice = (navigate) => {
     console.log("Heard:", transcript);
 
     if (transcript.includes("ride") || transcript.includes("taxi")) {
-      navigate('/ride');
+      navigate('/services/RideBooking');
     } else if (transcript.includes("food") || transcript.includes("eat")) {
-      navigate('/food');
+      navigate('/services/FoodDelivery');
     } else if (transcript.includes("finance") || transcript.includes("money")) {
-      navigate('/finance');
+      navigate('/FinanceHub');
     } else if (transcript.includes("help") || transcript.includes("emergency")) {
       alert("EMERGENCY SOS: Sending location to authorities!");
     }
