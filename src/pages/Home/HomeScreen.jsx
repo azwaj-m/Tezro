@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom'; // لنک امپورٹ کریں
 import { 
   Car, Wallet, HardHat, ShoppingBag, 
   Utensils, Hotel, ShieldCheck, HeartPulse 
@@ -18,18 +19,18 @@ const services = [
 const HomeScreen = () => {
   return (
     <div className="min-h-screen bg-gray-100 p-4">
-      {/* Header */}
       <header className="mb-8 mt-4 text-center">
         <h1 className="text-3xl font-bold text-gray-800">Tezro Super App</h1>
         <p className="text-gray-500">آپ کی تمام ضروریات، ایک ہی جگہ پر</p>
       </header>
 
-      {/* Services Grid */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {services.map((service) => (
-          <button
+          /* یہاں بٹن کو Link میں تبدیل کیا گیا ہے */
+          <Link
             key={service.id}
-            className="flex flex-col items-center justify-center p-6 bg-white rounded-2xl shadow-sm hover:shadow-md transition-all active:scale-95"
+            to={service.route}
+            className="flex flex-col items-center justify-center p-6 bg-white rounded-2xl shadow-sm hover:shadow-md transition-all active:scale-95 border border-transparent hover:border-blue-200"
           >
             <div className={`p-4 rounded-full text-white mb-3 ${service.color}`}>
               {service.icon}
@@ -37,7 +38,7 @@ const HomeScreen = () => {
             <span className="font-semibold text-gray-700 text-sm">
               {service.name}
             </span>
-          </button>
+          </Link>
         ))}
       </div>
     </div>
